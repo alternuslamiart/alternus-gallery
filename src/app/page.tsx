@@ -1,101 +1,917 @@
+"use client";
+
+import { useRef, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useLanguage, useCart } from "@/components/providers";
+import { paintings } from "@/lib/paintings";
+import AccordionSection from "@/components/accordion-section";
+import TestimonialsSection from "@/components/testimonials-section";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const router = useRouter();
+  const { t, formatPrice } = useLanguage();
+  const { addToCart } = useCart();
+  const [orderNumber, setOrderNumber] = useState("");
+  const [trackingError, setTrackingError] = useState("");
+  const [visiblePaintings, setVisiblePaintings] = useState(12);
+  const featuredPaintings = paintings.slice(0, visiblePaintings);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const heroScrollRef = useRef<HTMLDivElement>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -340, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 340, behavior: "smooth" });
+    }
+  };
+
+  const heroScrollLeft = () => {
+    if (heroScrollRef.current) {
+      heroScrollRef.current.scrollBy({ left: -400, behavior: "smooth" });
+    }
+  };
+
+  const heroScrollRight = () => {
+    if (heroScrollRef.current) {
+      heroScrollRef.current.scrollBy({ left: 400, behavior: "smooth" });
+    }
+  };
+
+  const handleTrackOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    setTrackingError("");
+
+    // Validate order number format (e.g., ALT-XXXX-XXXX)
+    const orderPattern = /^ALT-[A-Z0-9]+-[A-Z0-9]+$/i;
+
+    if (!orderNumber.trim()) {
+      setTrackingError("Please enter an order number");
+      return;
+    }
+
+    if (!orderPattern.test(orderNumber.trim())) {
+      setTrackingError("Invalid order number format. Use: ALT-XXXX-XXXX");
+      return;
+    }
+
+    // Redirect to order tracking page with order number
+    router.push(`/track?order=${encodeURIComponent(orderNumber.trim())}`);
+  };
+
+  return (
+    <div className="flex flex-col">
+      {/* Hero Section - Horizontal Scroll Frame */}
+      <section className="py-8 md:py-12 bg-muted/30">
+        <div className="container mx-auto px-4">
+          {/* Navigation Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold">Exclusive Original Works</h2>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={heroScrollLeft}
+                className="rounded-full h-10 w-10"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={heroScrollRight}
+                className="rounded-full h-10 w-10"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </Button>
+            </div>
+          </div>
+
+          {/* Style Buttons */}
+          <div className="mb-6">
+            <p className="text-sm text-gray-500 italic mb-3">Browse by style</p>
+            <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory md:flex-wrap" style={{ scrollbarWidth: "thin" }}>
+              <button
+                onClick={() => router.push('/gallery?category=Baroque')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                Baroque
+              </button>
+              <button
+                onClick={() => router.push('/gallery?category=Expressionism')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                Expressionism
+              </button>
+              <button
+                onClick={() => router.push('/gallery?category=Impressionism')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                Impressionism
+              </button>
+              <button
+                onClick={() => router.push('/gallery?category=Abstract')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                Abstract
+              </button>
+              <button
+                onClick={() => router.push('/gallery?category=Photography')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                Photography
+              </button>
+            </div>
+          </div>
+
+          {/* Horizontal Scroll Container */}
+          <div className="relative">
+            <div
+              ref={heroScrollRef}
+              className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {/* Main Hero Card */}
+              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+                <div className="relative bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-[16px] overflow-hidden h-[400px] md:h-[450px]">
+                  {/* Background Image */}
+                  <div className="absolute inset-0">
+                    <Image
+                      src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=1200&q=80"
+                      alt="Featured Artwork"
+                      fill
+                      className="object-cover opacity-40"
+                      priority
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className="relative z-10 h-full flex flex-col justify-center p-8 md:p-12">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium mb-6 w-fit">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                        <path d="M2 2l7.586 7.586" />
+                        <circle cx="11" cy="11" r="2" />
+                      </svg>
+                      Original Artworks
+                    </div>
+
+                    {/* Main Headline */}
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                      Where Art<br />
+                      <span className="text-white">Meets Soul</span>
+                    </h1>
+
+                    {/* Subheadline */}
+                    <p className="text-lg text-white/70 mb-8 max-w-lg">
+                      Discover unique paintings crafted with passion. Each artwork tells
+                      a story waiting to become part of your world.
+                    </p>
+
+                    {/* CTA Buttons */}
+                    <div className="flex flex-wrap gap-4">
+                      <Button asChild size="lg" className="px-8 bg-white text-black hover:bg-white/90">
+                        <Link href="/signup">
+                          Sell your Art
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline" className="px-8 bg-white/20 text-white border border-white/30 hover:bg-white/30">
+                        <Link href="/gallery">
+                          Browse Gallery
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Stats - Bottom Right (Hidden on mobile) */}
+                  <div className="hidden sm:flex absolute bottom-6 right-6 gap-6">
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">50+</p>
+                      <p className="text-white/60 text-xs">Artworks</p>
+                    </div>
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">12</p>
+                      <p className="text-white/60 text-xs">Countries</p>
+                    </div>
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">100%</p>
+                      <p className="text-white/60 text-xs">Original</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* News Card 2 - New Collection */}
+              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+                <div className="relative bg-gradient-to-br from-emerald-900 to-emerald-800 rounded-[16px] overflow-hidden h-[400px] md:h-[450px]">
+                  <div className="absolute inset-0">
+                    <Image
+                      src="https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=1200&q=80"
+                      alt="New Collection"
+                      fill
+                      className="object-cover opacity-40"
+                    />
+                  </div>
+                  <div className="relative z-10 h-full flex flex-col justify-center p-8 md:p-12">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium mb-6 w-fit">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                        <path d="m3.3 7 8.7 5 8.7-5" />
+                        <path d="M12 22V12" />
+                      </svg>
+                      New Collection
+                    </div>
+
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                      Spring 2026<br />
+                      <span className="text-white">Collection</span>
+                    </h2>
+                    <p className="text-lg text-white/70 mb-8 max-w-lg">
+                      Explore our latest collection featuring vibrant colors and fresh perspectives inspired by the renewal of spring.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <Button asChild size="lg" className="px-8 bg-white text-black hover:bg-white/90">
+                        <Link href="/gallery">
+                          Explore Collection
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline" className="px-8 bg-white/20 text-white border border-white/30 hover:bg-white/30">
+                        <Link href="/gallery?category=Abstract">
+                          View Abstract Art
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                  {/* Stats - Bottom Right (Hidden on mobile) */}
+                  <div className="hidden sm:flex absolute bottom-6 right-6 gap-6">
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">15+</p>
+                      <p className="text-white/60 text-xs">New Works</p>
+                    </div>
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">2026</p>
+                      <p className="text-white/60 text-xs">Season</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* News Card 3 - Limited Offer */}
+              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+                <div className="relative bg-gradient-to-br from-amber-900 to-orange-800 rounded-[16px] overflow-hidden h-[400px] md:h-[450px]">
+                  <div className="absolute inset-0">
+                    <Image
+                      src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?w=1200&q=80"
+                      alt="Worldwide Shipping"
+                      fill
+                      className="object-cover opacity-40"
+                    />
+                  </div>
+                  <div className="relative z-10 h-full flex flex-col justify-center p-8 md:p-12">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium mb-6 w-fit">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M12 16v-4" />
+                        <path d="M12 8h.01" />
+                      </svg>
+                      Limited Time Offer
+                    </div>
+
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                      Free Shipping<br />
+                      <span className="text-white">Worldwide</span>
+                    </h2>
+                    <p className="text-lg text-white/70 mb-8 max-w-lg">
+                      For a limited time, enjoy complimentary worldwide shipping on all original artworks. Start your collection today.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <Button asChild size="lg" className="px-8 bg-white text-black hover:bg-white/90">
+                        <Link href="/gallery">
+                          Shop Now
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline" className="px-8 bg-white/20 text-white border border-white/30 hover:bg-white/30">
+                        <Link href="/contact">
+                          Learn More
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                  {/* Stats - Bottom Right (Hidden on mobile) */}
+                  <div className="hidden sm:flex absolute bottom-6 right-6 gap-6">
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">€0</p>
+                      <p className="text-white/60 text-xs">Shipping</p>
+                    </div>
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">7 Days</p>
+                      <p className="text-white/60 text-xs">Left</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* News Card 4 - Meet the Artist */}
+              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+                <div className="relative bg-gradient-to-br from-purple-900 to-indigo-800 rounded-[16px] overflow-hidden h-[400px] md:h-[450px]">
+                  <div className="absolute inset-0">
+                    <Image
+                      src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1200&q=80"
+                      alt="Meet the Artist"
+                      fill
+                      className="object-cover opacity-40"
+                    />
+                  </div>
+                  <div className="relative z-10 h-full flex flex-col justify-center p-8 md:p-12">
+                    {/* Badge */}
+                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium mb-6 w-fit">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      Artist Spotlight
+                    </div>
+
+                    <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                      Meet<br />
+                      <span className="text-white">Lamiart</span>
+                    </h2>
+                    <p className="text-lg text-white/70 mb-8 max-w-lg">
+                      Discover the story behind the art. Learn about Lamiart&apos;s journey, inspiration, and creative process.
+                    </p>
+                    <div className="flex flex-wrap gap-4">
+                      <Button asChild size="lg" className="px-8 bg-white text-black hover:bg-white/90">
+                        <Link href="/artist/1">
+                          Read Story
+                          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                          </svg>
+                        </Link>
+                      </Button>
+                      <Button asChild size="lg" variant="outline" className="px-8 bg-white/20 text-white border border-white/30 hover:bg-white/30">
+                        <Link href="/gallery?artist=1">
+                          View Artworks
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                  {/* Stats - Bottom Right (Hidden on mobile) */}
+                  <div className="hidden sm:flex absolute bottom-6 right-6 gap-6">
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">10+</p>
+                      <p className="text-white/60 text-xs">Years</p>
+                    </div>
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl px-4 py-3">
+                      <p className="text-2xl font-bold text-white">50+</p>
+                      <p className="text-white/60 text-xs">Artworks</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      {/* Featured Works Section - Grid Layout */}
+      <section className="py-24 bg-background">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-6">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                Collection
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                {t("featuredWorks")}
+              </h2>
+            </div>
+            {visiblePaintings < paintings.length && (
+              <button
+                onClick={() => setVisiblePaintings(prev => Math.min(prev + 4, paintings.length))}
+                className="mt-4 md:mt-0 group inline-flex items-center gap-2 px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                <span>See More</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover:translate-y-1 transition-transform">
+                  <path d="m6 9 6 6 6-6" />
+                </svg>
+              </button>
+            )}
+          </div>
+
+          {/* Price Buttons */}
+          <div className="mb-8">
+            <p className="text-sm text-gray-500 italic mb-3">Shop by your budget</p>
+            <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory md:flex-wrap" style={{ scrollbarWidth: "thin" }}>
+              <button
+                onClick={() => router.push('/gallery?maxPrice=500')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                Under €500
+              </button>
+              <button
+                onClick={() => router.push('/gallery?minPrice=1000&maxPrice=3000')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                €1000 - €3000
+              </button>
+              <button
+                onClick={() => router.push('/gallery?minPrice=3000&maxPrice=5000')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                €3000 - €5000
+              </button>
+              <button
+                onClick={() => router.push('/gallery?minPrice=5000&maxPrice=10000')}
+                className="flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full border border-gray-200 bg-white text-gray-700 hover:bg-gray-100 transition-colors snap-start"
+              >
+                €5000 - €10000
+              </button>
+            </div>
+          </div>
+
+          {/* Grid Container */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            {featuredPaintings.map((painting) => (
+              <div
+                key={painting.id}
+                className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+              >
+                <Link href={`/gallery/${painting.id}`}>
+                  <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                    <Image
+                      src={painting.image}
+                      alt={painting.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {!painting.available && (
+                      <div className="absolute top-3 right-3 z-10">
+                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-sm font-bold px-3 py-1 shadow-lg">
+                          {t("sold")}
+                        </Badge>
+                      </div>
+                    )}
+                    {/* Quick Add Button */}
+                    {painting.available && (
+                      <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="sm"
+                          className="w-full"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addToCart(painting);
+                          }}
+                        >
+                          {t("addToCart")}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+                <div className="p-4">
+                  <Link href={`/gallery/${painting.id}`}>
+                    <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                      {painting.title}
+                    </h3>
+                  </Link>
+                  <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
+                  <p className="text-lg font-bold text-gray-900 mt-2">{formatPrice(painting.price)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Favorite Artist Section - Horizontal Scroll */}
+      <section className="py-24 bg-background overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-12">
+            <div>
+              <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
+                Curated Selection
+              </p>
+              <h2 className="text-3xl md:text-4xl font-bold">
+                {t("favoriteArtist")}
+              </h2>
+              <p className="text-muted-foreground mt-2 max-w-md">
+                {t("favoriteArtistSubtitle")}
+              </p>
+            </div>
+            <div className="flex items-center gap-3 mt-4 md:mt-0">
+              <Link
+                href="/gallery"
+                className="px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors"
+              >
+                See More
+              </Link>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={scrollLeft}
+                className="rounded-full h-10 w-10"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m15 18-6-6 6-6" />
+                </svg>
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={scrollRight}
+                className="rounded-full h-10 w-10"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </Button>
+            </div>
+          </div>
+
+          {/* Horizontal Scroll Container */}
+          <div className="relative">
+            <div
+              ref={scrollContainerRef}
+              className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+            {paintings.map((painting) => (
+              <div
+                key={painting.id}
+                className="group flex-shrink-0 w-[200px] md:w-[260px] snap-start bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+              >
+                <Link href={`/gallery/${painting.id}`}>
+                  <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                    <Image
+                      src={painting.image}
+                      alt={painting.title}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    {!painting.available && (
+                      <div className="absolute top-3 right-3 z-10">
+                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-sm font-bold px-3 py-1 shadow-lg">
+                          {t("sold")}
+                        </Badge>
+                      </div>
+                    )}
+                    {/* Quick Add Button */}
+                    {painting.available && (
+                      <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          size="sm"
+                          className="w-full"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            addToCart(painting);
+                          }}
+                        >
+                          {t("addToCart")}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </Link>
+                <div className="p-4">
+                  <Link href={`/gallery/${painting.id}`}>
+                    <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                      {painting.title}
+                    </h3>
+                  </Link>
+                  <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
+                  <p className="text-lg font-bold text-gray-900 mt-2">{formatPrice(painting.price)}</p>
+                </div>
+              </div>
+            ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Why Shop at Alternus Section */}
+      <section className="py-12 bg-muted/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-8">
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1">
+              Trust & Quality
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2">
+              {t("whyShopTitle")}
+            </h2>
+            <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+              {t("whyShopSubtitle")}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {/* Secure Shipping */}
+            <div className="bg-background rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <polyline points="3.29 7 12 12 20.71 7" />
+                  <line x1="12" x2="12" y1="22" y2="12" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold mb-1">{t("secureShipping")}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                {t("secureShippingDesc")}
+              </p>
+            </div>
+
+            {/* 100% Authentic */}
+            <div className="bg-background rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold mb-1">{t("authenticArt")}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                {t("authenticArtDesc")}
+              </p>
+            </div>
+
+            {/* 14-Day Returns */}
+            <div className="bg-background rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                  <path d="M3 3v5h5" />
+                  <path d="M12 7v5l4 2" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold mb-1">{t("easyReturns")}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                {t("easyReturnsDesc")}
+              </p>
+            </div>
+
+            {/* Secure Payment */}
+            <div className="bg-background rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <rect width="20" height="14" x="2" y="5" rx="2" />
+                  <line x1="2" x2="22" y1="10" y2="10" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold mb-1">{t("securePayment")}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                {t("securePaymentDesc")}
+              </p>
+            </div>
+
+            {/* Direct from Artist */}
+            <div className="bg-background rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                  <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                  <path d="M2 2l7.586 7.586" />
+                  <circle cx="11" cy="11" r="2" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold mb-1">{t("directFromArtist")}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                {t("directFromArtistDesc")}
+              </p>
+            </div>
+
+            {/* Expert Support */}
+            <div className="bg-background rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-center">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary">
+                  <path d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+                </svg>
+              </div>
+              <h3 className="text-sm font-semibold mb-1">{t("expertSupport")}</h3>
+              <p className="text-muted-foreground text-xs leading-relaxed line-clamp-2">
+                {t("expertSupportDesc")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 bg-muted/30 overflow-hidden">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-2">
+              Testimonials
+            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              What Collectors Say
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+              Discover why art enthusiasts around the world choose Alternus
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Testimonial 1 */}
+            <div className="bg-background rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow relative">
+              <div className="absolute -top-4 left-8">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-primary-foreground">
+                    <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.006z"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="pt-6">
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  &quot;The artwork I purchased exceeded all my expectations. The quality is outstanding
+                  and the customer service was impeccable from start to finish.&quot;
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    SM
+                  </div>
+                  <div>
+                    <p className="font-semibold">Sarah Mitchell</p>
+                    <p className="text-sm text-muted-foreground">Art Collector, London</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 2 */}
+            <div className="bg-background rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow relative">
+              <div className="absolute -top-4 left-8">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-primary-foreground">
+                    <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.006z"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="pt-6">
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  &quot;Alternus made buying art online feel personal and trustworthy.
+                  The piece arrived beautifully packaged and now sits proudly in my living room.&quot;
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    JK
+                  </div>
+                  <div>
+                    <p className="font-semibold">James Kowalski</p>
+                    <p className="text-sm text-muted-foreground">Interior Designer, New York</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Testimonial 3 */}
+            <div className="bg-background rounded-2xl p-8 shadow-sm hover:shadow-lg transition-shadow relative">
+              <div className="absolute -top-4 left-8">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="text-primary-foreground">
+                    <path d="M11.192 15.757c0-.88-.23-1.618-.69-2.217-.326-.412-.768-.683-1.327-.812-.55-.128-1.07-.137-1.54-.028-.16-.95.1-1.956.76-3.022.66-1.065 1.515-1.867 2.558-2.403L9.373 5c-.8.396-1.56.898-2.26 1.505-.71.607-1.34 1.305-1.9 2.094s-.98 1.68-1.25 2.69-.346 2.04-.217 3.1c.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l.002.003zm9.124 0c0-.88-.23-1.618-.69-2.217-.326-.42-.77-.692-1.327-.817-.56-.124-1.074-.13-1.54-.022-.16-.94.09-1.95.75-3.02.66-1.06 1.514-1.86 2.557-2.4L18.49 5c-.8.396-1.555.898-2.26 1.505-.708.607-1.34 1.305-1.894 2.094-.556.79-.97 1.68-1.24 2.69-.273 1-.345 2.04-.217 3.1.168 1.4.62 2.52 1.356 3.35.735.84 1.652 1.26 2.748 1.26.965 0 1.766-.29 2.4-.878.628-.576.94-1.365.94-2.368l-.007.006z"/>
+                  </svg>
+                </div>
+              </div>
+              <div className="pt-6">
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  &quot;As a first-time art buyer, I was nervous about investing. The Alternus team
+                  guided me through the process and helped me find the perfect piece.&quot;
+                </p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    AR
+                  </div>
+                  <div>
+                    <p className="font-semibold">Ana Rodriguez</p>
+                    <p className="text-sm text-muted-foreground">Entrepreneur, Madrid</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* About Preview Section - Apple Accordion Style */}
+      <section className="py-32 md:py-40 bg-white overflow-hidden">
+        <div className="container mx-auto px-6 md:px-12">
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="mb-16">
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[0.95] text-gray-900 mb-6">
+                Art that
+                <span className="block">speaks.</span>
+              </h2>
+              <p className="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-2xl">
+                A curated platform connecting exceptional artists with passionate collectors worldwide.
+              </p>
+            </div>
+
+            <AccordionSection />
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <TestimonialsSection />
+
+      {/* Order Tracking Section */}
+      <section className="py-24 bg-gradient-to-b from-white to-gray-50/80">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center">
+            {/* Header */}
+            <p className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-3">
+              Order Tracking
+            </p>
+            <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-3">
+              Track Your Order
+            </h2>
+            <p className="text-gray-500 text-sm mb-10 max-w-md mx-auto">
+              Enter your order number to check delivery status
+            </p>
+
+            {/* Order Tracking Input */}
+            <div className="max-w-md mx-auto">
+              <form onSubmit={handleTrackOrder}>
+                <div className="flex items-center gap-3 p-1.5 bg-gray-100/80 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200/50">
+                  <input
+                    type="text"
+                    placeholder="Enter order number (e.g., ALT-2024-1234)"
+                    className="flex-1 px-5 py-2.5 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none"
+                    value={orderNumber}
+                    onChange={(e) => {
+                      setOrderNumber(e.target.value);
+                      setTrackingError("");
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className="px-6 py-2.5 bg-white text-gray-700 text-sm font-medium rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:text-gray-900 transition-all duration-200"
+                  >
+                    Track
+                  </button>
+                </div>
+              </form>
+              {trackingError && (
+                <p className="text-xs text-red-500 mt-3 font-medium">{trackingError}</p>
+              )}
+              {!trackingError && (
+                <p className="text-[11px] text-gray-400 mt-4">
+                  Secure tracking with order confirmation.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Marquee Section */}
+      <div className="overflow-hidden bg-white border-t">
+        <div className="animate-marquee">
+          <span className="text-[256px] font-bold text-black mx-16 leading-none whitespace-nowrap">
+            Alternus
+          </span>
+          <span className="text-[256px] font-bold text-black mx-16 leading-none whitespace-nowrap">
+            Alternus
+          </span>
+          <span className="text-[256px] font-bold text-black mx-16 leading-none whitespace-nowrap">
+            Alternus
+          </span>
+          <span className="text-[256px] font-bold text-black mx-16 leading-none whitespace-nowrap">
+            Alternus
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
