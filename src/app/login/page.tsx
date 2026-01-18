@@ -56,26 +56,10 @@ export default function LoginPage() {
     setIsSubmitting(true);
     setErrors({});
 
-    // CEO direct login - bypass NextAuth for simplicity
-    const CEO_EMAIL = "lamialiuart@gmail.com";
-    const CEO_PASSWORD = "Alternus333#";
-
     const inputEmail = formData.email.trim().toLowerCase();
     const inputPassword = formData.password;
 
-    if (inputEmail === CEO_EMAIL.toLowerCase() && inputPassword === CEO_PASSWORD) {
-      // Set CEO session in localStorage
-      localStorage.setItem("userAuth", "true");
-      localStorage.setItem("userEmail", CEO_EMAIL);
-      localStorage.setItem("userName", "Lamiart CEO");
-      localStorage.setItem("userRole", "CEO");
-
-      // Redirect to home
-      window.location.href = "/";
-      return;
-    }
-
-    // For other users, try NextAuth
+    // Use NextAuth for all logins (including CEO)
     try {
       const result = await signIn("credentials", {
         email: inputEmail,
@@ -87,6 +71,15 @@ export default function LoginPage() {
         setErrors({ password: "Invalid email or password" });
         setIsSubmitting(false);
         return;
+      }
+
+      // Also set localStorage for UI state (header display)
+      const CEO_EMAIL = "lamialiuart@gmail.com";
+      if (inputEmail === CEO_EMAIL.toLowerCase()) {
+        localStorage.setItem("userAuth", "true");
+        localStorage.setItem("userEmail", CEO_EMAIL);
+        localStorage.setItem("userName", "Lamiart CEO");
+        localStorage.setItem("userRole", "CEO");
       }
 
       window.location.href = "/";

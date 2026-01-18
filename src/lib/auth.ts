@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import GitHub from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
+import { prisma } from "./prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -34,8 +35,27 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Case-insensitive email comparison
         if (email === CEO_EMAIL.toLowerCase() && password === CEO_PASSWORD) {
           console.log("CEO login successful")
+
+          // Find or create CEO user in database
+          let ceoUser = await prisma.user.findFirst({
+            where: { email: CEO_EMAIL },
+          })
+
+          if (!ceoUser) {
+            ceoUser = await prisma.user.create({
+              data: {
+                email: CEO_EMAIL,
+                firstName: "Lamiart",
+                lastName: "CEO",
+                role: "CEO",
+                emailVerified: true,
+              },
+            })
+            console.log("Created CEO user in database:", ceoUser.id)
+          }
+
           return {
-            id: "ceo-lamiart",
+            id: ceoUser.id,
             email: CEO_EMAIL,
             name: "Lamiart CEO",
             role: "CEO",
