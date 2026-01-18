@@ -1,15 +1,32 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage, useCart } from "@/components/providers";
-import { paintings } from "@/lib/paintings";
 import AccordionSection from "@/components/accordion-section";
 import TestimonialsSection from "@/components/testimonials-section";
+
+interface Artwork {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  image: string;
+  medium: string;
+  style: string;
+  category: string;
+  dimensions: string;
+  year: number;
+  available: boolean;
+  artist?: {
+    id: string;
+    displayName: string;
+  };
+}
 
 export default function Home() {
   const router = useRouter();
@@ -17,10 +34,31 @@ export default function Home() {
   const { addToCart } = useCart();
   const [orderNumber, setOrderNumber] = useState("");
   const [trackingError, setTrackingError] = useState("");
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [visiblePaintings, setVisiblePaintings] = useState(12);
-  const featuredPaintings = paintings.slice(0, visiblePaintings);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const heroScrollRef = useRef<HTMLDivElement>(null);
+
+  // Fetch artworks from API
+  useEffect(() => {
+    const fetchArtworks = async () => {
+      try {
+        const response = await fetch('/api/artworks?limit=50');
+        if (response.ok) {
+          const data = await response.json();
+          setArtworks(data.artworks || []);
+        }
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchArtworks();
+  }, []);
+
+  const featuredPaintings = artworks.slice(0, visiblePaintings);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -609,9 +647,9 @@ export default function Home() {
                 {t("featuredWorks")}
               </h2>
             </div>
-            {visiblePaintings < paintings.length && (
+            {visiblePaintings < artworks.length && (
               <button
-                onClick={() => setVisiblePaintings(prev => Math.min(prev + 4, paintings.length))}
+                onClick={() => setVisiblePaintings(prev => Math.min(prev + 4, artworks.length))}
                 className="mt-4 md:mt-0 group inline-flex items-center gap-2 px-6 py-2 bg-white border border-gray-300 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors"
               >
                 <span>See More</span>
@@ -654,56 +692,98 @@ export default function Home() {
           </div>
 
           {/* Grid Container */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featuredPaintings.map((painting) => (
-              <div
-                key={painting.id}
-                className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
-              >
-                <Link href={`/gallery/${painting.id}`}>
-                  <div className="relative aspect-[4/5] overflow-hidden bg-muted">
-                    <Image
-                      src={painting.image}
-                      alt={painting.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                    {!painting.available && (
-                      <div className="absolute top-3 right-3 z-10">
-                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-sm font-bold px-3 py-1 shadow-lg">
-                          {t("sold")}
-                        </Badge>
-                      </div>
-                    )}
-                    {/* Quick Add Button */}
-                    {painting.available && (
-                      <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Button
-                          size="sm"
-                          className="w-full"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            addToCart(painting);
-                          }}
-                        >
-                          {t("addToCart")}
-                        </Button>
-                      </div>
-                    )}
+          {isLoading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden animate-pulse">
+                  <div className="aspect-[4/5] bg-gray-200" />
+                  <div className="p-4 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                    <div className="h-3 bg-gray-200 rounded w-1/2" />
+                    <div className="h-5 bg-gray-200 rounded w-1/3" />
                   </div>
-                </Link>
-                <div className="p-4">
-                  <Link href={`/gallery/${painting.id}`}>
-                    <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
-                      {painting.title}
-                    </h3>
-                  </Link>
-                  <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
-                  <p className="text-lg font-bold text-gray-900 mt-2">{formatPrice(painting.price)}</p>
                 </div>
+              ))}
+            </div>
+          ) : featuredPaintings.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+              {featuredPaintings.map((painting) => (
+                <div
+                  key={painting.id}
+                  className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  <Link href={`/gallery/${painting.id}`}>
+                    <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                      <Image
+                        src={painting.image}
+                        alt={painting.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                      {!painting.available && (
+                        <div className="absolute top-3 right-3 z-10">
+                          <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-sm font-bold px-3 py-1 shadow-lg">
+                            {t("sold")}
+                          </Badge>
+                        </div>
+                      )}
+                      {/* Quick Add Button */}
+                      {painting.available && (
+                        <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button
+                            size="sm"
+                            className="w-full"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              addToCart({
+                                id: painting.id,
+                                title: painting.title,
+                                price: painting.price,
+                                image: painting.image,
+                                description: painting.description,
+                                dimensions: painting.dimensions,
+                                medium: painting.medium,
+                                year: painting.year,
+                                category: painting.category,
+                                style: painting.style,
+                                available: painting.available,
+                              });
+                            }}
+                          >
+                            {t("addToCart")}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                  <div className="p-4">
+                    <Link href={`/gallery/${painting.id}`}>
+                      <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                        {painting.title}
+                      </h3>
+                    </Link>
+                    <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
+                    <p className="text-lg font-bold text-gray-900 mt-2">{formatPrice(painting.price)}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
               </div>
-            ))}
-          </div>
+              <h3 className="text-xl font-semibold mb-2">No artworks yet</h3>
+              <p className="text-muted-foreground mb-6">Check back soon for new artwork additions!</p>
+              <Button asChild>
+                <Link href="/gallery">Browse Gallery</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -759,7 +839,7 @@ export default function Home() {
               className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
-            {paintings.map((painting) => (
+            {artworks.map((painting) => (
               <div
                 key={painting.id}
                 className="group flex-shrink-0 w-[200px] md:w-[260px] snap-start bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
@@ -787,7 +867,19 @@ export default function Home() {
                           className="w-full"
                           onClick={(e) => {
                             e.preventDefault();
-                            addToCart(painting);
+                            addToCart({
+                              id: painting.id,
+                              title: painting.title,
+                              price: painting.price,
+                              image: painting.image,
+                              description: painting.description,
+                              dimensions: painting.dimensions,
+                              medium: painting.medium,
+                              year: painting.year,
+                              category: painting.category,
+                              style: painting.style,
+                              available: painting.available,
+                            });
                           }}
                         >
                           {t("addToCart")}
