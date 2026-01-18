@@ -46,8 +46,23 @@ export function Header() {
   const { itemCount, setIsOpen: setCartOpen } = useCart();
   const { wishlistCount } = useWishlist();
   const { data: session, status } = useSession();
-  const isLoggedIn = status === "authenticated";
-  const user = session?.user;
+
+  // Check both NextAuth session and localStorage for CEO login
+  const [localUser, setLocalUser] = useState<{ name: string; email: string; role: string } | null>(null);
+
+  useEffect(() => {
+    const userAuth = localStorage.getItem("userAuth");
+    if (userAuth === "true") {
+      setLocalUser({
+        name: localStorage.getItem("userName") || "User",
+        email: localStorage.getItem("userEmail") || "",
+        role: localStorage.getItem("userRole") || "USER",
+      });
+    }
+  }, []);
+
+  const isLoggedIn = status === "authenticated" || localUser !== null;
+  const user = session?.user || localUser;
 
   // Mock notifications data
   const notifications = [
@@ -736,6 +751,12 @@ export function Header() {
               type="button"
               variant="destructive"
               onClick={() => {
+                // Clear localStorage
+                localStorage.removeItem("userAuth");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("userName");
+                localStorage.removeItem("userRole");
+                // Also sign out from NextAuth
                 signOut({ callbackUrl: "/" });
                 setShowLogoutConfirm(false);
               }}
