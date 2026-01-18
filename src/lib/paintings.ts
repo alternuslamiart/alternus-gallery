@@ -19,15 +19,38 @@ export interface Painting {
 
 export const paintings: Painting[] = [];
 
-export const categories = Array.from(new Set(paintings.map((p) => p.category)));
+// Static categories for artwork types
+export const categories = [
+  "Painting",
+  "Drawing",
+  "Sculpture",
+  "Photography",
+  "Digital Art",
+  "Mixed Media",
+  "Prints",
+  "Textile Art",
+  "Ceramics",
+  "Glass Art",
+];
 
-// Get unique styles and sort with Baroque first
-const uniqueStyles = Array.from(new Set(paintings.map((p) => p.style)));
-export const styles = uniqueStyles.sort((a, b) => {
-  if (a === "Baroque") return -1;
-  if (b === "Baroque") return 1;
-  return a.localeCompare(b);
-});
+// Static styles for artistic styles
+export const styles = [
+  "Abstract",
+  "Contemporary",
+  "Impressionism",
+  "Realism",
+  "Surrealism",
+  "Minimalism",
+  "Expressionism",
+  "Pop Art",
+  "Baroque",
+  "Landscape",
+  "Portrait",
+  "Still Life",
+  "Urban",
+  "Nature",
+  "Figurative",
+];
 
 export function getPaintingById(id: string): Painting | undefined {
   return paintings.find((p) => p.id === id);
