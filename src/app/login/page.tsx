@@ -59,18 +59,20 @@ export default function LoginPage() {
 
     try {
       const result = await signIn("credentials", {
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
         redirect: false,
       });
 
-      if (result?.error) {
+      console.log("SignIn result:", result);
+
+      if (result?.error || !result?.ok) {
         setErrors({ ...errors, password: "Invalid email or password" });
         setIsSubmitting(false);
         return;
       }
 
-      // Redirect to home after login
+      // Success - redirect to home
       window.location.href = "/";
     } catch (error) {
       console.error("Login error:", error);
@@ -174,96 +176,21 @@ export default function LoginPage() {
                 {errors.password && (
                   <p className="text-xs text-red-500">{errors.password}</p>
                 )}
-                {/* Password Requirements Indicator */}
-                {formData.password && (
-                  <div className="space-y-1 pt-1">
-                    <p className="text-xs font-medium text-muted-foreground">Password must contain:</p>
-                    <div className="grid grid-cols-2 gap-1">
-                      <div className="flex items-center gap-1.5">
-                        {formData.password.length >= 8 ? (
-                          <svg className="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        )}
-                        <span className={`text-xs ${formData.password.length >= 8 ? "text-green-600" : "text-gray-500"}`}>
-                          8+ characters
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {/[A-Z]/.test(formData.password) ? (
-                          <svg className="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        )}
-                        <span className={`text-xs ${/[A-Z]/.test(formData.password) ? "text-green-600" : "text-gray-500"}`}>
-                          Uppercase letter
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {/[0-9]/.test(formData.password) ? (
-                          <svg className="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        )}
-                        <span className={`text-xs ${/[0-9]/.test(formData.password) ? "text-green-600" : "text-gray-500"}`}>
-                          Number
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        {/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password) ? (
-                          <svg className="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                        ) : (
-                          <svg className="w-3 h-3 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        )}
-                        <span className={`text-xs ${/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password) ? "text-green-600" : "text-gray-500"}`}>
-                          Symbol (!@#$...)
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
               </div>
 
               {/* Remember Me */}
-              <div className="space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="remember"
-                    checked={rememberMe}
-                    onCheckedChange={(checked) => {
-                      setRememberMe(checked as boolean);
-                      if (checked && errors.rememberMe) {
-                        setErrors({ ...errors, rememberMe: "" });
-                      }
-                    }}
-                    className={errors.rememberMe ? "border-red-500" : ""}
-                  />
-                  <label
-                    htmlFor="remember"
-                    className="text-sm cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Remember me for 30 days *
-                  </label>
-                </div>
-                {errors.rememberMe && (
-                  <p className="text-xs text-red-500">{errors.rememberMe}</p>
-                )}
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="remember"
+                  checked={rememberMe}
+                  onCheckedChange={(checked) => setRememberMe(checked as boolean)}
+                />
+                <label
+                  htmlFor="remember"
+                  className="text-sm cursor-pointer leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Remember me for 30 days
+                </label>
               </div>
 
               {/* Submit Button */}

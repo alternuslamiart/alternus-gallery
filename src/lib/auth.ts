@@ -26,10 +26,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const CEO_EMAIL = "lamialiuart@gmail.com"
         const CEO_PASSWORD = "Alternus333#"
 
-        const email = credentials?.email as string
+        const email = (credentials?.email as string)?.trim()?.toLowerCase()
         const password = credentials?.password as string
 
-        if (email === CEO_EMAIL && password === CEO_PASSWORD) {
+        console.log("Login attempt for email:", email)
+
+        // Case-insensitive email comparison
+        if (email === CEO_EMAIL.toLowerCase() && password === CEO_PASSWORD) {
+          console.log("CEO login successful")
           return {
             id: "ceo-lamiart",
             email: CEO_EMAIL,
@@ -37,6 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: "CEO",
           }
         }
+        console.log("Login failed - invalid credentials")
         return null
       },
     }),
