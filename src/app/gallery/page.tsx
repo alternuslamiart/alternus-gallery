@@ -7,7 +7,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage, useCart, useWishlist } from "@/components/providers";
-import { categories, styles, type Painting } from "@/lib/paintings";
+import { Painting } from "@/lib/paintings";
 import { FilterSidebar } from "@/components/gallery/filter-sidebar";
 import { MobileFilterDrawer } from "@/components/gallery/mobile-filter-drawer";
 
@@ -23,52 +23,79 @@ export default function GalleryPage() {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
 
-  // Fetch real artworks from database
+  // Fetch paintings from database
   const [paintings, setPaintings] = useState<Painting[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [styles, setStyles] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchArtworks = async () => {
+    async function fetchArtworks() {
       try {
+        setIsLoading(true);
         const response = await fetch('/api/artworks?limit=100');
-        if (response.ok) {
-          const data = await response.json();
-          // Transform API response to Painting format
-          const artworks: Painting[] = data.artworks.map((artwork: {
+
+        if (!response.ok) {
+          console.error('API error:', response.status);
+          setPaintings([]);
+          setIsLoading(false);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (data.artworks && Array.isArray(data.artworks)) {
+          const mappedPaintings: Painting[] = data.artworks.map((artwork: {
             id: string;
             title: string;
-            image: string;
-            price: number;
-            medium: string;
-            dimensions: string;
-            year: number;
-            category: string;
-            style: string;
-            available: boolean;
             description?: string;
-            artist?: { displayName: string };
+            price: number;
+            dimensions?: string;
+            medium?: string;
+            year?: number;
+            category?: string;
+            style?: string;
+            image: string;
+            available: boolean;
+            isPreOrder?: boolean;
+            preOrderDate?: string;
+            preOrderDiscount?: number;
+            artist?: { id: string; displayName: string };
           }) => ({
             id: artwork.id,
             title: artwork.title,
-            image: artwork.image,
-            price: artwork.price,
-            medium: artwork.medium || 'Oil on Canvas',
-            dimensions: artwork.dimensions || '',
-            year: artwork.year || new Date().getFullYear(),
-            category: artwork.category || 'Abstract',
-            style: artwork.style || 'Contemporary',
-            available: artwork.available,
             description: artwork.description || '',
-            artist: artwork.artist?.displayName || 'Lamiart',
+            price: artwork.price,
+            dimensions: artwork.dimensions || '',
+            medium: artwork.medium || '',
+            year: artwork.year || new Date().getFullYear(),
+            category: artwork.category || 'Painting',
+            style: artwork.style || 'Contemporary',
+            image: artwork.image,
+            available: artwork.available,
+            isPreOrder: artwork.isPreOrder,
+            preOrderReleaseDate: artwork.preOrderDate,
+            preOrderDiscount: artwork.preOrderDiscount,
+            artistId: artwork.artist?.id,
+            artist: artwork.artist?.displayName,
           }));
-          setPaintings(artworks);
+
+          setPaintings(mappedPaintings);
+
+          const uniqueCategories = Array.from(new Set(mappedPaintings.map(p => p.category).filter(Boolean)));
+          const uniqueStyles = Array.from(new Set(mappedPaintings.map(p => p.style).filter(Boolean)));
+          setCategories(uniqueCategories);
+          setStyles(uniqueStyles);
+        } else {
+          setPaintings([]);
         }
       } catch (error) {
         console.error('Error fetching artworks:', error);
+        setPaintings([]);
       } finally {
         setIsLoading(false);
       }
-    };
+    }
 
     fetchArtworks();
   }, []);

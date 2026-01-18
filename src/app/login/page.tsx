@@ -106,7 +106,7 @@ export default function LoginPage() {
   };
 
   const handleOAuthSignIn = (provider: "google" | "github") => {
-    signIn(provider, { callbackUrl: "/dashboard" });
+    signIn(provider, { callbackUrl: "/" });
   };
 
   const handleForgotPassword = async (e: React.FormEvent) => {

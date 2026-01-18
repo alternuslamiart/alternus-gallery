@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { sendVerificationEmail } from '@/lib/email';
 
 // Store verification codes temporarily (in production, use Redis or database)
-const verificationCodes = new Map<string, { code: string; expires: Date }>();
+const globalForVerification = globalThis as unknown as {
+  verificationCodes: Map<string, { code: string; expires: Date }>;
+};
+
+if (!globalForVerification.verificationCodes) {
+  globalForVerification.verificationCodes = new Map();
+}
+
+const verificationCodes = globalForVerification.verificationCodes;
 
 // POST - Send verification code
 export async function POST(request: NextRequest) {
@@ -17,19 +23,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if email is already registered
     if (action === 'send') {
-      const existingUser = await prisma.user.findUnique({
-        where: { email },
-      });
-
-      if (existingUser) {
-        return NextResponse.json(
-          { error: 'This email is already registered' },
-          { status: 400 }
-        );
-      }
-
       // Generate 6-digit code
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const expires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
@@ -37,25 +31,14 @@ export async function POST(request: NextRequest) {
       // Store the code
       verificationCodes.set(email, { code, expires });
 
-      // Check if SMTP is configured
-      const smtpConfigured = process.env.SMTP_USER && process.env.SMTP_PASS;
+      // Log the code for development
+      console.log(`[Verification] Code for ${email}: ${code}`);
 
-      if (smtpConfigured) {
-        // Send verification email
-        const sent = await sendVerificationEmail(email, code);
-        if (!sent) {
-          console.log(`Email failed, verification code for ${email}: ${code}`);
-        }
-      } else {
-        // SMTP not configured - log the code
-        console.log(`[DEV MODE] Verification code for ${email}: ${code}`);
-      }
-
+      // For now, always return the devCode since SMTP is not configured
       return NextResponse.json({
         success: true,
-        message: smtpConfigured ? 'Verification code sent to your email' : 'Verification code generated',
-        // Return code if SMTP is not configured (development mode)
-        ...(!smtpConfigured && { devCode: code }),
+        message: 'Verification code generated',
+        devCode: code,
       });
     }
 

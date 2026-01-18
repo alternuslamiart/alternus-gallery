@@ -11,6 +11,7 @@ export default function ApplyPage() {
     phone: "",
     location: "",
     passportNumber: "",
+    memberType: "" as "" | "seller" | "buyer" | "collector",
     website: "",
     instagram: "",
     linkedin: "",
@@ -259,6 +260,81 @@ export default function ApplyPage() {
                     className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                   />
                   <p className="text-xs text-muted-foreground mt-1">Required for identity verification</p>
+                </div>
+              </div>
+
+              {/* Member Type Selection */}
+              <div className="mt-6">
+                <label className="block text-sm font-medium mb-3">
+                  I am a <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-3 gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, memberType: "seller" })}
+                    className={`p-4 rounded-xl border-2 transition-all text-center ${
+                      formData.memberType === "seller"
+                        ? "border-primary bg-primary/5"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className={`w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center ${
+                      formData.memberType === "seller" ? "bg-primary/10" : "bg-gray-100"
+                    }`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={formData.memberType === "seller" ? "text-primary" : "text-gray-500"}>
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                      </svg>
+                    </div>
+                    <p className={`font-medium ${formData.memberType === "seller" ? "text-primary" : ""}`}>Seller</p>
+                    <p className="text-xs text-muted-foreground mt-1">I want to sell my artwork</p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, memberType: "buyer" })}
+                    className={`p-4 rounded-xl border-2 transition-all text-center ${
+                      formData.memberType === "buyer"
+                        ? "border-primary bg-primary/5"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className={`w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center ${
+                      formData.memberType === "buyer" ? "bg-primary/10" : "bg-gray-100"
+                    }`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={formData.memberType === "buyer" ? "text-primary" : "text-gray-500"}>
+                        <circle cx="9" cy="21" r="1" />
+                        <circle cx="20" cy="21" r="1" />
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+                      </svg>
+                    </div>
+                    <p className={`font-medium ${formData.memberType === "buyer" ? "text-primary" : ""}`}>Buyer</p>
+                    <p className="text-xs text-muted-foreground mt-1">I want to buy artwork</p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, memberType: "collector" })}
+                    className={`p-4 rounded-xl border-2 transition-all text-center ${
+                      formData.memberType === "collector"
+                        ? "border-primary bg-primary/5"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <div className={`w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center ${
+                      formData.memberType === "collector" ? "bg-primary/10" : "bg-gray-100"
+                    }`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={formData.memberType === "collector" ? "text-primary" : "text-gray-500"}>
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                      </svg>
+                    </div>
+                    <p className={`font-medium ${formData.memberType === "collector" ? "text-primary" : ""}`}>Collector</p>
+                    <p className="text-xs text-muted-foreground mt-1">I want to collect art</p>
+                  </button>
                 </div>
               </div>
             </div>

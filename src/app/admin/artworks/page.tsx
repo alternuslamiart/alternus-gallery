@@ -22,84 +22,118 @@ interface Artwork {
   status: "pending" | "approved" | "rejected" | "sold";
 }
 
+interface AddArtworkForm {
+  title: string;
+  description: string;
+  price: string;
+  primaryImage: string;
+  medium: string;
+  style: string;
+  category: string;
+  dimensions: string;
+  yearCreated: string;
+}
+
 export default function ArtworksPage() {
-  const [artworks, setArtworks] = useState<Artwork[]>([
-    {
-      id: "AW-001",
-      title: "Sunset Dreams",
-      artist: "Marco Rossi",
-      artistId: "ART-001",
-      price: 12500,
-      commission: 5000,
-      artistEarning: 7500,
-      image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600",
-      medium: "Oil on Canvas",
-      style: "Abstract",
-      dimensions: "100 x 150 cm",
-      uploadDate: "2024-01-15",
-      status: "pending",
-    },
-    {
-      id: "AW-002",
-      title: "Urban Symphony",
-      artist: "Sophie Chen",
-      artistId: "ART-002",
-      price: 8300,
-      commission: 3320,
-      artistEarning: 4980,
-      image: "https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=600",
-      medium: "Digital Art",
-      style: "Contemporary",
-      dimensions: "80 x 120 cm",
-      uploadDate: "2024-01-14",
-      status: "pending",
-    },
-    {
-      id: "AW-003",
-      title: "Desert Mirage",
-      artist: "Ahmed Hassan",
-      artistId: "ART-003",
-      price: 15700,
-      commission: 6280,
-      artistEarning: 9420,
-      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600",
-      medium: "Mixed Media",
-      style: "Modern",
-      dimensions: "120 x 180 cm",
-      uploadDate: "2024-01-13",
-      status: "approved",
-    },
-    {
-      id: "AW-004",
-      title: "Ocean Whispers",
-      artist: "Maria Garcia",
-      artistId: "ART-004",
-      price: 22400,
-      commission: 8960,
-      artistEarning: 13440,
-      image: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600",
-      medium: "Watercolor",
-      style: "Impressionism",
-      dimensions: "90 x 120 cm",
-      uploadDate: "2024-01-12",
-      status: "sold",
-    },
-    {
-      id: "AW-005",
-      title: "Midnight Reflections",
-      artist: "Yuki Tanaka",
-      artistId: "ART-005",
-      price: 18900,
-      commission: 7560,
-      artistEarning: 11340,
-      image: "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=600",
-      medium: "Acrylic on Canvas",
-      style: "Abstract",
-      dimensions: "110 x 140 cm",
-      uploadDate: "2024-01-11",
-      status: "pending",
-    },
-  ]);
+  const [artworks, setArtworks] = useState<Artwork[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<AddArtworkForm>({
+    title: "",
+    description: "",
+    price: "",
+    primaryImage: "",
+    medium: "",
+    style: "",
+    category: "Painting",
+    dimensions: "",
+    yearCreated: new Date().getFullYear().toString(),
+  });
+
+  // Fetch artworks from database
+  useEffect(() => {
+    async function fetchArtworks() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/admin/artworks');
+        const data = await response.json();
+
+        if (data.artworks) {
+          const mappedArtworks: Artwork[] = data.artworks.map((artwork: {
+            id: string;
+            title: string;
+            price: number;
+            primaryImage: string;
+            medium?: string;
+            style?: string;
+            dimensions?: string;
+            status: string;
+            createdAt: string;
+            artist?: { id: string; displayName: string };
+          }) => ({
+            id: artwork.id,
+            title: artwork.title,
+            artist: artwork.artist?.displayName || 'Unknown',
+            artistId: artwork.artist?.id || '',
+            price: artwork.price,
+            commission: Math.round(artwork.price * 0.4),
+            artistEarning: Math.round(artwork.price * 0.6),
+            image: artwork.primaryImage,
+            medium: artwork.medium || '',
+            style: artwork.style || '',
+            dimensions: artwork.dimensions || '',
+            uploadDate: new Date(artwork.createdAt).toISOString().split('T')[0],
+            status: artwork.status.toLowerCase() as "pending" | "approved" | "rejected" | "sold",
+          }));
+          setArtworks(mappedArtworks);
+        }
+      } catch (error) {
+        console.error('Error fetching artworks:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArtworks();
+  }, []);
+
+  const handleAddArtwork = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/artworks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description,
+          price: parseFloat(formData.price),
+          primaryImage: formData.primaryImage,
+          medium: formData.medium,
+          style: formData.style,
+          category: formData.category,
+          dimensions: formData.dimensions,
+          yearCreated: formData.yearCreated,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Refresh the artworks list
+        window.location.reload();
+      } else {
+        alert(data.error || 'Failed to add artwork');
+      }
+    } catch (error) {
+      console.error('Error adding artwork:', error);
+      alert('Failed to add artwork');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "rejected" | "sold">("all");
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -275,10 +309,171 @@ export default function ArtworksPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-black mb-2">Artwork Management</h2>
-          <p className="text-zinc-600">Review and manage all artwork submissions</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-black mb-2">Artwork Management</h2>
+            <p className="text-zinc-600">Review and manage all artwork submissions</p>
+          </div>
+          <Button
+            onClick={() => setShowAddModal(true)}
+            className="bg-black hover:bg-zinc-800"
+          >
+            + Add Artwork
+          </Button>
         </div>
+
+        {/* Add Artwork Modal */}
+        {showAddModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-zinc-200">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold">Add New Artwork</h3>
+                  <button
+                    onClick={() => setShowAddModal(false)}
+                    className="p-2 hover:bg-zinc-100 rounded-lg"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleAddArtwork} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    placeholder="Artwork title"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">Description</label>
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    rows={3}
+                    placeholder="Describe the artwork..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Price (€) *</label>
+                    <input
+                      type="number"
+                      required
+                      min="0"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                      className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="1000"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Year Created</label>
+                    <input
+                      type="number"
+                      value={formData.yearCreated}
+                      onChange={(e) => setFormData({ ...formData, yearCreated: e.target.value })}
+                      className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="2024"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">Image URL *</label>
+                  <input
+                    type="url"
+                    required
+                    value={formData.primaryImage}
+                    onChange={(e) => setFormData({ ...formData, primaryImage: e.target.value })}
+                    className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                  <p className="text-xs text-zinc-500 mt-1">Upload image to a hosting service and paste the URL here</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Medium</label>
+                    <input
+                      type="text"
+                      value={formData.medium}
+                      onChange={(e) => setFormData({ ...formData, medium: e.target.value })}
+                      className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="Oil on canvas"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Dimensions</label>
+                    <input
+                      type="text"
+                      value={formData.dimensions}
+                      onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
+                      className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="100x80 cm"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Category</label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                    >
+                      <option value="Painting">Painting</option>
+                      <option value="Photography">Photography</option>
+                      <option value="Sculpture">Sculpture</option>
+                      <option value="Drawing">Drawing</option>
+                      <option value="Mixed Media">Mixed Media</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">Style</label>
+                    <input
+                      type="text"
+                      value={formData.style}
+                      onChange={(e) => setFormData({ ...formData, style: e.target.value })}
+                      className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                      placeholder="Abstract, Contemporary, etc."
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setShowAddModal(false)}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-black hover:bg-zinc-800"
+                  >
+                    {isSubmitting ? "Adding..." : "Add Artwork"}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
@@ -346,6 +541,27 @@ export default function ArtworksPage() {
         </div>
 
         {/* Artworks Grid */}
+        {isLoading ? (
+          <div className="bg-white rounded-2xl border border-zinc-200 p-12 text-center">
+            <div className="animate-spin w-12 h-12 border-4 border-zinc-200 border-t-black rounded-full mx-auto mb-4"></div>
+            <p className="text-zinc-600">Loading artworks...</p>
+          </div>
+        ) : filteredArtworks.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-zinc-200 p-12 text-center">
+            <div className="w-16 h-16 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-zinc-400">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                <circle cx="9" cy="9" r="2" />
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-black mb-2">No artworks yet</h3>
+            <p className="text-zinc-600 mb-4">Start by adding your first artwork</p>
+            <Button onClick={() => setShowAddModal(true)} className="bg-black hover:bg-zinc-800">
+              + Add Artwork
+            </Button>
+          </div>
+        ) : (
         <div className="grid lg:grid-cols-3 gap-6">
           {filteredArtworks.map((artwork) => (
             <div
@@ -434,11 +650,6 @@ export default function ArtworksPage() {
             </div>
           ))}
         </div>
-
-        {filteredArtworks.length === 0 && (
-          <div className="bg-white rounded-2xl border border-zinc-200 p-12 text-center">
-            <p className="text-zinc-600">No artworks found in this category</p>
-          </div>
         )}
       </div>
     </div>

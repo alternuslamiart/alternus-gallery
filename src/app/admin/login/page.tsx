@@ -34,7 +34,7 @@ export default function AdminLogin() {
     setTimeout(() => {
       // Admin credentials (in production, this should be server-side)
       const ADMIN_EMAIL = "admin@alternus.com";
-      const ADMIN_PASSWORD = "admin123";
+      const ADMIN_PASSWORD = "alternus123#";
 
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         // Set admin session
@@ -94,7 +94,7 @@ export default function AdminLogin() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@alternus.com"
+                    placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -172,20 +172,6 @@ export default function AdminLogin() {
                 )}
               </Button>
 
-              {/* Demo Credentials */}
-              <div className="mt-6 pt-6 border-t">
-                <p className="text-xs text-muted-foreground text-center mb-3">
-                  Demo Credentials:
-                </p>
-                <div className="bg-muted rounded-lg p-3 space-y-1">
-                  <p className="text-xs text-foreground">
-                    <span className="font-semibold">Email:</span> admin@alternus.com
-                  </p>
-                  <p className="text-xs text-foreground">
-                    <span className="font-semibold">Password:</span> admin123
-                  </p>
-                </div>
-              </div>
             </form>
           </CardContent>
         </Card>

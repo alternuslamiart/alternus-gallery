@@ -1,7 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
-import { sendWelcomeEmail } from '@/lib/email';
+
+// In-memory user storage (temporary - use database in production)
+interface User {
+  id: string;
+  email: string;
+  passwordHash: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  country?: string;
+  role: string;
+  emailVerified: boolean;
+  createdAt: string;
+}
+
+const globalForUsers = globalThis as unknown as {
+  users: Map<string, User>;
+};
+
+if (!globalForUsers.users) {
+  globalForUsers.users = new Map();
+}
+
+const users = globalForUsers.users;
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,11 +38,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    if (existingUser) {
+    if (users.has(email)) {
       return NextResponse.json(
         { error: 'This email is already registered' },
         { status: 400 }
@@ -38,37 +56,23 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create user with optional address
-    const user = await prisma.user.create({
-      data: {
-        email,
-        passwordHash,
-        firstName,
-        lastName,
-        phone: phone || null,
-        role: 'CUSTOMER',
-        emailVerified: true, // Already verified via code
-        isActive: true,
-        // Create default address if country is provided
-        ...(country && {
-          addresses: {
-            create: {
-              firstName,
-              lastName,
-              address: '', // Will be filled later
-              city: '', // Will be filled later
-              postalCode: '', // Will be filled later
-              country,
-              phone: phone || null,
-              isDefault: true,
-            },
-          },
-        }),
-      },
-    });
+    // Create user
+    const user: User = {
+      id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      email,
+      passwordHash,
+      firstName,
+      lastName,
+      phone: phone || undefined,
+      country: country || undefined,
+      role: 'CUSTOMER',
+      emailVerified: true,
+      createdAt: new Date().toISOString(),
+    };
 
-    // Send welcome email (async, don't wait)
-    sendWelcomeEmail(email, firstName).catch(console.error);
+    users.set(email, user);
+
+    console.log(`[Register] New user created: ${email}`);
 
     return NextResponse.json({
       success: true,

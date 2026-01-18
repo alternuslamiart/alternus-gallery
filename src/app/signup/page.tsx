@@ -103,7 +103,7 @@ export default function SignUpPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleOAuthSignIn = (provider: "google" | "github") => {
-    signIn(provider, { callbackUrl: "/dashboard" });
+    signIn(provider, { callbackUrl: "/" });
   };
 
   // Email verification states

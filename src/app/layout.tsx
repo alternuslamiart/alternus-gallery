@@ -9,6 +9,7 @@ import { CartModal } from "@/components/cart-modal";
 import { ArtLoverModal } from "@/components/art-lover-modal";
 import { CookieModal } from "@/components/cookie-modal";
 import { AIChat } from "@/components/ai-chat";
+import { MobileNav } from "@/components/mobile-nav";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,6 +31,9 @@ const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Alternus | Art Gallery",
   description: "Exclusive art gallery - Discover and purchase unique artworks",
+  icons: {
+    icon: "/icon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -44,12 +48,13 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 pb-20 md:pb-0">{children}</main>
           <Footer />
           <CartModal />
           <CookieModal />
           <ArtLoverModal />
           <AIChat />
+          <MobileNav />
         </Providers>
       </body>
     </html>
