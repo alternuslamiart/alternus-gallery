@@ -394,24 +394,46 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   const compareCount = compareList.length;
 
-  // User Artworks State
+  // User Artworks State - stored per user
   const [userArtworks, setUserArtworks] = useState<Painting[]>([]);
 
-  // Load user artworks from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem("userArtworks");
-    if (saved) {
-      try {
-        setUserArtworks(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load user artworks", e);
-      }
-    }
-  }, []);
+  // Get user-specific storage key (works for both localStorage auth and NextAuth session)
+  const getUserArtworksKey = () => {
+    // Check localStorage first (for CEO and local auth)
+    const localEmail = localStorage.getItem("userEmail");
+    if (localEmail) return `userArtworks_${localEmail}`;
+    // Fallback to user context (for OAuth users)
+    if (user?.email) return `userArtworks_${user.email}`;
+    return null;
+  };
 
-  // Save user artworks to localStorage
+  // Load user artworks from localStorage (user-specific)
   useEffect(() => {
-    localStorage.setItem("userArtworks", JSON.stringify(userArtworks));
+    const key = getUserArtworksKey();
+    if (key) {
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          setUserArtworks(JSON.parse(saved));
+        } catch (e) {
+          console.error("Failed to load user artworks", e);
+          setUserArtworks([]);
+        }
+      } else {
+        setUserArtworks([]);
+      }
+    } else {
+      // No user logged in, clear artworks
+      setUserArtworks([]);
+    }
+  }, [user]); // Re-run when user changes
+
+  // Save user artworks to localStorage (user-specific)
+  useEffect(() => {
+    const key = getUserArtworksKey();
+    if (key && userArtworks.length > 0) {
+      localStorage.setItem(key, JSON.stringify(userArtworks));
+    }
   }, [userArtworks]);
 
   const addUserArtwork = (artwork: Painting) => {
