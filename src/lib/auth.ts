@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import GitHub from "next-auth/providers/github"
+import Credentials from "next-auth/providers/credentials"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -13,6 +14,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
+    }),
+    Credentials({
+      name: "CEO Login",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        // CEO direct login - no verification needed
+        const CEO_EMAIL = "lamialiuart@gmail.com"
+        const CEO_PASSWORD = "Alternus333#"
+
+        if (
+          credentials?.email === CEO_EMAIL &&
+          credentials?.password === CEO_PASSWORD
+        ) {
+          return {
+            id: "ceo-lamiart",
+            email: CEO_EMAIL,
+            name: "Lamiart CEO",
+            role: "CEO",
+          }
+        }
+        return null
+      },
     }),
   ],
   session: {
@@ -27,7 +53,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
-        token.role = "CUSTOMER"
+        // Check if CEO login
+        if ((user as { role?: string }).role === "CEO") {
+          token.role = "CEO"
+        } else {
+          token.role = "CUSTOMER"
+        }
       }
       if (account) {
         token.accessToken = account.access_token
