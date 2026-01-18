@@ -330,67 +330,21 @@ function DashboardContent() {
   const soldWorks = allArtworks.filter((p) => !p.available).length;
   const totalRevenue = allArtworks.filter((p) => !p.available).reduce((sum, p) => sum + p.price, 0);
 
-  // Mock orders data with full details
-  const recentOrders = [
-    {
-      id: "ORD-001",
-      artwork: "Dawn of Hope",
-      artworkImage: "https://images.unsplash.com/photo-1549490349-8643362247b5?w=200&q=80",
-      buyer: "Marie L.",
-      buyerEmail: "marie.l@email.com",
-      buyerAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
-      price: 2400,
-      status: "pending",
-      date: "2024-12-28",
-      shippingAddress: "123 Art Street, New York, NY 10001, USA",
-      services: [
-        { task: "Confirm order receipt", completed: false },
-        { task: "Prepare artwork for shipping", completed: false },
-        { task: "Package with protective materials", completed: false },
-        { task: "Schedule courier pickup", completed: false },
-        { task: "Upload tracking number", completed: false },
-      ],
-    },
-    {
-      id: "ORD-002",
-      artwork: "Autumn Dreams",
-      artworkImage: "https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=200&q=80",
-      buyer: "Thomas K.",
-      buyerEmail: "thomas.k@email.com",
-      buyerAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
-      price: 1800,
-      status: "processing",
-      date: "2024-12-27",
-      shippingAddress: "456 Gallery Ave, Los Angeles, CA 90001, USA",
-      services: [
-        { task: "Confirm order receipt", completed: true },
-        { task: "Prepare artwork for shipping", completed: true },
-        { task: "Package with protective materials", completed: false },
-        { task: "Schedule courier pickup", completed: false },
-        { task: "Upload tracking number", completed: false },
-      ],
-    },
-    {
-      id: "ORD-003",
-      artwork: "Mediterranean Light",
-      artworkImage: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=200&q=80",
-      buyer: "Sophie M.",
-      buyerEmail: "sophie.m@email.com",
-      buyerAvatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
-      price: 3200,
-      status: "shipped",
-      date: "2024-12-25",
-      shippingAddress: "789 Canvas Blvd, Miami, FL 33101, USA",
-      trackingNumber: "TRK123456789",
-      services: [
-        { task: "Confirm order receipt", completed: true },
-        { task: "Prepare artwork for shipping", completed: true },
-        { task: "Package with protective materials", completed: true },
-        { task: "Schedule courier pickup", completed: true },
-        { task: "Upload tracking number", completed: true },
-      ],
-    },
-  ];
+  // Orders data - empty for now (will be loaded from API)
+  const recentOrders: Array<{
+    id: string;
+    artwork: string;
+    artworkImage: string;
+    buyer: string;
+    buyerEmail: string;
+    buyerAvatar: string;
+    price: number;
+    status: string;
+    date: string;
+    shippingAddress: string;
+    trackingNumber?: string;
+    services: Array<{ task: string; completed: boolean }>;
+  }> = [];
 
   const [selectedOrder, setSelectedOrder] = useState<typeof recentOrders[0] | null>(null);
   const [editingArtwork, setEditingArtwork] = useState<Painting | null>(null);
@@ -581,39 +535,56 @@ function DashboardContent() {
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-6">
                     <CardTitle className="text-base sm:text-lg">Recent Orders</CardTitle>
-                    <Button variant="ghost" size="sm" onClick={() => setActiveTab("orders")} className="text-xs sm:text-sm">
-                      View All
-                    </Button>
+                    {recentOrders.length > 0 && (
+                      <Button variant="ghost" size="sm" onClick={() => setActiveTab("orders")} className="text-xs sm:text-sm">
+                        View All
+                      </Button>
+                    )}
                   </CardHeader>
                   <CardContent className="p-4 sm:p-6">
-                    <div className="space-y-3 sm:space-y-4">
-                      {recentOrders.map((order) => (
-                        <div key={order.id} className="flex items-center justify-between p-3 sm:p-4 bg-muted/50 rounded-lg">
-                          <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-background rounded-lg flex items-center justify-center flex-shrink-0">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground sm:w-5 sm:h-5">
-                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
-                                <circle cx="9" cy="9" r="2" />
-                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
-                              </svg>
+                    {recentOrders.length > 0 ? (
+                      <div className="space-y-3 sm:space-y-4">
+                        {recentOrders.map((order) => (
+                          <div key={order.id} className="flex items-center justify-between p-3 sm:p-4 bg-muted/50 rounded-lg">
+                            <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-background rounded-lg flex items-center justify-center flex-shrink-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground sm:w-5 sm:h-5">
+                                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                                  <circle cx="9" cy="9" r="2" />
+                                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                                </svg>
+                              </div>
+                              <div className="min-w-0">
+                                <p className="font-medium text-sm sm:text-base truncate">{order.artwork}</p>
+                                <p className="text-xs sm:text-sm text-muted-foreground truncate">{order.buyer} • {order.date}</p>
+                              </div>
                             </div>
-                            <div className="min-w-0">
-                              <p className="font-medium text-sm sm:text-base truncate">{order.artwork}</p>
-                              <p className="text-xs sm:text-sm text-muted-foreground truncate">{order.buyer} • {order.date}</p>
+                            <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                              <Badge variant={
+                                order.status === "completed" ? "default" :
+                                order.status === "shipped" ? "secondary" : "outline"
+                              } className="text-xs">
+                                {order.status}
+                              </Badge>
+                              <p className="font-semibold text-sm sm:text-base">{formatPrice(order.price)}</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
-                            <Badge variant={
-                              order.status === "completed" ? "default" :
-                              order.status === "shipped" ? "secondary" : "outline"
-                            } className="text-xs">
-                              {order.status}
-                            </Badge>
-                            <p className="font-semibold text-sm sm:text-base">{formatPrice(order.price)}</p>
-                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <div className="w-14 h-14 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground">
+                            <path d="m7.5 4.27 9 5.15" />
+                            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                            <path d="m3.3 7 8.7 5 8.7-5" />
+                            <path d="M12 22V12" />
+                          </svg>
                         </div>
-                      ))}
-                    </div>
+                        <h3 className="font-semibold mb-1">No orders yet</h3>
+                        <p className="text-sm text-muted-foreground">Orders will appear here when customers purchase your artworks.</p>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
 
@@ -738,86 +709,120 @@ function DashboardContent() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-2xl font-bold">Orders</h2>
-                    <p className="text-muted-foreground">{recentOrders.filter(o => o.status === "pending").length} orders need attention</p>
+                    <p className="text-muted-foreground">
+                      {recentOrders.length > 0
+                        ? `${recentOrders.filter(o => o.status === "pending").length} orders need attention`
+                        : "Manage your artwork orders"}
+                    </p>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline">Export</Button>
-                  </div>
+                  {recentOrders.length > 0 && (
+                    <div className="flex gap-2">
+                      <Button variant="outline">Export</Button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Orders List */}
-                <div className="space-y-3">
-                  {recentOrders.map((order) => (
-                    <Card
-                      key={order.id}
-                      className={`cursor-pointer hover:shadow-md transition-all ${order.status === "pending" ? "border-amber-300 bg-amber-50/50" : ""}`}
-                      onClick={() => setSelectedOrder(order)}
-                    >
-                      <CardContent className="p-4">
-                        <div className="flex items-center gap-4">
-                          {/* Artwork Image */}
-                          <div className="relative flex-shrink-0">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={order.artworkImage}
-                              alt={order.artwork}
-                              className="w-20 h-20 rounded-lg object-cover"
-                            />
-                            {order.status === "pending" && (
-                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
-                            )}
-                          </div>
-
-                          {/* Order Info */}
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="font-semibold truncate">{order.artwork}</h3>
-                              <Badge variant={
-                                order.status === "pending" ? "destructive" :
-                                order.status === "processing" ? "default" :
-                                order.status === "shipped" ? "secondary" : "outline"
-                              }>
-                                {order.status === "pending" ? "New Order" : order.status === "processing" ? "In Progress" : "Shipped"}
-                              </Badge>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                {recentOrders.length > 0 ? (
+                  <div className="space-y-3">
+                    {recentOrders.map((order) => (
+                      <Card
+                        key={order.id}
+                        className={`cursor-pointer hover:shadow-md transition-all ${order.status === "pending" ? "border-amber-300 bg-amber-50/50" : ""}`}
+                        onClick={() => setSelectedOrder(order)}
+                      >
+                        <CardContent className="p-4">
+                          <div className="flex items-center gap-4">
+                            {/* Artwork Image */}
+                            <div className="relative flex-shrink-0">
                               {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img src={order.buyerAvatar} alt={order.buyer} className="w-5 h-5 rounded-full" />
-                              <span>{order.buyer}</span>
-                              <span>•</span>
-                              <span>{order.date}</span>
+                              <img
+                                src={order.artworkImage}
+                                alt={order.artwork}
+                                className="w-20 h-20 rounded-lg object-cover"
+                              />
+                              {order.status === "pending" && (
+                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+                              )}
                             </div>
-                            <div className="flex items-center justify-between mt-2">
-                              <span className="text-lg font-bold">{formatPrice(order.price)}</span>
-                              <span className="text-xs text-muted-foreground font-mono">{order.id}</span>
-                            </div>
-                          </div>
 
-                          {/* Progress */}
-                          <div className="hidden md:flex flex-col items-end gap-1">
-                            <span className="text-xs text-muted-foreground">Progress</span>
-                            <div className="flex gap-1">
-                              {order.services.map((s, idx) => (
-                                <div
-                                  key={idx}
-                                  className={`w-6 h-2 rounded-full ${s.completed ? "bg-green-500" : "bg-gray-200"}`}
-                                />
-                              ))}
+                            {/* Order Info */}
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 mb-1">
+                                <h3 className="font-semibold truncate">{order.artwork}</h3>
+                                <Badge variant={
+                                  order.status === "pending" ? "destructive" :
+                                  order.status === "processing" ? "default" :
+                                  order.status === "shipped" ? "secondary" : "outline"
+                                }>
+                                  {order.status === "pending" ? "New Order" : order.status === "processing" ? "In Progress" : "Shipped"}
+                                </Badge>
+                              </div>
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img src={order.buyerAvatar} alt={order.buyer} className="w-5 h-5 rounded-full" />
+                                <span>{order.buyer}</span>
+                                <span>•</span>
+                                <span>{order.date}</span>
+                              </div>
+                              <div className="flex items-center justify-between mt-2">
+                                <span className="text-lg font-bold">{formatPrice(order.price)}</span>
+                                <span className="text-xs text-muted-foreground font-mono">{order.id}</span>
+                              </div>
                             </div>
-                            <span className="text-xs font-medium">
-                              {order.services.filter(s => s.completed).length}/{order.services.length} steps
-                            </span>
-                          </div>
 
-                          {/* Arrow */}
-                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
-                            <path d="m9 18 6-6-6-6"/>
+                            {/* Progress */}
+                            <div className="hidden md:flex flex-col items-end gap-1">
+                              <span className="text-xs text-muted-foreground">Progress</span>
+                              <div className="flex gap-1">
+                                {order.services.map((s, idx) => (
+                                  <div
+                                    key={idx}
+                                    className={`w-6 h-2 rounded-full ${s.completed ? "bg-green-500" : "bg-gray-200"}`}
+                                  />
+                                ))}
+                              </div>
+                              <span className="text-xs font-medium">
+                                {order.services.filter(s => s.completed).length}/{order.services.length} steps
+                              </span>
+                            </div>
+
+                            {/* Arrow */}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
+                              <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                ) : (
+                  <Card>
+                    <CardContent className="py-16">
+                      <div className="text-center">
+                        <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground">
+                            <path d="m7.5 4.27 9 5.15" />
+                            <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+                            <path d="m3.3 7 8.7 5 8.7-5" />
+                            <path d="M12 22V12" />
                           </svg>
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                        <h3 className="text-xl font-semibold mb-2">No orders yet</h3>
+                        <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+                          When customers purchase your artworks, their orders will appear here. Start by adding some artworks to your gallery!
+                        </p>
+                        <Button onClick={() => setActiveTab("artworks")}>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                            <path d="M5 12h14" />
+                            <path d="M12 5v14" />
+                          </svg>
+                          Add Artworks
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
 
