@@ -16,7 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       allowDangerousEmailAccountLinking: true,
     }),
     Credentials({
-      name: "CEO Login",
+      name: "credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
@@ -26,10 +26,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const CEO_EMAIL = "lamialiuart@gmail.com"
         const CEO_PASSWORD = "Alternus333#"
 
-        if (
-          credentials?.email === CEO_EMAIL &&
-          credentials?.password === CEO_PASSWORD
-        ) {
+        const email = credentials?.email as string
+        const password = credentials?.password as string
+
+        if (email === CEO_EMAIL && password === CEO_PASSWORD) {
           return {
             id: "ceo-lamiart",
             email: CEO_EMAIL,

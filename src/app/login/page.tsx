@@ -95,8 +95,8 @@ export default function LoginPage() {
         localStorage.setItem("rememberedEmail", formData.email);
       }
 
-      // Redirect to dashboard after login
-      router.push("/dashboard");
+      // Redirect to home after login
+      router.push("/");
       router.refresh();
     } catch (error) {
       console.error("Login error:", error);
