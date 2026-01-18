@@ -56,27 +56,19 @@ export default function LoginPage() {
     }
 
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      const result = await signIn("credentials", {
-        email: formData.email.trim(),
+      // Use redirect: true - let NextAuth handle everything
+      await signIn("credentials", {
+        email: formData.email.trim().toLowerCase(),
         password: formData.password,
-        redirect: false,
+        callbackUrl: "/",
+        redirect: true,
       });
-
-      console.log("SignIn result:", result);
-
-      if (result?.error || !result?.ok) {
-        setErrors({ ...errors, password: "Invalid email or password" });
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Success - redirect to home
-      window.location.href = "/";
     } catch (error) {
       console.error("Login error:", error);
-      setErrors({ ...errors, password: "An error occurred. Please try again." });
+      setErrors({ password: "Invalid email or password" });
       setIsSubmitting(false);
     }
   };
