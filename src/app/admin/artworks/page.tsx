@@ -34,6 +34,13 @@ interface AddArtworkForm {
   yearCreated: string;
 }
 
+// Image upload state
+interface UploadState {
+  isUploading: boolean;
+  preview: string | null;
+  error: string | null;
+}
+
 export default function ArtworksPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,6 +57,60 @@ export default function ArtworksPage() {
     dimensions: "",
     yearCreated: new Date().getFullYear().toString(),
   });
+  const [uploadState, setUploadState] = useState<UploadState>({
+    isUploading: false,
+    preview: null,
+    error: null,
+  });
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Handle file upload
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUploadState({ ...uploadState, error: 'Please select an image file' });
+      return;
+    }
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadState({ ...uploadState, error: 'Image must be less than 10MB' });
+      return;
+    }
+
+    // Show preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setUploadState({ isUploading: true, preview: e.target?.result as string, error: null });
+    };
+    reader.readAsDataURL(file);
+
+    // Upload to Cloudinary
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append('file', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formDataUpload,
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setFormData({ ...formData, primaryImage: data.url });
+        setUploadState({ isUploading: false, preview: data.url, error: null });
+      } else {
+        setUploadState({ isUploading: false, preview: null, error: data.error || 'Upload failed' });
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      setUploadState({ isUploading: false, preview: null, error: 'Failed to upload image' });
+    }
+  };
 
   // Fetch artworks from database
   useEffect(() => {
@@ -391,16 +452,69 @@ export default function ArtworksPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1">Image URL *</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">Artwork Image *</label>
                   <input
-                    type="url"
-                    required
-                    value={formData.primaryImage}
-                    onChange={(e) => setFormData({ ...formData, primaryImage: e.target.value })}
-                    className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
-                    placeholder="https://example.com/image.jpg"
+                    type="file"
+                    ref={fileInputRef}
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
                   />
-                  <p className="text-xs text-zinc-500 mt-1">Upload image to a hosting service and paste the URL here</p>
+
+                  {/* Upload Area */}
+                  {!uploadState.preview && !formData.primaryImage ? (
+                    <div
+                      onClick={() => fileInputRef.current?.click()}
+                      className="border-2 border-dashed border-zinc-300 rounded-lg p-8 text-center cursor-pointer hover:border-zinc-400 hover:bg-zinc-50 transition-colors"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="mx-auto text-zinc-400 mb-3">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" x2="12" y1="3" y2="15" />
+                      </svg>
+                      <p className="text-sm font-medium text-zinc-700">Click to upload image</p>
+                      <p className="text-xs text-zinc-500 mt-1">PNG, JPG, WEBP up to 10MB</p>
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      {/* Preview Image */}
+                      <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-zinc-100">
+                        {uploadState.isUploading ? (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                            <div className="text-center text-white">
+                              <div className="w-8 h-8 border-3 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                              <p className="text-sm">Uploading...</p>
+                            </div>
+                          </div>
+                        ) : null}
+                        <Image
+                          src={uploadState.preview || formData.primaryImage}
+                          alt="Preview"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      {/* Change Image Button */}
+                      {!uploadState.isUploading && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUploadState({ isUploading: false, preview: null, error: null });
+                            setFormData({ ...formData, primaryImage: '' });
+                            fileInputRef.current?.click();
+                          }}
+                          className="absolute top-2 right-2 bg-black/70 text-white px-3 py-1.5 rounded-lg text-xs font-medium hover:bg-black transition-colors"
+                        >
+                          Change Image
+                        </button>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Error Message */}
+                  {uploadState.error && (
+                    <p className="text-xs text-red-500 mt-2">{uploadState.error}</p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
