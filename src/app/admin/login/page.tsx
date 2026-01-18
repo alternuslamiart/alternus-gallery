@@ -23,31 +23,25 @@ export default function AdminLogin() {
     setError("");
     setIsLoading(true);
 
-    // Check if "Remember me" is checked
-    if (!rememberMe) {
-      setError("Please check 'Remember me' to continue");
+    // Admin credentials
+    const ADMIN_EMAIL = "lamialiuart@gmail.com";
+    const ADMIN_PASSWORD = "Alternus333#";
+
+    // Compare with trimmed and lowercase email
+    const inputEmail = email.trim().toLowerCase();
+    const inputPassword = password;
+
+    if (inputEmail === ADMIN_EMAIL.toLowerCase() && inputPassword === ADMIN_PASSWORD) {
+      // Set admin session
+      localStorage.setItem("adminAuth", "true");
+      localStorage.setItem("adminRemember", "true");
+
+      // Redirect to dashboard
+      window.location.href = "/admin/dashboard";
+    } else {
+      setError("Invalid email or password");
       setIsLoading(false);
-      return;
     }
-
-    // Simulate authentication delay
-    setTimeout(() => {
-      // Admin credentials (in production, this should be server-side)
-      const ADMIN_EMAIL = "lamialiuart@gmail.com";
-      const ADMIN_PASSWORD = "Alternus333#";
-
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        // Set admin session
-        localStorage.setItem("adminAuth", "true");
-        localStorage.setItem("adminRemember", "true");
-
-        // Redirect to dashboard
-        router.push("/admin/dashboard");
-      } else {
-        setError("Invalid email or password");
-        setIsLoading(false);
-      }
-    }, 800);
   };
 
   return (
