@@ -33,8 +33,8 @@ export default function AdminLogin() {
     // Simulate authentication delay
     setTimeout(() => {
       // Admin credentials (in production, this should be server-side)
-      const ADMIN_EMAIL = "admin@alternus.com";
-      const ADMIN_PASSWORD = "alternus123#";
+      const ADMIN_EMAIL = "lamialiuart@gmail.com";
+      const ADMIN_PASSWORD = "Alternus333#";
 
       if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
         // Set admin session
