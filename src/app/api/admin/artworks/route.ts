@@ -6,27 +6,6 @@ import { auth } from '@/lib/auth'
 // GET - List all artworks for admin (including pending, rejected)
 export async function GET(request: NextRequest) {
   try {
-    const session = await auth()
-
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
-    // Check if user is CEO
-    const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
-    })
-
-    if (!user || user.role !== 'CEO') {
-      return NextResponse.json(
-        { error: 'Access denied. CEO only.' },
-        { status: 403 }
-      )
-    }
-
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status')
     const limit = parseInt(searchParams.get('limit') || '100')
