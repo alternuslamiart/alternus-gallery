@@ -164,7 +164,7 @@ export default function ArtworksPage() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/artworks', {
+      const response = await fetch('/api/admin/artworks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

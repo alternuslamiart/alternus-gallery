@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { Decimal } from '@prisma/client/runtime/library'
 import { auth } from '@/lib/auth'
 
 // GET - List all artworks for admin (including pending, rejected)
@@ -172,6 +173,103 @@ export async function PATCH(request: NextRequest) {
     console.error('Error updating artwork:', error)
     return NextResponse.json(
       { error: 'Failed to update artwork' },
+      { status: 500 }
+    )
+  }
+}
+
+// POST - Create artwork from admin panel (no Google auth required)
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const {
+      title,
+      description,
+      price,
+      primaryImage,
+      medium,
+      style,
+      category,
+      dimensions,
+      yearCreated,
+    } = body
+
+    // Validate required fields
+    if (!title || !price || !primaryImage) {
+      return NextResponse.json(
+        { error: 'Title, price, and image are required' },
+        { status: 400 }
+      )
+    }
+
+    // Find or create the gallery artist "Lamiart"
+    let galleryArtist = await prisma.artist.findFirst({
+      where: { displayName: 'Lamiart' },
+    })
+
+    if (!galleryArtist) {
+      // Create gallery artist
+      galleryArtist = await prisma.artist.create({
+        data: {
+          displayName: 'Lamiart',
+          bio: 'Official gallery artist',
+          applicationStatus: 'APPROVED',
+          approvedDate: new Date(),
+        },
+      })
+    }
+
+    // Create the artwork
+    const artwork = await prisma.artwork.create({
+      data: {
+        artistId: galleryArtist.id,
+        title,
+        description: description || '',
+        price: new Decimal(price),
+        primaryImage,
+        medium: medium || '',
+        style: style || '',
+        category: category || 'Painting',
+        dimensions: dimensions || '',
+        yearCreated: yearCreated ? parseInt(yearCreated) : new Date().getFullYear(),
+        status: 'APPROVED',
+        isAvailable: true,
+        approvedAt: new Date(),
+      },
+      include: {
+        artist: {
+          select: {
+            id: true,
+            displayName: true,
+          },
+        },
+      },
+    })
+
+    // Update artist's total artworks count
+    await prisma.artist.update({
+      where: { id: galleryArtist.id },
+      data: {
+        totalArtworks: { increment: 1 },
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      artwork: {
+        id: artwork.id,
+        title: artwork.title,
+        price: Number(artwork.price),
+        image: artwork.primaryImage,
+        status: artwork.status,
+        artist: artwork.artist,
+        createdAt: artwork.createdAt,
+      },
+    })
+  } catch (error) {
+    console.error('Error creating artwork:', error)
+    return NextResponse.json(
+      { error: 'Failed to create artwork' },
       { status: 500 }
     )
   }
