@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage, useCart } from "@/components/providers";
 import { StripePaymentForm } from "@/components/checkout/StripePaymentForm";
-import { PayPalPaymentButton } from "@/components/checkout/PayPalPaymentButton";
 
 // Bank details configuration
 const bankDetails = {
@@ -20,7 +19,7 @@ const bankDetails = {
   bic: "SGSBALTX",
 };
 
-type PaymentMethod = "card" | "paypal" | "bank";
+type PaymentMethod = "card" | "bank";
 
 interface OrderData {
   id: string;
@@ -564,7 +563,7 @@ export default function CheckoutPage() {
                   )}
 
                   {/* Payment Method Selection */}
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     {/* Credit/Debit Card */}
                     <button
                       type="button"
@@ -594,26 +593,6 @@ export default function CheckoutPage() {
                         </svg>
                       </div>
                       <span className="text-xs font-medium">Credit Card</span>
-                    </button>
-
-                    {/* PayPal */}
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("paypal")}
-                      className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                        paymentMethod === "paypal"
-                          ? "border-primary bg-primary/5"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
-                    >
-                      <svg width="60" height="20" viewBox="0 0 60 20" fill="none">
-                        <path d="M22.5 5H19.5C19.3 5 19.1 5.2 19 5.4L17.5 14.4C17.5 14.5 17.6 14.7 17.7 14.7H19.2C19.4 14.7 19.6 14.5 19.6 14.3L20 11.9C20 11.7 20.2 11.5 20.5 11.5H21.6C23.9 11.5 25.2 10.4 25.5 8.2C25.7 7.2 25.5 6.5 25 6C24.4 5.3 23.6 5 22.5 5ZM22.9 8.3C22.7 9.6 21.7 9.6 20.8 9.6H20.3L20.7 7.4C20.7 7.3 20.8 7.2 21 7.2H21.2C21.8 7.2 22.4 7.2 22.7 7.6C22.9 7.7 22.9 8 22.9 8.3Z" fill="#253B80"/>
-                        <path d="M32 8.2H30.5C30.4 8.2 30.2 8.3 30.2 8.4L30.1 9L30 8.8C29.6 8.2 28.7 8 27.9 8C25.9 8 24.2 9.5 23.9 11.6C23.7 12.6 24 13.6 24.5 14.3C25 14.9 25.8 15.2 26.6 15.2C28.1 15.2 28.9 14.3 28.9 14.3L28.8 14.9C28.8 15 28.9 15.2 29 15.2H30.3C30.5 15.2 30.7 15 30.8 14.8L31.7 8.6C31.8 8.4 31.7 8.2 32 8.2ZM29.4 11.7C29.2 12.6 28.5 13.3 27.5 13.3C27 13.3 26.6 13.1 26.4 12.8C26.2 12.5 26.1 12.1 26.2 11.6C26.3 10.7 27.1 10 28 10C28.5 10 28.9 10.2 29.1 10.5C29.4 10.8 29.5 11.3 29.4 11.7Z" fill="#253B80"/>
-                        <path d="M40.5 8.2H39C38.8 8.2 38.7 8.3 38.6 8.4L36.8 11.2L36 8.5C35.9 8.3 35.7 8.2 35.5 8.2H34.1C33.9 8.2 33.8 8.4 33.9 8.6L35.3 13.5L34 15.4C33.8 15.6 34 15.9 34.2 15.9H35.7C35.9 15.9 36 15.8 36.1 15.7L40.8 8.7C40.9 8.5 40.8 8.2 40.5 8.2Z" fill="#253B80"/>
-                        <path d="M46.5 5H43.5C43.3 5 43.1 5.2 43 5.4L41.5 14.4C41.5 14.5 41.6 14.7 41.7 14.7H43.3C43.4 14.7 43.6 14.6 43.6 14.4L44 11.9C44 11.7 44.2 11.5 44.5 11.5H45.6C47.9 11.5 49.2 10.4 49.5 8.2C49.7 7.2 49.5 6.5 49 6C48.4 5.3 47.6 5 46.5 5ZM46.9 8.3C46.7 9.6 45.7 9.6 44.8 9.6H44.3L44.7 7.4C44.7 7.3 44.8 7.2 45 7.2H45.2C45.8 7.2 46.4 7.2 46.7 7.6C46.9 7.7 46.9 8 46.9 8.3Z" fill="#179BD7"/>
-                        <path d="M56 8.2H54.5C54.4 8.2 54.2 8.3 54.2 8.4L54.1 9L54 8.8C53.6 8.2 52.7 8 51.9 8C49.9 8 48.2 9.5 47.9 11.6C47.7 12.6 48 13.6 48.5 14.3C49 14.9 49.8 15.2 50.6 15.2C52.1 15.2 52.9 14.3 52.9 14.3L52.8 14.9C52.8 15 52.9 15.2 53 15.2H54.3C54.5 15.2 54.7 15 54.8 14.8L55.7 8.6C55.8 8.4 55.7 8.2 56 8.2ZM53.4 11.7C53.2 12.6 52.5 13.3 51.5 13.3C51 13.3 50.6 13.1 50.4 12.8C50.2 12.5 50.1 12.1 50.2 11.6C50.3 10.7 51.1 10 52 10C52.5 10 52.9 10.2 53.1 10.5C53.4 10.8 53.5 11.3 53.4 11.7Z" fill="#179BD7"/>
-                      </svg>
-                      <span className="text-xs font-medium">PayPal</span>
                     </button>
 
                     {/* Bank Transfer */}
@@ -647,19 +626,6 @@ export default function CheckoutPage() {
                         orderId={orderData.id}
                         email={formData.email}
                         name={`${formData.firstName} ${formData.lastName}`}
-                        onSuccess={handlePaymentSuccess}
-                        onError={handlePaymentError}
-                      />
-                    </div>
-                  )}
-
-                  {/* PayPal Form */}
-                  {paymentMethod === "paypal" && (
-                    <div className="space-y-4">
-                      <PayPalPaymentButton
-                        orderId={orderData.id}
-                        amount={orderData.total}
-                        currency={orderData.currency}
                         onSuccess={handlePaymentSuccess}
                         onError={handlePaymentError}
                       />
@@ -849,12 +815,6 @@ export default function CheckoutPage() {
                           <circle cx="12" cy="10" r="6" fill="#EB001B"/>
                           <circle cx="20" cy="10" r="6" fill="#F79E1B"/>
                           <path d="M16 5.3C17.3 6.4 18 8.1 18 10C18 11.9 17.3 13.6 16 14.7C14.7 13.6 14 11.9 14 10C14 8.1 14.7 6.4 16 5.3Z" fill="#FF5F00"/>
-                        </svg>
-                      </div>
-                      <div className="px-2 py-1 bg-gray-100 rounded">
-                        <svg width="40" height="20" viewBox="0 0 60 20" fill="none">
-                          <path d="M22.5 5H19.5C19.3 5 19.1 5.2 19 5.4L17.5 14.4C17.5 14.5 17.6 14.7 17.7 14.7H19.2C19.4 14.7 19.6 14.5 19.6 14.3L20 11.9C20 11.7 20.2 11.5 20.5 11.5H21.6C23.9 11.5 25.2 10.4 25.5 8.2C25.7 7.2 25.5 6.5 25 6C24.4 5.3 23.6 5 22.5 5Z" fill="#253B80"/>
-                          <path d="M32 8.2H30.5C30.4 8.2 30.2 8.3 30.2 8.4L30.1 9L30 8.8C29.6 8.2 28.7 8 27.9 8C25.9 8 24.2 9.5 23.9 11.6C23.7 12.6 24 13.6 24.5 14.3C25 14.9 25.8 15.2 26.6 15.2C28.1 15.2 28.9 14.3 28.9 14.3L28.8 14.9C28.8 15 28.9 15.2 29 15.2H30.3C30.5 15.2 30.7 15 30.8 14.8L31.7 8.6C31.8 8.4 31.7 8.2 32 8.2Z" fill="#253B80"/>
                         </svg>
                       </div>
                     </div>
