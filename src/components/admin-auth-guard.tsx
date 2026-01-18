@@ -13,22 +13,16 @@ export function AdminAuthGuard({ children }: AdminAuthGuardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Small delay to ensure localStorage is ready
-    const checkAuth = () => {
-      const adminAuth = localStorage.getItem("adminAuth");
+    // Check if admin is authenticated
+    const adminAuth = localStorage.getItem("adminAuth");
 
-      if (adminAuth === "true") {
-        setIsAuthenticated(true);
-        setIsLoading(false);
-      } else {
-        // Redirect to login
-        router.push("/admin/login");
-      }
-    };
-
-    // Check immediately and also after a small delay
-    const timeout = setTimeout(checkAuth, 100);
-    return () => clearTimeout(timeout);
+    if (adminAuth === "true") {
+      setIsAuthenticated(true);
+      setIsLoading(false);
+    } else {
+      // Redirect to login
+      router.replace("/admin/login");
+    }
   }, [router]);
 
   // Show loading state while checking auth
