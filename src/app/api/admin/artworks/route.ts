@@ -187,9 +187,27 @@ export async function POST(request: NextRequest) {
     })
 
     if (!galleryArtist) {
-      // Create gallery artist
+      // First create or find system user for gallery
+      let systemUser = await prisma.user.findFirst({
+        where: { email: 'lamialiuart@gmail.com' },
+      })
+
+      if (!systemUser) {
+        systemUser = await prisma.user.create({
+          data: {
+            email: 'lamialiuart@gmail.com',
+            role: 'CEO',
+            firstName: 'Lamiart',
+            lastName: 'Gallery',
+            emailVerified: true,
+          },
+        })
+      }
+
+      // Create gallery artist linked to user
       galleryArtist = await prisma.artist.create({
         data: {
+          userId: systemUser.id,
           displayName: 'Lamiart',
           bio: 'Official gallery artist',
           applicationStatus: 'APPROVED',
