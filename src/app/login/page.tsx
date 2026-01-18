@@ -42,21 +42,6 @@ export default function LoginPage() {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else {
-      const hasUpperCase = /[A-Z]/.test(formData.password);
-      const hasNumber = /[0-9]/.test(formData.password);
-      const hasSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(formData.password);
-      const hasMinLength = formData.password.length >= 8;
-
-      if (!hasMinLength) {
-        newErrors.password = "Password must be at least 8 characters";
-      } else if (!hasUpperCase) {
-        newErrors.password = "Password must contain at least one uppercase letter";
-      } else if (!hasNumber) {
-        newErrors.password = "Password must contain at least one number";
-      } else if (!hasSymbol) {
-        newErrors.password = "Password must contain at least one symbol (!@#$%^&*...)";
-      }
     }
 
     setErrors(newErrors);
@@ -67,11 +52,6 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!validateForm()) {
-      return;
-    }
-
-    if (!rememberMe) {
-      setErrors({ ...errors, rememberMe: "You must accept to remember me for 30 days" });
       return;
     }
 
@@ -90,14 +70,8 @@ export default function LoginPage() {
         return;
       }
 
-      // Store login state
-      if (rememberMe) {
-        localStorage.setItem("rememberedEmail", formData.email);
-      }
-
       // Redirect to home after login
-      router.push("/");
-      router.refresh();
+      window.location.href = "/";
     } catch (error) {
       console.error("Login error:", error);
       setErrors({ ...errors, password: "An error occurred. Please try again." });
