@@ -37,37 +37,13 @@ export default function PaintingPage({ params }: PaintingPageProps) {
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedFrame, setSelectedFrame] = useState<"none" | "black" | "white">("none");
-  const [selectedRoom, setSelectedRoom] = useState(0);
 
-  // Realistic room backgrounds with proper wall placement
-  const roomBackgrounds = [
-    {
-      id: 0,
-      name: "Living Room",
-      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200&q=80",
-      artworkPosition: { top: "28%", left: "50%", width: "28%", height: "35%" },
-    },
-    {
-      id: 1,
-      name: "Modern Interior",
-      image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&q=80",
-      artworkPosition: { top: "25%", left: "50%", width: "22%", height: "30%" },
-    },
-    {
-      id: 2,
-      name: "Minimalist",
-      image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&q=80",
-      artworkPosition: { top: "30%", left: "35%", width: "25%", height: "32%" },
-    },
-    {
-      id: 3,
-      name: "Bedroom",
-      image: "https://images.unsplash.com/photo-1617325247661-675ab4b64ae2?w=1200&q=80",
-      artworkPosition: { top: "20%", left: "50%", width: "30%", height: "38%" },
-    },
-  ];
-
-  const currentRoom = roomBackgrounds[selectedRoom];
+  // Single elegant room background - minimalist living room
+  const roomBackground = {
+    image: "https://i.pinimg.com/originals/b2/93/8b/b2938b6be5e13f2df78d03ba9281b498.jpg",
+    // Position artwork on the wall above the sofa
+    artworkPosition: { top: "8%", left: "50%", width: "32%", height: "42%" },
+  };
 
   // Fetch artwork from API
   useEffect(() => {
@@ -326,31 +302,31 @@ export default function PaintingPage({ params }: PaintingPageProps) {
               >
                 <div className="relative w-full h-full">
                   <Image
-                    src={currentRoom.image}
+                    src={roomBackground.image}
                     alt="In Room"
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
                   {/* Artwork with frame on wall */}
                   <div
                     className="absolute transform -translate-x-1/2"
                     style={{
-                      top: currentRoom.artworkPosition.top,
-                      left: currentRoom.artworkPosition.left,
-                      width: currentRoom.artworkPosition.width,
-                      height: currentRoom.artworkPosition.height,
+                      top: roomBackground.artworkPosition.top,
+                      left: roomBackground.artworkPosition.left,
+                      width: roomBackground.artworkPosition.width,
+                      height: roomBackground.artworkPosition.height,
                     }}
                   >
+                    {/* Shadow */}
+                    <div className="absolute inset-0 translate-x-1 translate-y-1 bg-black/20 blur-sm" />
                     {/* Frame */}
-                    <div className="relative w-full h-full bg-gray-800 p-[3px] shadow-lg">
-                      <div className="relative w-full h-full bg-white p-[2px]">
-                        <Image
-                          src={painting.image}
-                          alt="In Room Preview"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
+                    <div className="relative w-full h-full bg-gradient-to-b from-gray-700 to-gray-900 p-[2px]">
+                      <Image
+                        src={painting.image}
+                        alt="In Room Preview"
+                        fill
+                        className="object-cover"
+                      />
                     </div>
                   </div>
                 </div>
@@ -398,60 +374,45 @@ export default function PaintingPage({ params }: PaintingPageProps) {
               )}
               {viewMode === "room" && (
                 <div className="relative w-full h-full">
-                  {/* Room Background */}
+                  {/* Room Background - Elegant minimalist living room */}
                   <Image
-                    src={currentRoom.image}
-                    alt={currentRoom.name}
+                    src={roomBackground.image}
+                    alt="Living Room Interior"
                     fill
-                    className="object-cover"
+                    className="object-cover object-top"
                   />
 
-                  {/* Artwork with realistic frame on wall */}
+                  {/* Artwork with realistic frame on wall above sofa */}
                   <div
                     className="absolute transform -translate-x-1/2"
                     style={{
-                      top: currentRoom.artworkPosition.top,
-                      left: currentRoom.artworkPosition.left,
-                      width: currentRoom.artworkPosition.width,
-                      height: currentRoom.artworkPosition.height,
+                      top: roomBackground.artworkPosition.top,
+                      left: roomBackground.artworkPosition.left,
+                      width: roomBackground.artworkPosition.width,
+                      height: roomBackground.artworkPosition.height,
                     }}
                   >
-                    {/* Shadow behind frame */}
-                    <div className="absolute inset-0 translate-x-2 translate-y-2 bg-black/30 blur-md rounded-sm" />
+                    {/* Shadow behind frame - subtle and realistic */}
+                    <div className="absolute inset-0 translate-x-2 translate-y-3 bg-black/25 blur-lg" />
 
-                    {/* Frame with mat */}
-                    <div className="relative w-full h-full bg-gradient-to-br from-gray-700 via-gray-800 to-gray-900 p-[6px] rounded-sm shadow-2xl">
-                      {/* Inner mat */}
-                      <div className="relative w-full h-full bg-gradient-to-br from-gray-100 to-white p-[4px]">
-                        {/* Artwork */}
-                        <div className="relative w-full h-full overflow-hidden">
-                          <Image
-                            src={painting.image}
-                            alt={painting.title}
-                            fill
-                            className="object-cover cursor-zoom-in"
-                            onClick={() => setIsZoomed(true)}
-                          />
-                        </div>
+                    {/* Frame - thin elegant black frame */}
+                    <div className="relative w-full h-full bg-gradient-to-b from-gray-800 to-black p-[4px] shadow-xl">
+                      {/* Artwork */}
+                      <div className="relative w-full h-full overflow-hidden">
+                        <Image
+                          src={painting.image}
+                          alt={painting.title}
+                          fill
+                          className="object-cover cursor-zoom-in"
+                          onClick={() => setIsZoomed(true)}
+                        />
                       </div>
                     </div>
                   </div>
 
-                  {/* Room selector */}
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black/60 backdrop-blur-sm px-3 py-2 rounded-full">
-                    {roomBackgrounds.map((room, index) => (
-                      <button
-                        key={room.id}
-                        onClick={(e) => { e.stopPropagation(); setSelectedRoom(index); }}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                          selectedRoom === index
-                            ? "bg-white text-black"
-                            : "bg-white/20 text-white hover:bg-white/30"
-                        }`}
-                      >
-                        {room.name}
-                      </button>
-                    ))}
+                  {/* Label */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full">
+                    <p className="text-white text-sm font-medium">View in Room</p>
                   </div>
                 </div>
               )}
