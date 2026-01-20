@@ -694,7 +694,7 @@ export default function Home() {
 
           {/* Grid Container */}
           {isLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden animate-pulse">
                   <div className="aspect-[4/5] bg-gray-200" />
@@ -707,7 +707,7 @@ export default function Home() {
               ))}
             </div>
           ) : featuredPaintings.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {featuredPaintings.map((painting) => (
                 <div
                   key={painting.id}
