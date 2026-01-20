@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage, useCart } from "@/components/providers";
+import { useLanguage, useCart, useWishlist } from "@/components/providers";
 import AccordionSection from "@/components/accordion-section";
 import TestimonialsSection from "@/components/testimonials-section";
 
@@ -32,6 +32,7 @@ export default function Home() {
   const router = useRouter();
   const { t, formatPrice } = useLanguage();
   const { addToCart } = useCart();
+  const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
   const [orderNumber, setOrderNumber] = useState("");
   const [trackingError, setTrackingError] = useState("");
   const [artworks, setArtworks] = useState<Artwork[]>([]);
@@ -693,7 +694,7 @@ export default function Home() {
 
           {/* Grid Container */}
           {isLoading ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden animate-pulse">
                   <div className="aspect-[4/5] bg-gray-200" />
@@ -706,7 +707,7 @@ export default function Home() {
               ))}
             </div>
           ) : featuredPaintings.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredPaintings.map((painting) => (
                 <div
                   key={painting.id}
@@ -720,13 +721,42 @@ export default function Home() {
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
-                      {!painting.available && (
-                        <div className="absolute top-3 right-3 z-10">
-                          <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-sm font-bold px-3 py-1 shadow-lg">
-                            {t("sold")}
-                          </Badge>
-                        </div>
-                      )}
+                      {/* Style Badge - Top Left */}
+                      <div className="absolute top-3 left-3 flex flex-col gap-2">
+                        <Badge variant="secondary" className="text-xs">
+                          {painting.style}
+                        </Badge>
+                      </div>
+                      {/* Wishlist Button - Top Right */}
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (isInWishlist(painting.id)) {
+                            removeFromWishlist(painting.id);
+                          } else {
+                            addToWishlist({
+                              ...painting,
+                              artist: painting.artist?.displayName,
+                            });
+                          }
+                        }}
+                        className="absolute top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-110"
+                        aria-label={isInWishlist(painting.id) ? "Remove from wishlist" : "Add to wishlist"}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill={isInWishlist(painting.id) ? "red" : "none"}
+                          stroke={isInWishlist(painting.id) ? "red" : "currentColor"}
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                        </svg>
+                      </button>
                       {/* Quick Add Button */}
                       {painting.available && (
                         <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -762,8 +792,32 @@ export default function Home() {
                         {painting.title}
                       </h3>
                     </Link>
+                    {painting.artist && (
+                      <Link
+                        href={`/artists/${painting.artist.id}`}
+                        className="text-xs text-gray-400 hover:text-gray-600 transition-colors mt-0.5 inline-block"
+                      >
+                        by {painting.artist.displayName}
+                      </Link>
+                    )}
                     <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
-                    <p className="text-lg font-bold text-gray-900 mt-2">{formatPrice(painting.price)}</p>
+                    <p className="text-sm text-gray-500">{painting.dimensions}</p>
+                    <div className="flex items-center justify-between mt-3">
+                      {painting.available ? (
+                        <>
+                          <p className="text-lg font-bold text-gray-900">
+                            {formatPrice(painting.price)}
+                          </p>
+                          <Badge variant="outline" className="text-green-600 border-green-600 text-xs">
+                            {t("available")}
+                          </Badge>
+                        </>
+                      ) : (
+                        <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 text-xs font-semibold">
+                          SOLD
+                        </Badge>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -852,13 +906,42 @@ export default function Home() {
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    {!painting.available && (
-                      <div className="absolute top-3 right-3 z-10">
-                        <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-0 text-sm font-bold px-3 py-1 shadow-lg">
-                          {t("sold")}
-                        </Badge>
-                      </div>
-                    )}
+                    {/* Style Badge - Top Left */}
+                    <div className="absolute top-3 left-3 flex flex-col gap-2">
+                      <Badge variant="secondary" className="text-xs">
+                        {painting.style}
+                      </Badge>
+                    </div>
+                    {/* Wishlist Button - Top Right */}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (isInWishlist(painting.id)) {
+                          removeFromWishlist(painting.id);
+                        } else {
+                          addToWishlist({
+                            ...painting,
+                            artist: painting.artist?.displayName,
+                          });
+                        }
+                      }}
+                      className="absolute top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-110"
+                      aria-label={isInWishlist(painting.id) ? "Remove from wishlist" : "Add to wishlist"}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill={isInWishlist(painting.id) ? "red" : "none"}
+                        stroke={isInWishlist(painting.id) ? "red" : "currentColor"}
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                      </svg>
+                    </button>
                     {/* Quick Add Button */}
                     {painting.available && (
                       <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -894,8 +977,32 @@ export default function Home() {
                       {painting.title}
                     </h3>
                   </Link>
+                  {painting.artist && (
+                    <Link
+                      href={`/artists/${painting.artist.id}`}
+                      className="text-xs text-gray-400 hover:text-gray-600 transition-colors mt-0.5 inline-block"
+                    >
+                      by {painting.artist.displayName}
+                    </Link>
+                  )}
                   <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
-                  <p className="text-lg font-bold text-gray-900 mt-2">{formatPrice(painting.price)}</p>
+                  <p className="text-sm text-gray-500">{painting.dimensions}</p>
+                  <div className="flex items-center justify-between mt-3">
+                    {painting.available ? (
+                      <>
+                        <p className="text-lg font-bold text-gray-900">
+                          {formatPrice(painting.price)}
+                        </p>
+                        <Badge variant="outline" className="text-green-600 border-green-600 text-xs">
+                          {t("available")}
+                        </Badge>
+                      </>
+                    ) : (
+                      <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 text-xs font-semibold">
+                        SOLD
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

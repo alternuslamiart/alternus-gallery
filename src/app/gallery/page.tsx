@@ -57,6 +57,7 @@ export default function GalleryPage() {
             style?: string;
             image: string;
             available: boolean;
+            status?: string;
             isPreOrder?: boolean;
             preOrderDate?: string;
             preOrderDiscount?: number;
@@ -294,19 +295,13 @@ export default function GalleryPage() {
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
-                  {!painting.available && !painting.isPreOrder && (
-                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                      <Badge variant="secondary" className="text-sm">
-                        {t("sold")}
-                      </Badge>
-                    </div>
-                  )}
+                  {/* Style Badge - Top Left */}
                   <div className="absolute top-3 left-3 flex flex-col gap-2">
                     <Badge variant="secondary" className="text-xs">
                       {painting.style}
                     </Badge>
                   </div>
-                  {/* Wishlist Heart Button */}
+                  {/* Wishlist Button - Top Right */}
                   <button
                     onClick={(e) => {
                       e.preventDefault();
@@ -356,15 +351,29 @@ export default function GalleryPage() {
                     {painting.title}
                   </h3>
                 </Link>
+                {painting.artist && painting.artistId && (
+                  <Link
+                    href={`/artists/${painting.artistId}`}
+                    className="text-xs text-gray-400 hover:text-gray-600 transition-colors mt-0.5 inline-block"
+                  >
+                    by {painting.artist}
+                  </Link>
+                )}
                 <p className="text-sm text-gray-500 mt-1">{painting.medium}</p>
                 <p className="text-sm text-gray-500">{painting.dimensions}</p>
                 <div className="flex items-center justify-between mt-3">
-                  <p className="text-lg font-bold text-gray-900">
-                    {formatPrice(painting.price)}
-                  </p>
-                  {painting.available && (
-                    <Badge variant="outline" className="text-green-600 border-green-600 text-xs">
-                      {t("available")}
+                  {painting.available ? (
+                    <>
+                      <p className="text-lg font-bold text-gray-900">
+                        {formatPrice(painting.price)}
+                      </p>
+                      <Badge variant="outline" className="text-green-600 border-green-600 text-xs">
+                        {t("available")}
+                      </Badge>
+                    </>
+                  ) : (
+                    <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 text-xs font-semibold">
+                      SOLD
                     </Badge>
                   )}
                 </div>

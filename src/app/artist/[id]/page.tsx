@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { useLanguage } from "@/components/providers";
+import { useLanguage, useCart, useWishlist } from "@/components/providers";
 
 interface Artist {
   id: string;
@@ -42,7 +42,9 @@ interface Artwork {
 
 export default function ArtistProfile({ params }: { params: { id: string } }) {
   const artistId = params.id;
-  const { formatPrice } = useLanguage();
+  const { formatPrice, t } = useLanguage();
+  const { addToCart } = useCart();
+  const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist();
 
   // Artist data state
   const [artist, setArtist] = useState<Artist | null>(null);
@@ -708,28 +710,119 @@ export default function ArtistProfile({ params }: { params: { id: string } }) {
                 </div>
               ) : (
                 artistArtworks.map((artwork) => (
-                  <Link key={artwork.id} href={`/gallery/${artwork.id}`}>
-                    <Card className="group overflow-hidden border-0 shadow-none bg-transparent">
-                      <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-muted">
+                  <div
+                    key={artwork.id}
+                    className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow"
+                  >
+                    <Link href={`/gallery/${artwork.id}`}>
+                      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
                         <Image
                           src={artwork.primaryImage}
                           alt={artwork.title}
                           fill
                           className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
-                        {artwork.status === "SOLD" && (
-                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <Badge variant="secondary">Sold</Badge>
+                        {/* Style Badge - Top Left */}
+                        {artwork.medium && (
+                          <div className="absolute top-3 left-3 flex flex-col gap-2">
+                            <Badge variant="secondary" className="text-xs">
+                              {artwork.medium}
+                            </Badge>
+                          </div>
+                        )}
+                        {/* Wishlist Button - Top Right */}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (isInWishlist(artwork.id)) {
+                              removeFromWishlist(artwork.id);
+                            } else {
+                              addToWishlist({
+                                id: artwork.id,
+                                title: artwork.title,
+                                price: parseFloat(artwork.price),
+                                image: artwork.primaryImage,
+                                description: "",
+                                dimensions: "",
+                                medium: artwork.medium || "",
+                                year: new Date().getFullYear(),
+                                category: "Painting",
+                                style: artwork.medium || "",
+                                available: artwork.isAvailable,
+                              });
+                            }
+                          }}
+                          className="absolute top-3 right-3 p-1.5 rounded-full bg-white/90 hover:bg-white shadow-lg transition-all hover:scale-110"
+                          aria-label={isInWishlist(artwork.id) ? "Remove from wishlist" : "Add to wishlist"}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill={isInWishlist(artwork.id) ? "red" : "none"}
+                            stroke={isInWishlist(artwork.id) ? "red" : "currentColor"}
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                          </svg>
+                        </button>
+                        {/* Add to Cart - Bottom (hover) */}
+                        {artwork.isAvailable && (
+                          <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button
+                              size="sm"
+                              className="w-full"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                addToCart({
+                                  id: artwork.id,
+                                  title: artwork.title,
+                                  price: parseFloat(artwork.price),
+                                  image: artwork.primaryImage,
+                                  description: "",
+                                  dimensions: "",
+                                  medium: artwork.medium || "",
+                                  year: new Date().getFullYear(),
+                                  category: "Painting",
+                                  style: artwork.medium || "",
+                                  available: artwork.isAvailable,
+                                });
+                              }}
+                            >
+                              {t("addToCart")}
+                            </Button>
                           </div>
                         )}
                       </div>
-                      <CardContent className="px-0 pt-3">
-                        <h3 className="font-medium group-hover:underline">{artwork.title}</h3>
-                        <p className="text-sm text-muted-foreground">{artwork.medium}</p>
-                        <p className="font-semibold mt-1">{formatPrice(parseFloat(artwork.price))}</p>
-                      </CardContent>
-                    </Card>
-                  </Link>
+                    </Link>
+                    <div className="p-4">
+                      <Link href={`/gallery/${artwork.id}`}>
+                        <h3 className="font-semibold text-gray-900 group-hover:text-gray-700 transition-colors">
+                          {artwork.title}
+                        </h3>
+                      </Link>
+                      <p className="text-sm text-gray-500 mt-1">{artwork.medium}</p>
+                      <div className="flex items-center justify-between mt-3">
+                        {artwork.isAvailable ? (
+                          <>
+                            <p className="text-lg font-bold text-gray-900">
+                              {formatPrice(parseFloat(artwork.price))}
+                            </p>
+                            <Badge variant="outline" className="text-green-600 border-green-600 text-xs">
+                              Available
+                            </Badge>
+                          </>
+                        ) : (
+                          <Badge className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 text-xs font-semibold">
+                            SOLD
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 ))
               )}
             </div>
