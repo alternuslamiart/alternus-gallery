@@ -244,7 +244,7 @@ export default function ArtworksPage() {
 
   const handleStatusChange = async (id: string, newStatus: 'SOLD' | 'APPROVED') => {
     try {
-      const response = await fetch(`/api/artworks/${id}`, {
+      const response = await fetch(`/api/admin/artworks/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -274,7 +274,7 @@ export default function ArtworksPage() {
 
     setIsDeleting(id);
     try {
-      const response = await fetch(`/api/artworks/${id}`, {
+      const response = await fetch(`/api/admin/artworks/${id}`, {
         method: 'DELETE',
       });
 
@@ -322,7 +322,7 @@ export default function ArtworksPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/artworks/${editingArtwork.id}`, {
+      const response = await fetch(`/api/admin/artworks/${editingArtwork.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
