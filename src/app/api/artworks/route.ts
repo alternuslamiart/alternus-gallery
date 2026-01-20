@@ -16,10 +16,9 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Build where clause
+    // Build where clause - include both APPROVED and SOLD artworks
     const where: Record<string, unknown> = {
-      status: 'APPROVED',
-      isAvailable: true,
+      status: { in: ['APPROVED', 'SOLD'] },
     }
 
     if (category) where.category = category
@@ -65,7 +64,8 @@ export async function GET(request: NextRequest) {
         category: artwork.category,
         dimensions: artwork.dimensions,
         year: artwork.yearCreated,
-        available: artwork.isAvailable,
+        available: artwork.isAvailable && artwork.status !== 'SOLD',
+        status: artwork.status,
         isFeatured: artwork.isFeatured,
         isPreOrder: artwork.isPreOrder,
         preOrderDate: artwork.preOrderDate,
