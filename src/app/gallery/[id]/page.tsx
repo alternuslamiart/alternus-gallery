@@ -1,20 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { notFound } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import { useLanguage, useCart, useWishlist, useUserArtworks } from "@/components/providers";
-import { paintings as initialPaintings, getPaintingById } from "@/lib/paintings";
+import { useLanguage, useCart, useWishlist } from "@/components/providers";
 import { ReviewsSection } from "@/components/reviews-section";
 import { SocialShare } from "@/components/social-share";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ShippingCalculator } from "@/components/shipping-calculator";
 import { ARViewer } from "@/components/ar-viewer";
+import { Painting } from "@/lib/paintings";
 
 interface PaintingPageProps {
   params: { id: string };
@@ -23,20 +23,89 @@ interface PaintingPageProps {
 type ViewMode = "original" | "black-frame" | "white-frame" | "room";
 
 export default function PaintingPage({ params }: PaintingPageProps) {
+  const router = useRouter();
   const { t, formatPrice } = useLanguage();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const { userArtworks } = useUserArtworks();
 
-  // Find painting from initial paintings or user artworks
-  const painting = getPaintingById(params.id) || userArtworks.find(p => p.id === params.id);
-
-  // Combine all paintings for related works section
-  const paintings = [...userArtworks, ...initialPaintings];
+  const [painting, setPainting] = useState<Painting | null>(null);
+  const [relatedPaintings, setRelatedPaintings] = useState<Painting[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("original");
   const [views, setViews] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedFrame, setSelectedFrame] = useState<"none" | "black" | "white">("none");
+
+  // Fetch artwork from API
+  useEffect(() => {
+    async function fetchArtwork() {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/artworks/${params.id}`);
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            setNotFound(true);
+          }
+          return;
+        }
+
+        const data = await response.json();
+
+        const mappedPainting: Painting = {
+          id: data.id,
+          title: data.title,
+          description: data.description || '',
+          price: data.price,
+          dimensions: data.dimensions || '',
+          medium: data.medium || '',
+          year: data.year || new Date().getFullYear(),
+          category: data.category || 'Painting',
+          style: data.style || 'Contemporary',
+          image: data.image,
+          available: data.available,
+          artist: data.artist?.displayName,
+          artistId: data.artist?.id,
+        };
+
+        setPainting(mappedPainting);
+
+        // Fetch related artworks
+        const relatedResponse = await fetch(`/api/artworks?style=${data.style}&limit=5`);
+        if (relatedResponse.ok) {
+          const relatedData = await relatedResponse.json();
+          const related = relatedData.artworks
+            .filter((a: { id: string }) => a.id !== params.id)
+            .slice(0, 4)
+            .map((artwork: {
+              id: string;
+              title: string;
+              price: number;
+              image: string;
+              style?: string;
+              category?: string;
+            }) => ({
+              id: artwork.id,
+              title: artwork.title,
+              price: artwork.price,
+              image: artwork.image,
+              style: artwork.style,
+              category: artwork.category,
+            }));
+          setRelatedPaintings(related);
+        }
+      } catch (error) {
+        console.error('Error fetching artwork:', error);
+        setNotFound(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArtwork();
+  }, [params.id]);
 
   const frameOptions: { id: "none" | "black" | "white"; label: string; price: number }[] = [
     { id: "none", label: "No Frame", price: 0 },
@@ -70,14 +139,73 @@ export default function PaintingPage({ params }: PaintingPageProps) {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isZoomed) {
         setIsZoomed(false);
+        setZoomLevel(1);
       }
     };
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [isZoomed]);
 
-  if (!painting) {
-    notFound();
+  // Handle zoom controls
+  const handleZoomIn = () => setZoomLevel(prev => Math.min(prev + 0.5, 4));
+  const handleZoomOut = () => setZoomLevel(prev => Math.max(prev - 0.5, 1));
+  const handleZoomReset = () => setZoomLevel(1);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-3 w-20">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="aspect-[4/5] rounded-lg bg-muted animate-pulse" />
+                ))}
+              </div>
+              <div className="flex-1 aspect-[4/5] rounded-lg bg-muted animate-pulse" />
+            </div>
+            <div className="space-y-4">
+              <div className="h-8 w-24 bg-muted rounded animate-pulse" />
+              <div className="h-12 w-3/4 bg-muted rounded animate-pulse" />
+              <div className="h-6 w-1/2 bg-muted rounded animate-pulse" />
+              <div className="h-10 w-1/3 bg-muted rounded animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Not found state
+  if (notFound || !painting) {
+    return (
+      <div className="py-16">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-md mx-auto">
+            <div className="w-32 h-32 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                <circle cx="9" cy="9" r="2" />
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold mb-4">Artwork Not Found</h1>
+            <p className="text-muted-foreground mb-6">
+              The artwork you&apos;re looking for might have been removed or doesn&apos;t exist.
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button onClick={() => router.back()} variant="outline">
+                Go Back
+              </Button>
+              <Button asChild>
+                <Link href="/gallery">Browse Gallery</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -565,10 +693,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
             </Link>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-            {paintings
-              .filter((p) => p.id !== painting.id && (p.style === painting.style || p.category === painting.category))
-              .slice(0, 4)
-              .map((relatedPainting) => (
+            {relatedPaintings.map((relatedPainting) => (
                 <Card
                   key={relatedPainting.id}
                   className="group overflow-hidden border-0 shadow-none bg-transparent"
@@ -597,46 +722,89 @@ export default function PaintingPage({ params }: PaintingPageProps) {
         </div>
       </div>
 
-      {/* Zoom Modal */}
+      {/* Fullscreen Zoom Modal */}
       {isZoomed && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
-          onClick={() => setIsZoomed(false)}
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          onClick={() => { setIsZoomed(false); setZoomLevel(1); }}
         >
+          {/* Close Button */}
           <button
-            onClick={() => setIsZoomed(false)}
-            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-10"
+            onClick={() => { setIsZoomed(false); setZoomLevel(1); }}
+            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors z-20"
             aria-label="Close zoom"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18" />
               <line x1="6" y1="6" x2="18" y2="18" />
             </svg>
           </button>
 
-          <div className="relative w-full h-full max-w-7xl max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
-            <Image
-              src={painting.image}
-              alt={painting.title}
-              fill
-              className="object-contain"
-              priority
-            />
+          {/* Zoom Controls */}
+          <div className="absolute top-4 left-4 flex gap-2 z-20">
+            <button
+              onClick={(e) => { e.stopPropagation(); handleZoomOut(); }}
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors disabled:opacity-50"
+              disabled={zoomLevel <= 1}
+              aria-label="Zoom out"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+                <line x1="8" x2="14" y1="11" y2="11" />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); handleZoomReset(); }}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors text-white text-sm font-medium"
+            >
+              {Math.round(zoomLevel * 100)}%
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); handleZoomIn(); }}
+              className="p-3 bg-white/10 hover:bg-white/20 rounded-full transition-colors disabled:opacity-50"
+              disabled={zoomLevel >= 4}
+              aria-label="Zoom in"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+                <line x1="11" x2="11" y1="8" y2="14" />
+                <line x1="8" x2="14" y1="11" y2="11" />
+              </svg>
+            </button>
           </div>
 
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-sm px-6 py-3 rounded-full">
-            <p className="text-white text-sm">
-              Press <kbd className="px-2 py-1 bg-white/20 rounded text-xs mx-1">ESC</kbd> or click outside to close
+          {/* Zoomable Image Container */}
+          <div
+            className="relative w-full h-full overflow-auto flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="relative transition-transform duration-200"
+              style={{
+                transform: `scale(${zoomLevel})`,
+                width: '90vw',
+                height: '90vh',
+              }}
+            >
+              <Image
+                src={painting.image}
+                alt={painting.title}
+                fill
+                className="object-contain cursor-move"
+                priority
+                draggable={false}
+              />
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-black/80 backdrop-blur-sm px-6 py-3 rounded-full z-20">
+            <p className="text-white text-sm flex items-center gap-4">
+              <span>Use <kbd className="px-2 py-1 bg-white/20 rounded text-xs">+</kbd> / <kbd className="px-2 py-1 bg-white/20 rounded text-xs">-</kbd> to zoom</span>
+              <span className="text-white/50">|</span>
+              <span>Press <kbd className="px-2 py-1 bg-white/20 rounded text-xs">ESC</kbd> to close</span>
             </p>
           </div>
         </div>
