@@ -32,6 +32,7 @@ interface AddArtworkForm {
   category: string;
   dimensions: string;
   yearCreated: string;
+  saleStatus: "for_sale" | "sold";
 }
 
 // Image upload state
@@ -45,7 +46,10 @@ export default function ArtworksPage() {
   const [artworks, setArtworks] = useState<Artwork[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingArtwork, setEditingArtwork] = useState<Artwork | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [formData, setFormData] = useState<AddArtworkForm>({
     title: "",
     description: "",
@@ -56,6 +60,7 @@ export default function ArtworksPage() {
     category: "Painting",
     dimensions: "",
     yearCreated: new Date().getFullYear().toString(),
+    saleStatus: "for_sale",
   });
   const [uploadState, setUploadState] = useState<UploadState>({
     isUploading: false,
@@ -177,6 +182,7 @@ export default function ArtworksPage() {
           category: formData.category,
           dimensions: formData.dimensions,
           yearCreated: formData.yearCreated,
+          status: formData.saleStatus === "sold" ? "SOLD" : "APPROVED",
         }),
       });
 
@@ -233,6 +239,126 @@ export default function ArtworksPage() {
           artwork.id === id ? { ...artwork, status: "rejected" as const } : artwork
         )
       );
+    }
+  };
+
+  const handleStatusChange = async (id: string, newStatus: 'SOLD' | 'APPROVED') => {
+    try {
+      const response = await fetch(`/api/artworks/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        setArtworks(
+          artworks.map((artwork) =>
+            artwork.id === id ? { ...artwork, status: newStatus.toLowerCase() as "sold" | "approved" } : artwork
+          )
+        );
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Failed to update status');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status');
+    }
+  };
+
+  // Delete artwork
+  const handleDeleteArtwork = async (id: string, title: string) => {
+    if (!confirm(`A jeni i sigurt që dëshironi të fshini "${title}"? Ky veprim nuk mund të zhbëhet.`)) {
+      return;
+    }
+
+    setIsDeleting(id);
+    try {
+      const response = await fetch(`/api/artworks/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setArtworks(artworks.filter((artwork) => artwork.id !== id));
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Dështoi fshirja e veprës');
+      }
+    } catch (error) {
+      console.error('Error deleting artwork:', error);
+      alert('Dështoi fshirja e veprës');
+    } finally {
+      setIsDeleting(null);
+    }
+  };
+
+  // Open edit modal
+  const handleOpenEditModal = (artwork: Artwork) => {
+    setEditingArtwork(artwork);
+    setFormData({
+      title: artwork.title,
+      description: '',
+      price: artwork.price.toString(),
+      primaryImage: artwork.image,
+      medium: artwork.medium,
+      style: artwork.style,
+      category: 'Painting',
+      dimensions: artwork.dimensions,
+      yearCreated: new Date().getFullYear().toString(),
+      saleStatus: artwork.status === 'sold' ? 'sold' : 'for_sale',
+    });
+    setUploadState({
+      isUploading: false,
+      preview: artwork.image,
+      error: null,
+    });
+    setShowEditModal(true);
+  };
+
+  // Edit artwork
+  const handleEditArtwork = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingArtwork) return;
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/artworks/${editingArtwork.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: formData.title,
+          description: formData.description,
+          price: parseFloat(formData.price),
+          status: formData.saleStatus === 'sold' ? 'SOLD' : 'APPROVED',
+        }),
+      });
+
+      if (response.ok) {
+        setArtworks(
+          artworks.map((artwork) =>
+            artwork.id === editingArtwork.id
+              ? {
+                  ...artwork,
+                  title: formData.title,
+                  price: parseFloat(formData.price),
+                  commission: Math.round(parseFloat(formData.price) * 0.4),
+                  artistEarning: Math.round(parseFloat(formData.price) * 0.6),
+                  status: formData.saleStatus === 'sold' ? 'sold' as const : 'approved' as const,
+                }
+              : artwork
+          )
+        );
+        setShowEditModal(false);
+        setEditingArtwork(null);
+      } else {
+        const data = await response.json();
+        alert(data.error || 'Dështoi përditësimi i veprës');
+      }
+    } catch (error) {
+      console.error('Error updating artwork:', error);
+      alert('Dështoi përditësimi i veprës');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -567,6 +693,35 @@ export default function ArtworksPage() {
                   </div>
                 </div>
 
+                {/* Sale Status Toggle */}
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-3">Sale Status</label>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, saleStatus: "for_sale" })}
+                      className={`w-28 h-11 rounded-full text-sm font-semibold transition-all ${
+                        formData.saleStatus === "for_sale"
+                          ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
+                          : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                      }`}
+                    >
+                      For Sale
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, saleStatus: "sold" })}
+                      className={`w-28 h-11 rounded-full text-sm font-semibold transition-all ${
+                        formData.saleStatus === "sold"
+                          ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/30"
+                          : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                      }`}
+                    >
+                      Sold
+                    </button>
+                  </div>
+                </div>
+
                 <div className="flex gap-3 pt-4">
                   <Button
                     type="button"
@@ -582,6 +737,116 @@ export default function ArtworksPage() {
                     className="flex-1 bg-black hover:bg-zinc-800"
                   >
                     {isSubmitting ? "Adding..." : "Add Artwork"}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Edit Artwork Modal */}
+        {showEditModal && editingArtwork && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-6 border-b border-zinc-200">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xl font-bold">Edit Artwork</h3>
+                  <button
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setEditingArtwork(null);
+                    }}
+                    className="p-2 hover:bg-zinc-100 rounded-lg"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <form onSubmit={handleEditArtwork} className="p-6 space-y-4">
+                {/* Preview Image */}
+                <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-zinc-100">
+                  <Image
+                    src={editingArtwork.image}
+                    alt={editingArtwork.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1">Price (€) *</label>
+                  <input
+                    type="number"
+                    required
+                    min="0"
+                    step="0.01"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    className="w-full px-4 py-2 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                </div>
+
+                {/* Sale Status Toggle */}
+                <div>
+                  <label className="block text-sm font-medium text-zinc-700 mb-3">Sale Status</label>
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, saleStatus: "for_sale" })}
+                      className={`w-28 h-11 rounded-full text-sm font-semibold transition-all ${
+                        formData.saleStatus === "for_sale"
+                          ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
+                          : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                      }`}
+                    >
+                      For Sale
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setFormData({ ...formData, saleStatus: "sold" })}
+                      className={`w-28 h-11 rounded-full text-sm font-semibold transition-all ${
+                        formData.saleStatus === "sold"
+                          ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/30"
+                          : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                      }`}
+                    >
+                      Sold
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex gap-3 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setShowEditModal(false);
+                      setEditingArtwork(null);
+                    }}
+                    className="flex-1"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-black hover:bg-zinc-800"
+                  >
+                    {isSubmitting ? "Saving..." : "Save Changes"}
                   </Button>
                 </div>
               </form>
@@ -742,7 +1007,40 @@ export default function ArtworksPage() {
                   </p>
                 </div>
 
-                {/* Actions */}
+                {/* Edit & Delete Buttons */}
+                <div className="flex gap-2 mb-4">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => handleOpenEditModal(artwork)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                      <path d="m15 5 4 4"/>
+                    </svg>
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-red-200 text-red-600 hover:bg-red-50"
+                    onClick={() => handleDeleteArtwork(artwork.id, artwork.title)}
+                    disabled={isDeleting === artwork.id}
+                  >
+                    {isDeleting === artwork.id ? (
+                      <div className="w-4 h-4 border-2 border-red-300 border-t-red-600 rounded-full animate-spin" />
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18"/>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                        <line x1="10" x2="10" y1="11" y2="17"/>
+                        <line x1="14" x2="14" y1="11" y2="17"/>
+                      </svg>
+                    )}
+                  </Button>
+                </div>
+
+                {/* Status Actions */}
                 {artwork.status === "pending" && (
                   <div className="flex gap-2">
                     <Button
@@ -758,6 +1056,30 @@ export default function ArtworksPage() {
                     >
                       ✗ Reject
                     </Button>
+                  </div>
+                )}
+                {(artwork.status === "approved" || artwork.status === "sold") && (
+                  <div className="flex gap-3 justify-center">
+                    <button
+                      onClick={() => handleStatusChange(artwork.id, 'APPROVED')}
+                      className={`w-24 h-10 rounded-full text-sm font-semibold transition-all ${
+                        artwork.status === "approved"
+                          ? "bg-emerald-500 text-white shadow-lg shadow-emerald-500/30"
+                          : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                      }`}
+                    >
+                      For Sale
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(artwork.id, 'SOLD')}
+                      className={`w-24 h-10 rounded-full text-sm font-semibold transition-all ${
+                        artwork.status === "sold"
+                          ? "bg-gradient-to-r from-red-500 to-orange-500 text-white shadow-lg shadow-red-500/30"
+                          : "bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                      }`}
+                    >
+                      Sold
+                    </button>
                   </div>
                 )}
               </div>
