@@ -248,12 +248,6 @@ export default function CartPage() {
                             <path d="M44 18c0-5.5-4.5-10-10-10-2.2 0-4.2.7-5.9 1.9 2.5 2.2 4.1 5.4 4.1 9.1s-1.6 6.9-4.1 9.1c1.7 1.2 3.7 1.9 5.9 1.9 5.5 0 10-4.5 10-10z" fill="#EB001B"/>
                           </svg>
                         </div>
-                        <div className="px-3 py-2 bg-muted rounded flex items-center justify-center">
-                          <svg className="h-4" viewBox="0 0 48 32" xmlns="http://www.w3.org/2000/svg">
-                            <rect fill="#00579F" height="32" rx="4" width="48"/>
-                            <text x="24" y="20" fill="white" fontSize="14" fontWeight="bold" textAnchor="middle">PAYPAL</text>
-                          </svg>
-                        </div>
                       </div>
                     </div>
                   </div>

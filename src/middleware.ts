@@ -55,7 +55,7 @@ export function middleware(request: NextRequest) {
     // Stricter limits for sensitive endpoints
     if (pathname.includes("/auth") || pathname.includes("/login")) {
       limit = 10; // 10 requests per minute for auth
-    } else if (pathname.includes("/payment") || pathname.includes("/stripe") || pathname.includes("/paypal")) {
+    } else if (pathname.includes("/payment") || pathname.includes("/stripe")) {
       limit = 20; // 20 requests per minute for payments
     } else if (pathname.includes("/contact")) {
       limit = 5; // 5 requests per minute for contact
