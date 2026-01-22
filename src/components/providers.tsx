@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { SessionProvider } from "next-auth/react";
 import { Language, translations } from "@/lib/i18n";
 import { Painting } from "@/lib/paintings";
@@ -398,14 +398,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [userArtworks, setUserArtworks] = useState<Painting[]>([]);
 
   // Get user-specific storage key (works for both localStorage auth and NextAuth session)
-  const getUserArtworksKey = () => {
+  const getUserArtworksKey = useCallback(() => {
     // Check localStorage first (for CEO and local auth)
-    const localEmail = localStorage.getItem("userEmail");
-    if (localEmail) return `userArtworks_${localEmail}`;
+    if (typeof window !== "undefined") {
+      const localEmail = localStorage.getItem("userEmail");
+      if (localEmail) return `userArtworks_${localEmail}`;
+    }
     // Fallback to user context (for OAuth users)
     if (user?.email) return `userArtworks_${user.email}`;
     return null;
-  };
+  }, [user?.email]);
 
   // Load user artworks from localStorage (user-specific)
   useEffect(() => {
@@ -426,7 +428,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       // No user logged in, clear artworks
       setUserArtworks([]);
     }
-  }, [user]); // Re-run when user changes
+  }, [getUserArtworksKey]); // Re-run when key changes
 
   // Save user artworks to localStorage (user-specific)
   useEffect(() => {
@@ -434,7 +436,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     if (key && userArtworks.length > 0) {
       localStorage.setItem(key, JSON.stringify(userArtworks));
     }
-  }, [userArtworks]);
+  }, [userArtworks, getUserArtworksKey]);
 
   const addUserArtwork = (artwork: Painting) => {
     setUserArtworks((prev) => [artwork, ...prev]);

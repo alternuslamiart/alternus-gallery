@@ -10,9 +10,9 @@ function rateLimit(ip: string, limit: number, windowMs: number): boolean {
 
   // Clean old entries periodically
   if (rateLimitMap.size > 10000) {
-    for (const [key, val] of rateLimitMap.entries()) {
+    rateLimitMap.forEach((val, key) => {
       if (val.resetTime < now) rateLimitMap.delete(key);
-    }
+    });
   }
 
   if (!entry || entry.resetTime < now) {
@@ -40,7 +40,8 @@ function getClientIP(request: NextRequest): string {
 
 // Define protected routes
 const protectedRoutes: string[] = [];
-const adminRoutes = ["/admin"];
+// Admin routes (for future use)
+// const adminRoutes = ["/admin"];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -49,7 +50,7 @@ export function middleware(request: NextRequest) {
   // Rate limiting for API routes
   if (pathname.startsWith("/api")) {
     let limit = 100; // Default: 100 requests per minute
-    let windowMs = 60 * 1000;
+    const windowMs = 60 * 1000;
 
     // Stricter limits for sensitive endpoints
     if (pathname.includes("/auth") || pathname.includes("/login")) {

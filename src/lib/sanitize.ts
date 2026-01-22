@@ -195,11 +195,11 @@ export function checkFormRateLimit(
 
   // Cleanup old entries periodically
   if (formSubmissions.size > 1000) {
-    for (const [key, times] of formSubmissions.entries()) {
+    Array.from(formSubmissions.entries()).forEach(([key, times]) => {
       if (times.every((time) => now - time > windowMs)) {
         formSubmissions.delete(key);
       }
-    }
+    });
   }
 
   return true;
