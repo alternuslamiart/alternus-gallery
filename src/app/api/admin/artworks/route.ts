@@ -171,6 +171,7 @@ export async function POST(request: NextRequest) {
       category,
       dimensions,
       yearCreated,
+      status: requestedStatus,
     } = body
 
     // Validate required fields
@@ -216,6 +217,10 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Determine the status (default to APPROVED if not specified)
+    const artworkStatus = requestedStatus === 'SOLD' ? 'SOLD' : 'APPROVED'
+    const isAvailable = artworkStatus !== 'SOLD'
+
     // Create the artwork
     const artwork = await prisma.artwork.create({
       data: {
@@ -229,8 +234,8 @@ export async function POST(request: NextRequest) {
         category: category || 'Painting',
         dimensions: dimensions || '',
         yearCreated: yearCreated ? parseInt(yearCreated) : new Date().getFullYear(),
-        status: 'APPROVED',
-        isAvailable: true,
+        status: artworkStatus,
+        isAvailable,
         approvedAt: new Date(),
       },
       include: {

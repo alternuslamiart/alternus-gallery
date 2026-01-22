@@ -4,10 +4,10 @@ import { prisma } from '@/lib/prisma';
 // GET - Get single artist by ID with their artworks
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const artistId = params.id;
+    const { id: artistId } = await params;
 
     const artist = await prisma.artist.findUnique({
       where: { id: artistId },

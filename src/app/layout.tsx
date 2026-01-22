@@ -29,7 +29,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Alternus | Art Gallery",
+  title: "Exclusive Original ArtWorks",
   description: "Exclusive art gallery - Discover and purchase unique artworks",
   icons: {
     icon: "/icon.ico",

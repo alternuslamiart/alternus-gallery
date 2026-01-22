@@ -37,8 +37,18 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [notifications, setNotifications] = useState<Array<{
+    id: string;
+    type: string;
+    title: string;
+    message: string | null;
+    linkUrl: string | null;
+    isRead: boolean;
+    createdAt: string;
+  }>>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -64,36 +74,6 @@ export function Header() {
   const isLoggedIn = status === "authenticated" || localUser !== null;
   const user = session?.user || localUser;
 
-  // Mock notifications data
-  const notifications = [
-    {
-      id: 1,
-      type: "order",
-      title: "Order Shipped",
-      message: "Your order #ALT-2024-1234 has been shipped",
-      time: "2 hours ago",
-      isRead: false,
-    },
-    {
-      id: 2,
-      type: "artwork",
-      title: "New Artwork Available",
-      message: "Lamiart uploaded a new masterpiece",
-      time: "5 hours ago",
-      isRead: false,
-    },
-    {
-      id: 3,
-      type: "sale",
-      title: "Flash Sale Alert",
-      message: "20% off on selected artworks this weekend",
-      time: "1 day ago",
-      isRead: false,
-    },
-  ];
-
-  const unreadCount = notifications.filter(n => !n.isRead).length;
-
   // Filter results based on search query
   const filteredPaintings = paintings.filter(p =>
     p.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -103,6 +83,26 @@ export function Header() {
   const filteredArtists = artists.filter(a =>
     a.name.toLowerCase().includes(searchQuery.toLowerCase())
   ).slice(0, 3);
+
+  // Fetch notifications
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await fetch('/api/notifications?limit=6');
+        if (res.ok) {
+          const data = await res.json();
+          setNotifications(data.notifications || []);
+          setUnreadCount(data.unreadCount || 0);
+        }
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+      }
+    };
+    fetchNotifications();
+    // Refresh notifications every 60 seconds
+    const interval = setInterval(fetchNotifications, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Close search results when clicking outside
   useEffect(() => {
@@ -115,7 +115,7 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close notification when clicking outside
+  // Close notifications when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
@@ -125,9 +125,7 @@ export function Header() {
     if (isNotificationOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isNotificationOpen]);
 
   const handleSearch = (value: string) => {
@@ -158,6 +156,29 @@ export function Header() {
   ];
 
   const currentLang = languages.find((l) => l.code === language);
+
+  // Format time ago
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString();
+  };
+
+  const handleNotificationClick = (notification: typeof notifications[0]) => {
+    setIsNotificationOpen(false);
+    if (notification.linkUrl) {
+      router.push(notification.linkUrl);
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-3xl supports-[backdrop-filter]:bg-background/50">
@@ -459,142 +480,164 @@ export function Header() {
             )}
 
             {/* Notifications */}
-            {isLoggedIn && (
-              <div ref={notificationRef} className="relative">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative"
-                  onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+            <div ref={notificationRef} className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative"
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                  </svg>
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Button>
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                </svg>
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-semibold">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </Button>
 
-                {/* Notifications Dropdown */}
-                {isNotificationOpen && (
-                  <div className="absolute top-full right-0 mt-3 w-[380px] bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-200 z-50 overflow-hidden">
-                    {/* Header */}
-                    <div className="px-5 py-4 border-b border-gray-100 bg-gradient-to-b from-gray-50 to-white">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-bold text-lg text-gray-900">Notifications</h3>
-                          {unreadCount > 0 && (
-                            <span className="px-2.5 py-0.5 bg-red-500 text-white text-xs font-semibold rounded-full">
-                              {unreadCount}
-                            </span>
-                          )}
-                        </div>
-                        <button
-                          onClick={() => setIsNotificationOpen(false)}
-                          className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
-                            <path d="M18 6 6 18" />
-                            <path d="m6 6 12 12" />
-                          </svg>
-                        </button>
+              {/* Notifications Dropdown */}
+              {isNotificationOpen && (
+                <div className="absolute top-full right-0 mt-3 w-[360px] bg-white dark:bg-gray-900 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-200 dark:border-gray-700 z-50 overflow-hidden">
+                  {/* Header */}
+                  <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-bold text-lg text-gray-900 dark:text-white">Gallery Updates</h3>
+                        {unreadCount > 0 && (
+                          <span className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded-full">
+                            {unreadCount}
+                          </span>
+                        )}
                       </div>
-                      <p className="text-xs text-gray-500 font-medium">Stay updated with your orders and artworks</p>
+                      <button
+                        onClick={() => setIsNotificationOpen(false)}
+                        className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500">
+                          <path d="M18 6 6 18" />
+                          <path d="m6 6 12 12" />
+                        </svg>
+                      </button>
                     </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">New artworks & artists</p>
+                  </div>
 
-                    {/* Notifications List */}
-                    <div className="max-h-[420px] overflow-y-auto divide-y divide-gray-100">
-                      {notifications.map((notification) => (
-                        <div
+                  {/* Notifications List */}
+                  <div className="max-h-[380px] overflow-y-auto divide-y divide-gray-100 dark:divide-gray-800">
+                    {notifications.length === 0 ? (
+                      <div className="px-5 py-8 text-center">
+                        <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
+                            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                          </svg>
+                        </div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">No updates yet</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Check back later for new artworks</p>
+                      </div>
+                    ) : (
+                      notifications.map((notification) => (
+                        <button
                           key={notification.id}
-                          className={`px-5 py-4 hover:bg-gray-50 transition-all duration-200 cursor-pointer ${
-                            !notification.isRead ? "bg-blue-50/40" : "bg-white"
+                          onClick={() => handleNotificationClick(notification)}
+                          className={`w-full px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-200 text-left ${
+                            !notification.isRead ? "bg-blue-50/50 dark:bg-blue-900/20" : ""
                           }`}
-                          onClick={() => setIsNotificationOpen(false)}
                         >
-                          <div className="flex items-start gap-4">
+                          <div className="flex items-start gap-3">
                             {/* Icon */}
                             <div
-                              className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${
-                                notification.type === "order"
-                                  ? "bg-gradient-to-br from-blue-100 to-blue-50 shadow-sm"
-                                  : notification.type === "artwork"
-                                  ? "bg-gradient-to-br from-purple-100 to-purple-50 shadow-sm"
-                                  : "bg-gradient-to-br from-emerald-100 to-emerald-50 shadow-sm"
+                              className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                                notification.type === "new_artwork"
+                                  ? "bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/50 dark:to-purple-800/30"
+                                  : notification.type === "new_artist"
+                                  ? "bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-emerald-900/50 dark:to-emerald-800/30"
+                                  : notification.type === "order"
+                                  ? "bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/50 dark:to-blue-800/30"
+                                  : "bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-700"
                               }`}
                             >
-                              {notification.type === "order" && (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600">
-                                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                                  <polyline points="3.29 7 12 12 20.71 7" />
-                                  <line x1="12" x2="12" y1="22" y2="12" />
-                                </svg>
-                              )}
-                              {notification.type === "artwork" && (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600">
+                              {notification.type === "new_artwork" && (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600 dark:text-purple-400">
                                   <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
                                   <circle cx="9" cy="9" r="2" />
                                   <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                                 </svg>
                               )}
-                              {notification.type === "sale" && (
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600">
-                                  <circle cx="8" cy="21" r="1" />
-                                  <circle cx="19" cy="21" r="1" />
-                                  <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                              {notification.type === "new_artist" && (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-emerald-600 dark:text-emerald-400">
+                                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                  <circle cx="9" cy="7" r="4" />
+                                  <line x1="19" x2="19" y1="8" y2="14" />
+                                  <line x1="22" x2="16" y1="11" y2="11" />
+                                </svg>
+                              )}
+                              {notification.type === "order" && (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400">
+                                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                                  <polyline points="3.29 7 12 12 20.71 7" />
+                                  <line x1="12" x2="12" y1="22" y2="12" />
+                                </svg>
+                              )}
+                              {!["new_artwork", "new_artist", "order"].includes(notification.type) && (
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-600 dark:text-gray-400">
+                                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
                                 </svg>
                               )}
                             </div>
 
                             {/* Content */}
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-start justify-between gap-3 mb-1">
-                                <p className="font-bold text-sm text-gray-900 leading-snug">
+                              <div className="flex items-start justify-between gap-2 mb-0.5">
+                                <p className="font-semibold text-sm text-gray-900 dark:text-white leading-snug">
                                   {notification.title}
                                 </p>
                                 {!notification.isRead && (
-                                  <div className="w-2.5 h-2.5 bg-blue-500 rounded-full flex-shrink-0 mt-1.5 shadow-sm" />
+                                  <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5" />
                                 )}
                               </div>
-                              <p className="text-sm text-gray-600 leading-relaxed mb-2">
+                              <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
                                 {notification.message}
                               </p>
-                              <div className="flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-400">
-                                  <circle cx="12" cy="12" r="10" />
-                                  <polyline points="12 6 12 12 16 14" />
-                                </svg>
-                                <p className="text-xs text-gray-500 font-medium">{notification.time}</p>
-                              </div>
+                              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">
+                                {formatTimeAgo(notification.createdAt)}
+                              </p>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="px-5 py-3 border-t border-gray-100 bg-gradient-to-b from-white to-gray-50">
-                      <button className="w-full text-center text-sm font-semibold text-gray-700 hover:text-gray-900 transition-colors py-2 px-4 rounded-lg hover:bg-white">
-                        View all notifications →
-                      </button>
-                    </div>
+                        </button>
+                      ))
+                    )}
                   </div>
-                )}
-              </div>
-            )}
+
+                  {/* Footer */}
+                  {notifications.length > 0 && (
+                    <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800">
+                      <Link
+                        href="/gallery"
+                        onClick={() => setIsNotificationOpen(false)}
+                        className="block w-full text-center text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors py-2 px-4 rounded-lg hover:bg-white dark:hover:bg-gray-800"
+                      >
+                        Browse Gallery →
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
 
             {/* Wishlist */}
             <Link href="/wishlist">

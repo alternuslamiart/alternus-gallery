@@ -209,41 +209,48 @@ export function AIChat() {
     "Can I commission custom art?",
   ];
 
+  // This component is now only used for desktop
+  // Mobile chat is handled by MobileChat component in mobile-nav
   return (
     <>
-      {/* Chat Button - Mobile Only, Centered */}
+      {/* Desktop Chat Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-14 h-14 bg-black text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center"
+        className="hidden md:flex fixed bottom-6 right-6 z-50 w-16 h-16 bg-black text-white rounded-full shadow-2xl hover:scale-110 transition-all duration-300 items-center justify-center group"
         aria-label="Open AI Chat"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
+          width="28"
+          height="28"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          className="group-hover:scale-110 transition-transform"
         >
           <path d="m3 21 1.9-5.7a8.5 8.5 0 1 1 3.8 3.8z" />
         </svg>
-        <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+        <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse" />
+        {/* Tooltip */}
+        <span className="absolute right-20 bg-gray-900 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          Chat with Artie AI
+        </span>
       </button>
 
-      {/* Chat Window - Mobile Only, Centered */}
+      {/* Desktop Chat Window */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="hidden md:flex fixed inset-0 z-50 items-end justify-end p-6">
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0"
             onClick={() => setIsOpen(false)}
           />
 
-          {/* Chat Container - Centered */}
-          <div className="relative w-full max-w-md h-[80vh] max-h-[600px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 fade-in duration-300">
+          {/* Chat Container */}
+          <div className="relative w-full max-w-md h-[600px] max-h-[85vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right-4 duration-300">
             {/* Header */}
             <div className="bg-black px-4 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
