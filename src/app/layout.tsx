@@ -29,7 +29,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Exclusive Original ArtWorks",
+  title: "Exclusive Original Artworks",
   description: "Exclusive art gallery - Discover and purchase unique artworks",
   icons: {
     icon: "/icon.ico",
