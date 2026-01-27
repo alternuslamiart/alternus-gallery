@@ -22,7 +22,7 @@ interface OrderItem {
   artwork: {
     id: string;
     title: string;
-    imageUrl: string | null;
+    primaryImage: string | null;
   } | null;
 }
 
@@ -286,9 +286,9 @@ export default function AdminOrdersPage() {
                                 key={item.id}
                                 className="flex items-center gap-3 bg-white p-3 rounded-lg border"
                               >
-                                {item.artwork?.imageUrl ? (
+                                {item.artwork?.primaryImage ? (
                                   <Image
-                                    src={item.artwork.imageUrl}
+                                    src={item.artwork.primaryImage}
                                     alt={item.artwork.title}
                                     width={64}
                                     height={64}
