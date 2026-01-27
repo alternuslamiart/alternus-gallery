@@ -55,7 +55,7 @@ export default function ReturnsPage() {
               <div className="bg-white rounded-2xl border border-gray-100 p-6 text-center h-full">
                 <div className="w-12 h-12 bg-gray-900 text-white rounded-xl flex items-center justify-center mx-auto mb-4 font-bold">1</div>
                 <h3 className="font-semibold text-gray-900 mb-2">Contact Us</h3>
-                <p className="text-sm text-gray-500">Email us at info@alternus.com with your order number</p>
+                <p className="text-sm text-gray-500">Email us at info@alternusart.com with your order number</p>
               </div>
               <div className="hidden md:block absolute top-1/2 -right-2 w-4 h-0.5 bg-gray-200" />
             </div>

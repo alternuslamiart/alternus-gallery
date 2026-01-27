@@ -385,7 +385,7 @@ export default function PrivacyPolicyPage() {
               </div>
 
               <p className="text-muted-foreground leading-relaxed mt-4">
-                To exercise any of these rights, please contact us at <strong>privacy@alternus.com</strong>.
+                To exercise any of these rights, please contact us at <strong>privacy@alternusart.com</strong>.
                 We will respond to your request within 30 days as required by law.
               </p>
             </section>
@@ -471,10 +471,10 @@ export default function PrivacyPolicyPage() {
               <div className="bg-muted/50 rounded-xl p-6 space-y-3">
                 <p className="font-semibold text-lg">Alternus Art Gallery</p>
                 <p className="text-muted-foreground">
-                  <strong>Address:</strong> Prishtinë, Kosovo
+                  <strong>Address:</strong> Kosovo
                 </p>
                 <p className="text-muted-foreground">
-                  <strong>Email:</strong> privacy@alternus.com
+                  <strong>Email:</strong> privacy@alternusart.com
                 </p>
                 <p className="text-muted-foreground">
                   <strong>Phone:</strong> +383 48 466 061

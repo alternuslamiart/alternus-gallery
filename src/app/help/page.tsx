@@ -107,7 +107,7 @@ export default function HelpCenterPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Email Support</h3>
               <p className="text-sm text-gray-500 mb-4">Get help via email within 24 hours</p>
-              <span className="text-sm text-blue-600 font-medium">info@alternus.com</span>
+              <span className="text-sm text-blue-600 font-medium">info@alternusart.com</span>
             </Link>
 
             {/* FAQ */}

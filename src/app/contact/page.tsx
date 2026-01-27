@@ -48,8 +48,8 @@ export default function ContactPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Email</h3>
               <p className="text-sm text-gray-500 mb-3">We&apos;ll respond within 24 hours</p>
-              <a href="mailto:info@alternus.com" className="text-blue-600 font-medium hover:underline">
-                info@alternus.com
+              <a href="mailto:info@alternusart.com" className="text-blue-600 font-medium hover:underline">
+                info@alternusart.com
               </a>
             </div>
 
@@ -75,7 +75,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Location</h3>
               <p className="text-sm text-gray-500 mb-3">Visit our gallery</p>
-              <span className="text-purple-600 font-medium">Prishtinë, Kosovo</span>
+              <span className="text-purple-600 font-medium">Kosovo</span>
             </div>
           </div>
 

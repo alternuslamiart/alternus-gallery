@@ -17,7 +17,7 @@ const faqs = [
       },
       {
         q: "Can I cancel or modify my order?",
-        a: "Orders can be cancelled or modified within 24 hours of placement, provided the artwork hasn't been shipped. Contact us immediately at info@alternus.com."
+        a: "Orders can be cancelled or modified within 24 hours of placement, provided the artwork hasn't been shipped. Contact us immediately at info@alternusart.com."
       },
       {
         q: "How long do I have to complete payment?",
@@ -55,7 +55,7 @@ const faqs = [
       },
       {
         q: "How do I initiate a return?",
-        a: "Contact our support team at info@alternus.com with your order number. We'll provide return instructions and a prepaid shipping label."
+        a: "Contact our support team at info@alternusart.com with your order number. We'll provide return instructions and a prepaid shipping label."
       },
       {
         q: "When will I receive my refund?",
@@ -195,14 +195,14 @@ export default function FAQPage() {
                 Contact Support
               </Link>
               <a
-                href="mailto:info@alternus.com"
+                href="mailto:info@alternusart.com"
                 className="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-8 py-4 rounded-xl font-medium hover:bg-white/10 transition-colors"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <rect width="20" height="16" x="2" y="4" rx="2"/>
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                 </svg>
-                info@alternus.com
+                info@alternusart.com
               </a>
             </div>
           </div>

@@ -130,7 +130,7 @@ export default function AdminSettingsPage() {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-semibold text-gray-700">Email</label>
-                  <p className="text-base text-gray-900 mt-1">admin@alternus.com</p>
+                  <p className="text-base text-gray-900 mt-1">admin@alternusart.com</p>
                 </div>
                 <div>
                   <label className="text-sm font-semibold text-gray-700">Role</label>

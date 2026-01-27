@@ -133,7 +133,7 @@ export default function ApplyPage() {
                 <a href="/">Return to Home</a>
               </Button>
               <p className="text-sm text-muted-foreground">
-                Questions? Contact us at <a href="mailto:artists@alternus.com" className="text-primary hover:underline">artists@alternus.com</a>
+                Questions? Contact us at <a href="mailto:artists@alternusart.com" className="text-primary hover:underline">artists@alternusart.com</a>
               </p>
             </div>
           </div>

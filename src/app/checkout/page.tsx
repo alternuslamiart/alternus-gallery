@@ -937,7 +937,7 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Questions about your order?</p>
-                  <p className="font-semibold text-lg">info@alternus.com</p>
+                  <p className="font-semibold text-lg">info@alternusart.com</p>
                 </div>
                 <Button variant="outline" className="ml-auto" asChild>
                   <Link href="/contact">Contact Us</Link>
