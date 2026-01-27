@@ -111,7 +111,6 @@ export default function SignUpPage() {
   const [verificationCode, setVerificationCode] = useState<string[]>(["", "", "", "", "", ""]);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_generatedCode, setGeneratedCode] = useState("");
-  const [devCode, setDevCode] = useState<string | null>(null); // For development without SMTP
   const [verificationError, setVerificationError] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
   const [canResend, setCanResend] = useState(false);
@@ -150,13 +149,6 @@ export default function SignUpPage() {
       if (!response.ok) {
         setErrors({ email: data.error || 'Failed to send verification code' });
         return false;
-      }
-
-      // If SMTP not configured, store the dev code to show in UI
-      if (data.devCode) {
-        setDevCode(data.devCode);
-      } else {
-        setDevCode(null);
       }
 
       return true;
@@ -252,8 +244,19 @@ export default function SignUpPage() {
         return;
       }
 
-      // Success - redirect to login
-      router.push('/login?verified=true');
+      // Success - automatically sign in and redirect to homepage
+      const signInResult = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (signInResult?.ok) {
+        router.push('/');
+      } else {
+        // If auto-login fails, redirect to login page
+        router.push('/login?verified=true');
+      }
     } catch (error) {
       console.error('Verification error:', error);
       setVerificationError("An error occurred. Please try again.");
@@ -390,15 +393,6 @@ export default function SignUpPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Dev Mode - Show code when SMTP not configured */}
-              {devCode && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-center">
-                  <p className="text-xs text-amber-600 mb-1">Development Mode (Email not configured)</p>
-                  <p className="text-sm text-amber-800">Your verification code is:</p>
-                  <p className="text-2xl font-bold text-amber-900 tracking-widest mt-1">{devCode}</p>
-                </div>
-              )}
-
               {/* Verification Code Inputs */}
               <div className="space-y-4">
                 <div className="flex justify-center gap-2">

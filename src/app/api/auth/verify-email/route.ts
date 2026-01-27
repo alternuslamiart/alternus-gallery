@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { sendVerificationEmail } from '@/lib/email';
 
 // Store verification codes temporarily (in production, use Redis or database)
 const globalForVerification = globalThis as unknown as {
@@ -31,14 +32,22 @@ export async function POST(request: NextRequest) {
       // Store the code
       verificationCodes.set(email, { code, expires });
 
-      // Log the code for development
-      console.log(`[Verification] Code for ${email}: ${code}`);
+      // Send verification email
+      const emailSent = await sendVerificationEmail(email, code);
 
-      // For now, always return the devCode since SMTP is not configured
+      if (!emailSent) {
+        console.error(`[Verification] Failed to send email to ${email}`);
+        return NextResponse.json(
+          { error: 'Failed to send verification email. Please try again.' },
+          { status: 500 }
+        );
+      }
+
+      console.log(`[Verification] Email sent successfully to ${email}`);
+
       return NextResponse.json({
         success: true,
-        message: 'Verification code generated',
-        devCode: code,
+        message: 'Verification code sent to your email',
       });
     }
 
