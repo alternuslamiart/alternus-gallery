@@ -760,57 +760,59 @@ export function Header() {
         </div>
       </div>
 
-      {/* Logout Confirmation Dialog */}
+      {/* Logout Confirmation Dialog - Modern Soft Design */}
       <Dialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
-        <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden">
-          {/* Header with gradient */}
-          <div className="bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-8 text-center">
-            <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-white/20">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" x2="9" y1="12" y2="12" />
-              </svg>
+        <DialogContent className="sm:max-w-[380px] p-0 overflow-hidden rounded-3xl border-0 shadow-2xl">
+          {/* Soft gradient header */}
+          <div className="bg-gradient-to-br from-slate-50 via-gray-50 to-stone-100 px-8 pt-10 pb-6 text-center">
+            <div className="w-20 h-20 bg-white rounded-2xl shadow-lg flex items-center justify-center mx-auto mb-5 rotate-3 hover:rotate-0 transition-transform duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-rose-100 to-orange-100 rounded-xl flex items-center justify-center -rotate-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-rose-500">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+              </div>
             </div>
-            <h2 className="text-xl font-semibold text-white mb-1">Sign Out</h2>
-            <p className="text-gray-400 text-sm">You&apos;re about to log out</p>
+            <h2 className="text-2xl font-semibold text-gray-800 mb-2">Leaving so soon?</h2>
+            <p className="text-gray-500 text-sm">We&apos;ll miss you!</p>
           </div>
 
           {/* Content */}
-          <div className="px-6 py-5">
-            <p className="text-center text-muted-foreground text-sm leading-relaxed">
-              Are you sure you want to sign out of your account? You&apos;ll need to sign in again to access your orders, wishlist, and personalized recommendations.
-            </p>
-
-            {/* User info */}
+          <div className="px-8 py-6 bg-white">
+            {/* User info card */}
             {user && (
-              <div className="mt-4 p-3 bg-muted/50 rounded-lg flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                  <span className="text-primary font-semibold text-sm">
+              <div className="p-4 bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl flex items-center gap-4 mb-5">
+                <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                  <span className="text-white font-semibold text-lg">
                     {(user.name || user.email || "U").charAt(0).toUpperCase()}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{user.name || "User"}</p>
-                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  <p className="text-base font-medium text-gray-800 truncate">{user.name || "User"}</p>
+                  <p className="text-sm text-gray-500 truncate">{user.email}</p>
                 </div>
               </div>
             )}
+
+            <p className="text-center text-gray-500 text-sm leading-relaxed">
+              You&apos;ll need to sign in again to access your saved items and order history.
+            </p>
           </div>
 
-          {/* Footer */}
-          <div className="px-6 pb-6 flex gap-3">
+          {/* Footer with soft buttons */}
+          <div className="px-8 pb-8 pt-2 bg-white flex gap-3">
             <Button
               type="button"
-              variant="outline"
-              className="flex-1"
+              variant="ghost"
+              className="flex-1 h-12 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium transition-all duration-200"
               onClick={() => setShowLogoutConfirm(false)}
             >
-              Cancel
+              Stay
             </Button>
             <Button
               type="button"
-              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white"
+              className="flex-1 h-12 rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-medium shadow-lg shadow-rose-500/25 transition-all duration-200"
               onClick={() => {
                 // Clear localStorage
                 localStorage.removeItem("userAuth");
@@ -822,11 +824,6 @@ export function Header() {
                 setShowLogoutConfirm(false);
               }}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" x2="9" y1="12" y2="12" />
-              </svg>
               Sign Out
             </Button>
           </div>
