@@ -34,6 +34,9 @@ export const metadata: Metadata = {
   icons: {
     icon: "/icon.ico",
   },
+  other: {
+    "trustpilot-one-time-domain-verification-id": "97339bc2-345b-49c2-a68e-f83d09f259c1",
+  },
 };
 
 export default function RootLayout({
