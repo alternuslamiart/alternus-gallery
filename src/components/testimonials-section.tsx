@@ -220,7 +220,7 @@ export default function TestimonialsSection() {
         <div className="mt-16 pt-12 border-t border-gray-200">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">5,000+</p>
+              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">120+</p>
               <p className="text-sm text-gray-600">Happy Customers</p>
             </div>
             <div>
@@ -228,11 +228,11 @@ export default function TestimonialsSection() {
               <p className="text-sm text-gray-600">Satisfaction Rate</p>
             </div>
             <div>
-              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">10,000+</p>
-              <p className="text-sm text-gray-600">Artworks Sold</p>
+              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">50+</p>
+              <p className="text-sm text-gray-600">Original Artworks</p>
             </div>
             <div>
-              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">150+</p>
+              <p className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">10+</p>
               <p className="text-sm text-gray-600">Featured Artists</p>
             </div>
           </div>
