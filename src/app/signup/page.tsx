@@ -84,7 +84,7 @@ export default function SignUpPage() {
     { code: "ZA", name: "South Africa", phonePlaceholder: "+27" },
     { code: "AE", name: "United Arab Emirates", phonePlaceholder: "+971" },
     { code: "SA", name: "Saudi Arabia", phonePlaceholder: "+966" },
-    { code: "IL", name: "Israel", phonePlaceholder: "+972" },
+    { code: "PS", name: "Palestine", phonePlaceholder: "+970" },
     { code: "EG", name: "Egypt", phonePlaceholder: "+20" },
     { code: "NG", name: "Nigeria", phonePlaceholder: "+234" },
     { code: "KE", name: "Kenya", phonePlaceholder: "+254" },
