@@ -252,10 +252,11 @@ export default function SignUpPage() {
       });
 
       if (signInResult?.ok) {
-        router.push('/');
+        // Use window.location for full page reload to pick up session
+        window.location.href = '/';
       } else {
         // If auto-login fails, redirect to login page
-        router.push('/login?verified=true');
+        window.location.href = '/login?verified=true';
       }
     } catch (error) {
       console.error('Verification error:', error);
