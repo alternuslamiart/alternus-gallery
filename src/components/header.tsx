@@ -766,33 +766,55 @@ export function Header() {
 
       {/* Logout Confirmation Dialog */}
       <Dialog open={showLogoutConfirm} onOpenChange={setShowLogoutConfirm}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-600">
-                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                  <polyline points="16 17 21 12 16 7" />
-                  <line x1="21" x2="9" y1="12" y2="12" />
-                </svg>
+        <DialogContent className="sm:max-w-[400px] p-0 overflow-hidden">
+          {/* Header with gradient */}
+          <div className="bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-8 text-center">
+            <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4 ring-4 ring-white/20">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" x2="9" y1="12" y2="12" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-semibold text-white mb-1">Sign Out</h2>
+            <p className="text-gray-400 text-sm">You&apos;re about to log out</p>
+          </div>
+
+          {/* Content */}
+          <div className="px-6 py-5">
+            <p className="text-center text-muted-foreground text-sm leading-relaxed">
+              Are you sure you want to sign out of your account? You&apos;ll need to sign in again to access your orders, wishlist, and personalized recommendations.
+            </p>
+
+            {/* User info */}
+            {user && (
+              <div className="mt-4 p-3 bg-muted/50 rounded-lg flex items-center gap-3">
+                <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                  <span className="text-primary font-semibold text-sm">
+                    {(user.name || user.email || "U").charAt(0).toUpperCase()}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{user.name || "User"}</p>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                </div>
               </div>
-              Confirm Logout
-            </DialogTitle>
-            <DialogDescription className="pt-2">
-              Are you sure you want to log out? You will need to log in again to access your account.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="gap-2 sm:gap-0">
+            )}
+          </div>
+
+          {/* Footer */}
+          <div className="px-6 pb-6 flex gap-3">
             <Button
               type="button"
               variant="outline"
+              className="flex-1"
               onClick={() => setShowLogoutConfirm(false)}
             >
               Cancel
             </Button>
             <Button
               type="button"
-              variant="destructive"
+              className="flex-1 bg-gray-900 hover:bg-gray-800 text-white"
               onClick={() => {
                 // Clear localStorage
                 localStorage.removeItem("userAuth");
@@ -804,9 +826,14 @@ export function Header() {
                 setShowLogoutConfirm(false);
               }}
             >
-              Logout
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" x2="9" y1="12" y2="12" />
+              </svg>
+              Sign Out
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
     </header>
