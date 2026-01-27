@@ -133,7 +133,7 @@ export default function HelpCenterPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
               <p className="text-sm text-gray-500 mb-4">Call us Mon-Fri, 9am-6pm EST</p>
-              <span className="text-sm text-amber-600 font-medium">+1 (212) XXX-XXXX</span>
+              <span className="text-sm text-amber-600 font-medium">+383 48 466 061</span>
             </div>
           </div>
         </div>

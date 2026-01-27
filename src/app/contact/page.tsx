@@ -62,7 +62,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
               <p className="text-sm text-gray-500 mb-3">Mon-Fri, 9am-6pm EST</p>
-              <span className="text-emerald-600 font-medium">+1 (212) XXX-XXXX</span>
+              <span className="text-emerald-600 font-medium">+383 48 466 061</span>
             </div>
 
             {/* Location */}
@@ -75,7 +75,7 @@ export default function ContactPage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Location</h3>
               <p className="text-sm text-gray-500 mb-3">Visit our gallery</p>
-              <span className="text-purple-600 font-medium">New York, NY</span>
+              <span className="text-purple-600 font-medium">Prishtinë, Kosovo</span>
             </div>
           </div>
 

@@ -447,7 +447,7 @@ export default function TermsOfServicePage() {
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 Any disputes arising out of or relating to these Terms shall be subject to the exclusive
-                jurisdiction of the courts of New York, NY, unless otherwise required by applicable
+                jurisdiction of the courts of Prishtinë, Kosovo, unless otherwise required by applicable
                 consumer protection laws.
               </p>
             </section>
@@ -538,13 +538,13 @@ export default function TermsOfServicePage() {
               <div className="bg-muted/50 rounded-xl p-6 space-y-3">
                 <p className="font-semibold text-lg">Alternus Art Gallery</p>
                 <p className="text-muted-foreground">
-                  <strong>Address:</strong> New York, NY
+                  <strong>Address:</strong> Prishtinë, Kosovo
                 </p>
                 <p className="text-muted-foreground">
                   <strong>Email:</strong> legal@alternus.com
                 </p>
                 <p className="text-muted-foreground">
-                  <strong>Phone:</strong> +1 (212) XXX-XXXX
+                  <strong>Phone:</strong> +383 48 466 061
                 </p>
                 <p className="text-muted-foreground">
                   <strong>Business Registration:</strong> NIPT: XXXXXXXXXX

@@ -471,13 +471,13 @@ export default function PrivacyPolicyPage() {
               <div className="bg-muted/50 rounded-xl p-6 space-y-3">
                 <p className="font-semibold text-lg">Alternus Art Gallery</p>
                 <p className="text-muted-foreground">
-                  <strong>Address:</strong> New York, NY
+                  <strong>Address:</strong> Prishtinë, Kosovo
                 </p>
                 <p className="text-muted-foreground">
                   <strong>Email:</strong> privacy@alternus.com
                 </p>
                 <p className="text-muted-foreground">
-                  <strong>Phone:</strong> +1 (212) XXX-XXXX
+                  <strong>Phone:</strong> +383 48 466 061
                 </p>
               </div>
             </section>
