@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import GitHub from "next-auth/providers/github"
 import Credentials from "next-auth/providers/credentials"
+import bcrypt from "bcryptjs"
 import { prisma } from "./prisma"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -32,7 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         console.log("Login attempt for email:", email)
 
-        // Case-insensitive email comparison
+        // Case-insensitive email comparison for CEO
         if (email === CEO_EMAIL.toLowerCase() && password === CEO_PASSWORD) {
           console.log("CEO login successful")
 
@@ -61,6 +62,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             role: "CEO",
           }
         }
+
+        // Check for regular users in database
+        const user = await prisma.user.findFirst({
+          where: { email: { equals: email, mode: 'insensitive' } },
+        })
+
+        if (user && user.passwordHash) {
+          const isValidPassword = await bcrypt.compare(password, user.passwordHash)
+
+          if (isValidPassword) {
+            console.log("User login successful:", email)
+            return {
+              id: user.id,
+              email: user.email,
+              name: `${user.firstName} ${user.lastName}`,
+              role: user.role,
+            }
+          }
+        }
+
         console.log("Login failed - invalid credentials")
         return null
       },

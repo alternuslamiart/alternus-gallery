@@ -1,29 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-
-// In-memory user storage (temporary - use database in production)
-interface User {
-  id: string;
-  email: string;
-  passwordHash: string;
-  firstName: string;
-  lastName: string;
-  phone?: string;
-  country?: string;
-  role: string;
-  emailVerified: boolean;
-  createdAt: string;
-}
-
-const globalForUsers = globalThis as unknown as {
-  users: Map<string, User>;
-};
-
-if (!globalForUsers.users) {
-  globalForUsers.users = new Map();
-}
-
-const users = globalForUsers.users;
+import { prisma } from '@/lib/prisma';
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,8 +14,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const normalizedEmail = email.trim().toLowerCase();
+
     // Check if user already exists
-    if (users.has(email)) {
+    const existingUser = await prisma.user.findFirst({
+      where: { email: { equals: normalizedEmail, mode: 'insensitive' } },
+    });
+
+    if (existingUser) {
       return NextResponse.json(
         { error: 'This email is already registered' },
         { status: 400 }
@@ -56,23 +39,20 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await bcrypt.hash(password, 12);
 
-    // Create user
-    const user: User = {
-      id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      email,
-      passwordHash,
-      firstName,
-      lastName,
-      phone: phone || undefined,
-      country: country || undefined,
-      role: 'CUSTOMER',
-      emailVerified: true,
-      createdAt: new Date().toISOString(),
-    };
+    // Create user in database
+    const user = await prisma.user.create({
+      data: {
+        email: normalizedEmail,
+        passwordHash,
+        firstName,
+        lastName,
+        phone: phone || null,
+        role: 'CUSTOMER',
+        emailVerified: true,
+      },
+    });
 
-    users.set(email, user);
-
-    console.log(`[Register] New user created: ${email}`);
+    console.log(`[Register] New user created: ${normalizedEmail}`);
 
     return NextResponse.json({
       success: true,
