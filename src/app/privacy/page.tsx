@@ -416,9 +416,32 @@ export default function PrivacyPolicyPage() {
               </p>
             </section>
 
+            {/* Third-Party Advertising */}
+            <section>
+              <h2 className="text-2xl font-bold mb-4">12. Third-Party Advertising</h2>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                We may use third-party advertising companies, including Google AdSense, to serve advertisements
+                when you visit our website. These companies may use information (not including your name, address,
+                email address, or telephone number) about your visits to this and other websites in order to
+                provide advertisements about goods and services of interest to you.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Google, as a third-party vendor, uses cookies to serve ads on our site. Google&apos;s use of the
+                DART cookie enables it to serve ads to our users based on their visit to our sites and other
+                sites on the Internet. Users may opt out of the use of the DART cookie by visiting the
+                Google ad and content network privacy policy.
+              </p>
+              <h3 className="text-xl font-semibold mb-3">How to Opt Out</h3>
+              <ul className="list-disc pl-6 text-muted-foreground space-y-2">
+                <li>Visit <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ads Settings</a> to opt out of personalized advertising</li>
+                <li>Visit <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">AboutAds.info</a> to opt out of third-party vendor cookies</li>
+                <li>Use your browser settings to manage or delete cookies</li>
+              </ul>
+            </section>
+
             {/* Third-Party Links */}
             <section>
-              <h2 className="text-2xl font-bold mb-4">12. Third-Party Links</h2>
+              <h2 className="text-2xl font-bold mb-4">13. Third-Party Links</h2>
               <p className="text-muted-foreground leading-relaxed">
                 Our Site may contain links to third-party websites that are not operated by us.
                 If you click on a third-party link, you will be directed to that third party&apos;s site.
@@ -430,7 +453,7 @@ export default function PrivacyPolicyPage() {
 
             {/* Changes to This Policy */}
             <section>
-              <h2 className="text-2xl font-bold mb-4">13. Changes to This Privacy Policy</h2>
+              <h2 className="text-2xl font-bold mb-4">14. Changes to This Privacy Policy</h2>
               <p className="text-muted-foreground leading-relaxed">
                 We may update our Privacy Policy from time to time. We will notify you of any changes
                 by posting the new Privacy Policy on this page and updating the &quot;Last updated&quot; date.
@@ -441,7 +464,7 @@ export default function PrivacyPolicyPage() {
 
             {/* Contact Us */}
             <section>
-              <h2 className="text-2xl font-bold mb-4">14. Contact Us</h2>
+              <h2 className="text-2xl font-bold mb-4">15. Contact Us</h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
                 If you have any questions about this Privacy Policy or our data practices, please contact us:
               </p>
