@@ -16,10 +16,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
 } from "@/components/ui/dialog";
 import { useLanguage, useCart, useWishlist } from "@/components/providers";
 import { languages } from "@/lib/i18n";
