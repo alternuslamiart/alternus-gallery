@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Script from "next/script";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/components/providers";
 
@@ -336,6 +337,28 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Trustpilot Widget */}
+        <div className="flex flex-col items-center gap-3 mb-8">
+          <p className="text-sm text-muted-foreground font-medium">Customer Reviews</p>
+          <div
+            className="trustpilot-widget"
+            data-locale="en-US"
+            data-template-id="56278e9abfbbba0bdcd568bc"
+            data-businessunit-id="697912722557cead736d2bbf"
+            data-style-height="52px"
+            data-style-width="100%"
+            data-token="1b9304da-76f4-45bf-a3ea-6fac82089ba9"
+          >
+            <a
+              href="https://www.trustpilot.com/review/alternusart.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Trustpilot
+            </a>
+          </div>
+        </div>
+
         <Separator className="mb-8" />
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
@@ -350,6 +373,12 @@ export function Footer() {
           </div>
         </div>
       </div>
+
+      {/* TrustBox script */}
+      <Script
+        src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js"
+        strategy="lazyOnload"
+      />
     </footer>
   );
 }
