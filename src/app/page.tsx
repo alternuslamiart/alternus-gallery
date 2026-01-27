@@ -185,11 +185,11 @@ export default function Home() {
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {/* Main Hero Card */}
-              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[450px] p-3">
+                <div className="md:hidden relative h-[360px] p-2">
                   {/* Decorative Frame */}
-                  <div className="relative h-full rounded-[20px] border-[3px] border-amber-600/80 bg-gradient-to-br from-zinc-900 to-zinc-800 overflow-hidden shadow-[0_0_0_6px_rgba(120,53,15,0.3),0_0_0_10px_rgba(120,53,15,0.1)]">
+                  <div className="relative h-full rounded-[16px] border-[2px] border-amber-600/80 bg-gradient-to-br from-zinc-900 to-zinc-800 overflow-hidden shadow-[0_0_0_4px_rgba(120,53,15,0.3)]">
                     {/* Background Image */}
                     <div className="absolute inset-0">
                       <Image
@@ -201,13 +201,13 @@ export default function Home() {
                       />
                     </div>
                     {/* Frame Inner Border */}
-                    <div className="absolute inset-2 border border-amber-500/30 rounded-[14px] pointer-events-none" />
+                    <div className="absolute inset-1.5 border border-amber-500/30 rounded-[12px] pointer-events-none" />
 
                     {/* Content Inside Frame */}
-                    <div className="relative z-10 h-full flex flex-col justify-end p-5 pb-6">
-                      {/* Badge */}
-                      <div className="inline-flex items-center gap-2 bg-amber-900/60 backdrop-blur-sm text-amber-100 px-3 py-1.5 rounded-full text-xs font-medium mb-3 w-fit border border-amber-600/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-4">
+                      {/* Top Section - Badge */}
+                      <div className="inline-flex items-center gap-1.5 bg-amber-900/60 backdrop-blur-sm text-amber-100 px-2.5 py-1 rounded-full text-[10px] font-medium w-fit border border-amber-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M12 19l7-7 3 3-7 7-3-3z" />
                           <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
                           <path d="M2 2l7.586 7.586" />
@@ -216,29 +216,44 @@ export default function Home() {
                         Original Artworks
                       </div>
 
-                      {/* Main Headline */}
-                      <h1 className="text-3xl font-bold text-white mb-2 leading-tight drop-shadow-lg">
-                        Where Art<br />
-                        <span className="text-amber-200">Meets Soul</span>
-                      </h1>
+                      {/* Bottom Section - Content & Buttons */}
+                      <div>
+                        {/* Main Headline */}
+                        <h1 className="text-2xl font-bold text-white mb-1 leading-tight drop-shadow-lg">
+                          Where Art <span className="text-amber-200">Meets Soul</span>
+                        </h1>
 
-                      {/* Subheadline */}
-                      <p className="text-sm text-white/80 mb-4 line-clamp-2 drop-shadow">
-                        Discover unique paintings crafted with passion.
-                      </p>
+                        {/* Subheadline */}
+                        <p className="text-xs text-white/80 mb-3 drop-shadow">
+                          Discover unique paintings crafted with passion.
+                        </p>
 
-                      {/* CTA Buttons */}
-                      <div className="flex gap-2">
-                        <Button asChild size="sm" className="px-4 bg-amber-600 text-white hover:bg-amber-500 border-0">
-                          <Link href="/signup">
-                            Sell your Art
-                          </Link>
-                        </Button>
-                        <Button asChild size="sm" variant="outline" className="px-4 bg-white/10 text-white border border-white/30 hover:bg-white/20">
-                          <Link href="/gallery">
-                            Gallery
-                          </Link>
-                        </Button>
+                        {/* CTA Buttons & Stats Row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-2">
+                            <Button asChild size="sm" className="h-8 px-3 text-xs bg-amber-600 text-white hover:bg-amber-500 border-0">
+                              <Link href="/signup">
+                                Sell Art
+                              </Link>
+                            </Button>
+                            <Button asChild size="sm" variant="outline" className="h-8 px-3 text-xs bg-white/10 text-white border border-white/30 hover:bg-white/20">
+                              <Link href="/gallery">
+                                Gallery
+                              </Link>
+                            </Button>
+                          </div>
+                          {/* Mobile Stats */}
+                          <div className="flex gap-2">
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">50+</p>
+                              <p className="text-white/60 text-[8px]">Works</p>
+                            </div>
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">100%</p>
+                              <p className="text-white/60 text-[8px]">Original</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -320,10 +335,10 @@ export default function Home() {
               </div>
 
               {/* News Card 2 - New Collection */}
-              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[450px] p-3">
-                  <div className="relative h-full rounded-[20px] border-[3px] border-emerald-600/80 bg-gradient-to-br from-emerald-900 to-emerald-800 overflow-hidden shadow-[0_0_0_6px_rgba(5,150,105,0.3),0_0_0_10px_rgba(5,150,105,0.1)]">
+                <div className="md:hidden relative h-[360px] p-2">
+                  <div className="relative h-full rounded-[16px] border-[2px] border-emerald-600/80 bg-gradient-to-br from-emerald-900 to-emerald-800 overflow-hidden shadow-[0_0_0_4px_rgba(5,150,105,0.3)]">
                     <div className="absolute inset-0">
                       <Image
                         src="https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=1200&q=80"
@@ -332,11 +347,12 @@ export default function Home() {
                         className="object-cover opacity-50"
                       />
                     </div>
-                    <div className="absolute inset-2 border border-emerald-500/30 rounded-[14px] pointer-events-none" />
+                    <div className="absolute inset-1.5 border border-emerald-500/30 rounded-[12px] pointer-events-none" />
 
-                    <div className="relative z-10 h-full flex flex-col justify-end p-5 pb-6">
-                      <div className="inline-flex items-center gap-2 bg-emerald-900/60 backdrop-blur-sm text-emerald-100 px-3 py-1.5 rounded-full text-xs font-medium mb-3 w-fit border border-emerald-600/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-4">
+                      {/* Top Section - Badge */}
+                      <div className="inline-flex items-center gap-1.5 bg-emerald-900/60 backdrop-blur-sm text-emerald-100 px-2.5 py-1 rounded-full text-[10px] font-medium w-fit border border-emerald-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
                           <path d="m3.3 7 8.7 5 8.7-5" />
                           <path d="M12 22V12" />
@@ -344,24 +360,40 @@ export default function Home() {
                         New Collection
                       </div>
 
-                      <h2 className="text-3xl font-bold text-white mb-2 leading-tight drop-shadow-lg">
-                        Spring 2026<br />
-                        <span className="text-emerald-200">Collection</span>
-                      </h2>
-                      <p className="text-sm text-white/80 mb-4 line-clamp-2 drop-shadow">
-                        Fresh perspectives inspired by the renewal of spring.
-                      </p>
-                      <div className="flex gap-2">
-                        <Button asChild size="sm" className="px-4 bg-emerald-600 text-white hover:bg-emerald-500 border-0">
-                          <Link href="/gallery">
-                            Explore
-                          </Link>
-                        </Button>
-                        <Button asChild size="sm" variant="outline" className="px-4 bg-white/10 text-white border border-white/30 hover:bg-white/20">
-                          <Link href="/gallery?category=Abstract">
-                            Abstract
-                          </Link>
-                        </Button>
+                      {/* Bottom Section - Content & Buttons */}
+                      <div>
+                        <h2 className="text-2xl font-bold text-white mb-1 leading-tight drop-shadow-lg">
+                          Spring 2026 <span className="text-emerald-200">Collection</span>
+                        </h2>
+                        <p className="text-xs text-white/80 mb-3 drop-shadow">
+                          Fresh perspectives inspired by the renewal of spring.
+                        </p>
+                        {/* CTA Buttons & Stats Row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-2">
+                            <Button asChild size="sm" className="h-8 px-3 text-xs bg-emerald-600 text-white hover:bg-emerald-500 border-0">
+                              <Link href="/gallery">
+                                Explore
+                              </Link>
+                            </Button>
+                            <Button asChild size="sm" variant="outline" className="h-8 px-3 text-xs bg-white/10 text-white border border-white/30 hover:bg-white/20">
+                              <Link href="/gallery?category=Abstract">
+                                Abstract
+                              </Link>
+                            </Button>
+                          </div>
+                          {/* Mobile Stats */}
+                          <div className="flex gap-2">
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">15+</p>
+                              <p className="text-white/60 text-[8px]">New</p>
+                            </div>
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">2026</p>
+                              <p className="text-white/60 text-[8px]">Season</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -425,10 +457,10 @@ export default function Home() {
               </div>
 
               {/* News Card 3 - Limited Offer */}
-              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[450px] p-3">
-                  <div className="relative h-full rounded-[20px] border-[3px] border-orange-600/80 bg-gradient-to-br from-amber-900 to-orange-800 overflow-hidden shadow-[0_0_0_6px_rgba(234,88,12,0.3),0_0_0_10px_rgba(234,88,12,0.1)]">
+                <div className="md:hidden relative h-[360px] p-2">
+                  <div className="relative h-full rounded-[16px] border-[2px] border-orange-600/80 bg-gradient-to-br from-amber-900 to-orange-800 overflow-hidden shadow-[0_0_0_4px_rgba(234,88,12,0.3)]">
                     <div className="absolute inset-0">
                       <Image
                         src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?w=1200&q=80"
@@ -437,11 +469,12 @@ export default function Home() {
                         className="object-cover opacity-50"
                       />
                     </div>
-                    <div className="absolute inset-2 border border-orange-500/30 rounded-[14px] pointer-events-none" />
+                    <div className="absolute inset-1.5 border border-orange-500/30 rounded-[12px] pointer-events-none" />
 
-                    <div className="relative z-10 h-full flex flex-col justify-end p-5 pb-6">
-                      <div className="inline-flex items-center gap-2 bg-orange-900/60 backdrop-blur-sm text-orange-100 px-3 py-1.5 rounded-full text-xs font-medium mb-3 w-fit border border-orange-600/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-4">
+                      {/* Top Section - Badge */}
+                      <div className="inline-flex items-center gap-1.5 bg-orange-900/60 backdrop-blur-sm text-orange-100 px-2.5 py-1 rounded-full text-[10px] font-medium w-fit border border-orange-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <circle cx="12" cy="12" r="10" />
                           <path d="M12 16v-4" />
                           <path d="M12 8h.01" />
@@ -449,24 +482,40 @@ export default function Home() {
                         Limited Time
                       </div>
 
-                      <h2 className="text-3xl font-bold text-white mb-2 leading-tight drop-shadow-lg">
-                        Free Shipping<br />
-                        <span className="text-orange-200">Worldwide</span>
-                      </h2>
-                      <p className="text-sm text-white/80 mb-4 line-clamp-2 drop-shadow">
-                        Complimentary shipping on all original artworks.
-                      </p>
-                      <div className="flex gap-2">
-                        <Button asChild size="sm" className="px-4 bg-orange-600 text-white hover:bg-orange-500 border-0">
-                          <Link href="/gallery">
-                            Shop Now
-                          </Link>
-                        </Button>
-                        <Button asChild size="sm" variant="outline" className="px-4 bg-white/10 text-white border border-white/30 hover:bg-white/20">
-                          <Link href="/contact">
-                            Learn More
-                          </Link>
-                        </Button>
+                      {/* Bottom Section - Content & Buttons */}
+                      <div>
+                        <h2 className="text-2xl font-bold text-white mb-1 leading-tight drop-shadow-lg">
+                          Free Shipping <span className="text-orange-200">Worldwide</span>
+                        </h2>
+                        <p className="text-xs text-white/80 mb-3 drop-shadow">
+                          Complimentary shipping on all original artworks.
+                        </p>
+                        {/* CTA Buttons & Stats Row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-2">
+                            <Button asChild size="sm" className="h-8 px-3 text-xs bg-orange-600 text-white hover:bg-orange-500 border-0">
+                              <Link href="/gallery">
+                                Shop Now
+                              </Link>
+                            </Button>
+                            <Button asChild size="sm" variant="outline" className="h-8 px-3 text-xs bg-white/10 text-white border border-white/30 hover:bg-white/20">
+                              <Link href="/contact">
+                                Learn More
+                              </Link>
+                            </Button>
+                          </div>
+                          {/* Mobile Stats */}
+                          <div className="flex gap-2">
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">€0</p>
+                              <p className="text-white/60 text-[8px]">Shipping</p>
+                            </div>
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">7</p>
+                              <p className="text-white/60 text-[8px]">Days Left</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -530,10 +579,10 @@ export default function Home() {
               </div>
 
               {/* News Card 4 - Meet the Artist */}
-              <div className="flex-shrink-0 w-[90vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[450px] p-3">
-                  <div className="relative h-full rounded-[20px] border-[3px] border-purple-600/80 bg-gradient-to-br from-purple-900 to-indigo-800 overflow-hidden shadow-[0_0_0_6px_rgba(147,51,234,0.3),0_0_0_10px_rgba(147,51,234,0.1)]">
+                <div className="md:hidden relative h-[360px] p-2">
+                  <div className="relative h-full rounded-[16px] border-[2px] border-purple-600/80 bg-gradient-to-br from-purple-900 to-indigo-800 overflow-hidden shadow-[0_0_0_4px_rgba(147,51,234,0.3)]">
                     <div className="absolute inset-0">
                       <Image
                         src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=1200&q=80"
@@ -542,35 +591,52 @@ export default function Home() {
                         className="object-cover opacity-50"
                       />
                     </div>
-                    <div className="absolute inset-2 border border-purple-500/30 rounded-[14px] pointer-events-none" />
+                    <div className="absolute inset-1.5 border border-purple-500/30 rounded-[12px] pointer-events-none" />
 
-                    <div className="relative z-10 h-full flex flex-col justify-end p-5 pb-6">
-                      <div className="inline-flex items-center gap-2 bg-purple-900/60 backdrop-blur-sm text-purple-100 px-3 py-1.5 rounded-full text-xs font-medium mb-3 w-fit border border-purple-600/30">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <div className="relative z-10 h-full flex flex-col justify-between p-4">
+                      {/* Top Section - Badge */}
+                      <div className="inline-flex items-center gap-1.5 bg-purple-900/60 backdrop-blur-sm text-purple-100 px-2.5 py-1 rounded-full text-[10px] font-medium w-fit border border-purple-600/30">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                           <circle cx="12" cy="7" r="4" />
                         </svg>
                         Artist Spotlight
                       </div>
 
-                      <h2 className="text-3xl font-bold text-white mb-2 leading-tight drop-shadow-lg">
-                        Meet<br />
-                        <span className="text-purple-200">Lamiart</span>
-                      </h2>
-                      <p className="text-sm text-white/80 mb-4 line-clamp-2 drop-shadow">
-                        Discover the story behind the art.
-                      </p>
-                      <div className="flex gap-2">
-                        <Button asChild size="sm" className="px-4 bg-purple-600 text-white hover:bg-purple-500 border-0">
-                          <Link href="/artist/1">
-                            Read Story
-                          </Link>
-                        </Button>
-                        <Button asChild size="sm" variant="outline" className="px-4 bg-white/10 text-white border border-white/30 hover:bg-white/20">
-                          <Link href="/gallery?artist=1">
-                            Artworks
-                          </Link>
-                        </Button>
+                      {/* Bottom Section - Content & Buttons */}
+                      <div>
+                        <h2 className="text-2xl font-bold text-white mb-1 leading-tight drop-shadow-lg">
+                          Meet <span className="text-purple-200">Lamiart</span>
+                        </h2>
+                        <p className="text-xs text-white/80 mb-3 drop-shadow">
+                          Discover the story behind the art.
+                        </p>
+                        {/* CTA Buttons & Stats Row */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-2">
+                            <Button asChild size="sm" className="h-8 px-3 text-xs bg-purple-600 text-white hover:bg-purple-500 border-0">
+                              <Link href="/artist/1">
+                                Read Story
+                              </Link>
+                            </Button>
+                            <Button asChild size="sm" variant="outline" className="h-8 px-3 text-xs bg-white/10 text-white border border-white/30 hover:bg-white/20">
+                              <Link href="/gallery?artist=1">
+                                Artworks
+                              </Link>
+                            </Button>
+                          </div>
+                          {/* Mobile Stats */}
+                          <div className="flex gap-2">
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">10+</p>
+                              <p className="text-white/60 text-[8px]">Years</p>
+                            </div>
+                            <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg px-2 py-1">
+                              <p className="text-sm font-bold text-white">50+</p>
+                              <p className="text-white/60 text-[8px]">Works</p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

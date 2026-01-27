@@ -2,140 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { getAIResponse, WELCOME_MESSAGE, SUGGESTED_QUESTIONS } from "@/lib/ai-assistant";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
-}
-
-const WELCOME_MESSAGE = `Hello! I'm Artie, your AI art assistant at Alternus Gallery. I can help you with:
-
-- Discovering artworks and artists
-- Learning about art styles and techniques
-- Finding the perfect piece for your space
-- Understanding art history and movements
-- Getting recommendations based on your taste
-
-How can I assist you today?`;
-
-const AI_RESPONSES: { [key: string]: string } = {
-  default: "That's an interesting question! At Alternus Gallery, we specialize in connecting art lovers with talented artists from around the world. Is there something specific about our collection or artists you'd like to know?",
-
-  greeting: "Hello! Welcome to Alternus Gallery. I'm Artie, your AI art assistant. How can I help you explore the world of art today?",
-
-  about: "Alternus Gallery is a premium online art marketplace that connects collectors with talented artists worldwide. We feature original paintings, prints, and commissioned works across various styles - from contemporary abstract to classical realism. Our mission is to make fine art accessible to everyone while supporting independent artists.",
-
-  artists: "We have a diverse community of talented artists at Alternus! Each artist goes through a careful selection process to ensure quality. You can browse artist profiles in our Gallery section, where you'll find their portfolios, bios, and available works. Many of our artists also accept custom commissions!",
-
-  buy: "Buying art at Alternus is simple and secure! Browse our Gallery, find a piece you love, select your preferred frame option if available, and add it to your cart. We offer secure checkout with multiple payment methods. All artworks come with a certificate of authenticity and are carefully packaged for safe delivery.",
-
-  commission: "Yes! Many of our artists accept custom commissions. You can contact them directly through their profile page using the 'Message' button. Describe your vision, preferred size, colors, and style, and they'll work with you to create your perfect piece. Commission prices vary by artist and complexity.",
-
-  shipping: "We ship worldwide! Artworks are carefully packaged with protective materials to ensure safe delivery. Shipping costs depend on the size of the artwork and destination. Orders over $100 qualify for free shipping. You can track your order through your account dashboard.",
-
-  returns: "We want you to love your art! If you're not completely satisfied, we offer a 14-day return policy for most items. The artwork must be in its original condition. Custom commissions and certain items may have different policies. Contact our support team for assistance.",
-
-  styles: "Alternus features a wide range of art styles including:\n\n- **Abstract** - Expressive, non-representational works\n- **Contemporary** - Modern artistic expressions\n- **Impressionism** - Light and color focused pieces\n- **Realism** - Detailed, lifelike representations\n- **Minimalist** - Clean, simple compositions\n- **Pop Art** - Bold, vibrant cultural commentary\n\nUse our filters in the Gallery to explore each style!",
-
-  price: "Our artworks range from affordable prints starting at around $50 to original masterpieces in the thousands. We believe great art should be accessible to everyone. Use the price filter in our Gallery to find pieces within your budget. We also offer payment plans for larger purchases.",
-
-  original: "Yes, we sell both original artworks and high-quality prints! Original pieces are one-of-a-kind works created by the artist. Prints are museum-quality reproductions on archival paper or canvas. Each listing clearly indicates whether it's an original or print, along with edition information for limited prints.",
-
-  frame: "We offer professional framing options for many artworks! When viewing a piece, you can select from frame styles including:\n\n- **No Frame** - Canvas or paper only\n- **Black Frame** - Classic, modern look\n- **White Frame** - Clean, gallery style\n- **Natural Wood** - Warm, organic feel\n\nFrame prices vary by size and are added to the artwork cost.",
-
-  artist_apply: "Want to sell your art on Alternus? We're always looking for talented artists! Visit our 'Apply as Artist' page to submit your portfolio. We review applications based on quality, originality, and professionalism. Accepted artists get their own profile page, access to our collector base, and dedicated support.",
-
-  contact: "You can reach us through:\n\n- **Email**: support@alternusart.com\n- **Contact Form**: Visit our Contact page\n- **Live Chat**: I'm here to help!\n\nFor artist-specific questions, message them directly through their profile. Our team typically responds within 24 hours.",
-
-  recommend: "I'd love to help you find the perfect artwork! To give you better recommendations, could you tell me:\n\n1. What style appeals to you? (abstract, realistic, minimalist, etc.)\n2. What colors would complement your space?\n3. What size are you looking for?\n4. Is it for a specific room or occasion?\n\nWith this info, I can suggest pieces from our collection!",
-};
-
-function getAIResponse(message: string): string {
-  const lowerMessage = message.toLowerCase();
-
-  // Greetings
-  if (lowerMessage.match(/^(hi|hello|hey|good morning|good afternoon|good evening|salut|pershendetje|miredita)/)) {
-    return AI_RESPONSES.greeting;
-  }
-
-  // About Alternus
-  if (lowerMessage.includes("about") || lowerMessage.includes("what is alternus") || lowerMessage.includes("tell me about")) {
-    return AI_RESPONSES.about;
-  }
-
-  // Artists
-  if (lowerMessage.includes("artist") && (lowerMessage.includes("who") || lowerMessage.includes("find") || lowerMessage.includes("browse"))) {
-    return AI_RESPONSES.artists;
-  }
-
-  // Apply as artist
-  if (lowerMessage.includes("apply") || lowerMessage.includes("sell my art") || lowerMessage.includes("become an artist")) {
-    return AI_RESPONSES.artist_apply;
-  }
-
-  // Buying
-  if (lowerMessage.includes("buy") || lowerMessage.includes("purchase") || lowerMessage.includes("order") || lowerMessage.includes("how to get")) {
-    return AI_RESPONSES.buy;
-  }
-
-  // Commission
-  if (lowerMessage.includes("commission") || lowerMessage.includes("custom") || lowerMessage.includes("personalized")) {
-    return AI_RESPONSES.commission;
-  }
-
-  // Shipping
-  if (lowerMessage.includes("ship") || lowerMessage.includes("delivery") || lowerMessage.includes("deliver")) {
-    return AI_RESPONSES.shipping;
-  }
-
-  // Returns
-  if (lowerMessage.includes("return") || lowerMessage.includes("refund") || lowerMessage.includes("exchange")) {
-    return AI_RESPONSES.returns;
-  }
-
-  // Styles
-  if (lowerMessage.includes("style") || lowerMessage.includes("type") || lowerMessage.includes("kind of art") || lowerMessage.includes("genre")) {
-    return AI_RESPONSES.styles;
-  }
-
-  // Price
-  if (lowerMessage.includes("price") || lowerMessage.includes("cost") || lowerMessage.includes("expensive") || lowerMessage.includes("cheap") || lowerMessage.includes("affordable")) {
-    return AI_RESPONSES.price;
-  }
-
-  // Original vs Print
-  if (lowerMessage.includes("original") || lowerMessage.includes("print") || lowerMessage.includes("authentic")) {
-    return AI_RESPONSES.original;
-  }
-
-  // Frame
-  if (lowerMessage.includes("frame") || lowerMessage.includes("framing")) {
-    return AI_RESPONSES.frame;
-  }
-
-  // Contact
-  if (lowerMessage.includes("contact") || lowerMessage.includes("support") || lowerMessage.includes("help") || lowerMessage.includes("email")) {
-    return AI_RESPONSES.contact;
-  }
-
-  // Recommendations
-  if (lowerMessage.includes("recommend") || lowerMessage.includes("suggest") || lowerMessage.includes("looking for") || lowerMessage.includes("find me")) {
-    return AI_RESPONSES.recommend;
-  }
-
-  // Thank you
-  if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
-    return "You're welcome! I'm always here to help you discover amazing art at Alternus. Feel free to ask if you have any other questions!";
-  }
-
-  // Goodbye
-  if (lowerMessage.includes("bye") || lowerMessage.includes("goodbye") || lowerMessage.includes("see you")) {
-    return "Goodbye! Thank you for visiting Alternus Gallery. Come back anytime to explore more beautiful artworks. Happy collecting!";
-  }
-
-  return AI_RESPONSES.default;
+  suggestedQuestions?: string[];
 }
 
 export function AIChat() {
@@ -144,8 +18,9 @@ export function AIChat() {
     {
       id: "welcome",
       role: "assistant",
-      content: WELCOME_MESSAGE,
+      content: WELCOME_MESSAGE.en,
       timestamp: new Date(),
+      suggestedQuestions: SUGGESTED_QUESTIONS.en,
     },
   ]);
   const [input, setInput] = useState("");
@@ -183,16 +58,17 @@ export function AIChat() {
 
     // Simulate AI thinking time
     setTimeout(() => {
-      const response = getAIResponse(userMessage.content);
+      const aiResponse = getAIResponse(userMessage.content);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: response,
+        content: aiResponse.content,
         timestamp: new Date(),
+        suggestedQuestions: aiResponse.suggestedQuestions,
       };
       setMessages((prev) => [...prev, assistantMessage]);
       setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
+    }, 800 + Math.random() * 600);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -202,12 +78,9 @@ export function AIChat() {
     }
   };
 
-  const suggestedQuestions = [
-    "What is Alternus?",
-    "How do I buy art?",
-    "Do you ship internationally?",
-    "Can I commission custom art?",
-  ];
+  // Get the last message's suggested questions, or use defaults
+  const lastMessage = messages[messages.length - 1];
+  const currentSuggestions = lastMessage?.suggestedQuestions || SUGGESTED_QUESTIONS.en;
 
   // This component is now only used for desktop
   // Mobile chat is handled by MobileChat component in mobile-nav
@@ -350,12 +223,12 @@ export function AIChat() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggested Questions (show only if few messages) */}
-            {messages.length <= 2 && (
+            {/* Suggested Questions (show if available) */}
+            {currentSuggestions && currentSuggestions.length > 0 && messages.length <= 4 && (
               <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
                 <p className="text-xs text-gray-500 mb-2">Suggested questions:</p>
                 <div className="flex flex-wrap gap-2">
-                  {suggestedQuestions.map((question) => (
+                  {currentSuggestions.map((question) => (
                     <button
                       key={question}
                       onClick={() => {
@@ -368,16 +241,17 @@ export function AIChat() {
                         setMessages((prev) => [...prev, userMessage]);
                         setIsTyping(true);
                         setTimeout(() => {
-                          const response = getAIResponse(question);
+                          const aiResponse = getAIResponse(question);
                           const assistantMessage: Message = {
                             id: (Date.now() + 1).toString(),
                             role: "assistant",
-                            content: response,
+                            content: aiResponse.content,
                             timestamp: new Date(),
+                            suggestedQuestions: aiResponse.suggestedQuestions,
                           };
                           setMessages((prev) => [...prev, assistantMessage]);
                           setIsTyping(false);
-                        }, 1000 + Math.random() * 1000);
+                        }, 800 + Math.random() * 600);
                       }}
                       className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full text-xs text-gray-700 dark:text-gray-300 transition-colors"
                     >

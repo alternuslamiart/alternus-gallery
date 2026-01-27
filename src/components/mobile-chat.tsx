@@ -2,12 +2,14 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { getAIResponse, WELCOME_MESSAGE, SUGGESTED_QUESTIONS } from "@/lib/ai-assistant";
 
 interface Message {
   id: string;
   role: "user" | "assistant";
   content: string;
   timestamp: Date;
+  suggestedQuestions?: string[];
 }
 
 interface MobileChatProps {
@@ -15,83 +17,14 @@ interface MobileChatProps {
   onClose: () => void;
 }
 
-const WELCOME_MESSAGE = `Hello! I'm Artie, your AI art assistant at Alternus Gallery. I can help you with:
-
-• Discovering artworks and artists
-• Learning about art styles and techniques
-• Finding the perfect piece for your space
-• Getting recommendations based on your taste
-
-How can I assist you today?`;
-
-const AI_RESPONSES: { [key: string]: string } = {
-  default: "That's an interesting question! At Alternus Gallery, we specialize in connecting art lovers with talented artists from around the world. Is there something specific about our collection or artists you'd like to know?",
-  greeting: "Hello! Welcome to Alternus Gallery. I'm Artie, your AI art assistant. How can I help you explore the world of art today?",
-  about: "Alternus Gallery is a premium online art marketplace that connects collectors with talented artists worldwide. We feature original paintings, prints, and commissioned works across various styles - from contemporary abstract to classical realism.",
-  artists: "We have a diverse community of talented artists at Alternus! Each artist goes through a careful selection process to ensure quality. You can browse artist profiles in our Gallery section.",
-  buy: "Buying art at Alternus is simple and secure! Browse our Gallery, find a piece you love, and add it to your cart. We offer secure checkout with multiple payment methods.",
-  commission: "Yes! Many of our artists accept custom commissions. You can contact them directly through their profile page.",
-  shipping: "We ship worldwide! Artworks are carefully packaged with protective materials. Orders over $100 qualify for free shipping.",
-  returns: "We offer a 14-day return policy for most items. The artwork must be in its original condition.",
-  styles: "Alternus features Abstract, Contemporary, Impressionism, Realism, Minimalist, and Pop Art styles. Use our filters to explore!",
-  price: "Our artworks range from affordable prints starting at around $50 to original masterpieces. Use the price filter in our Gallery.",
-  contact: "You can reach us at support@alternusart.com or through our Contact page. We typically respond within 24 hours.",
-  recommend: "I'd love to help! What style appeals to you? What colors and size are you looking for?",
-};
-
-function getAIResponse(message: string): string {
-  const lowerMessage = message.toLowerCase();
-
-  if (lowerMessage.match(/^(hi|hello|hey|good morning|good afternoon|good evening)/)) {
-    return AI_RESPONSES.greeting;
-  }
-  if (lowerMessage.includes("about") || lowerMessage.includes("what is alternus")) {
-    return AI_RESPONSES.about;
-  }
-  if (lowerMessage.includes("artist")) {
-    return AI_RESPONSES.artists;
-  }
-  if (lowerMessage.includes("buy") || lowerMessage.includes("purchase") || lowerMessage.includes("order")) {
-    return AI_RESPONSES.buy;
-  }
-  if (lowerMessage.includes("commission") || lowerMessage.includes("custom")) {
-    return AI_RESPONSES.commission;
-  }
-  if (lowerMessage.includes("ship") || lowerMessage.includes("delivery")) {
-    return AI_RESPONSES.shipping;
-  }
-  if (lowerMessage.includes("return") || lowerMessage.includes("refund")) {
-    return AI_RESPONSES.returns;
-  }
-  if (lowerMessage.includes("style") || lowerMessage.includes("type")) {
-    return AI_RESPONSES.styles;
-  }
-  if (lowerMessage.includes("price") || lowerMessage.includes("cost")) {
-    return AI_RESPONSES.price;
-  }
-  if (lowerMessage.includes("contact") || lowerMessage.includes("support") || lowerMessage.includes("email")) {
-    return AI_RESPONSES.contact;
-  }
-  if (lowerMessage.includes("recommend") || lowerMessage.includes("suggest") || lowerMessage.includes("find")) {
-    return AI_RESPONSES.recommend;
-  }
-  if (lowerMessage.includes("thank")) {
-    return "You're welcome! Feel free to ask if you have any other questions!";
-  }
-  if (lowerMessage.includes("bye")) {
-    return "Goodbye! Thank you for visiting Alternus Gallery. Happy collecting!";
-  }
-
-  return AI_RESPONSES.default;
-}
-
 export function MobileChat({ isOpen, onClose }: MobileChatProps) {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
       role: "assistant",
-      content: WELCOME_MESSAGE,
+      content: WELCOME_MESSAGE.en,
       timestamp: new Date(),
+      suggestedQuestions: SUGGESTED_QUESTIONS.en,
     },
   ]);
   const [input, setInput] = useState("");
@@ -140,16 +73,17 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
     setIsTyping(true);
 
     setTimeout(() => {
-      const response = getAIResponse(userMessage.content);
+      const aiResponse = getAIResponse(userMessage.content);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: response,
+        content: aiResponse.content,
         timestamp: new Date(),
+        suggestedQuestions: aiResponse.suggestedQuestions,
       };
       setMessages((prev) => [...prev, assistantMessage]);
       setIsTyping(false);
-    }, 800 + Math.random() * 800);
+    }, 800 + Math.random() * 600);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -159,11 +93,9 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
     }
   };
 
-  const suggestedQuestions = [
-    "What is Alternus?",
-    "How do I buy art?",
-    "Shipping info",
-  ];
+  // Get the last message's suggested questions, or use defaults
+  const lastMessage = messages[messages.length - 1];
+  const currentSuggestions = lastMessage?.suggestedQuestions || SUGGESTED_QUESTIONS.en;
 
   if (!isOpen) return null;
 
@@ -246,10 +178,10 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
         </main>
 
         {/* Suggested Questions */}
-        {messages.length <= 2 && (
+        {currentSuggestions && currentSuggestions.length > 0 && messages.length <= 4 && (
           <div className="flex-shrink-0 px-4 py-2 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-              {suggestedQuestions.map((question) => (
+              {currentSuggestions.map((question) => (
                 <button
                   key={question}
                   onClick={() => {
@@ -262,12 +194,13 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
                     setMessages((prev) => [...prev, userMessage]);
                     setIsTyping(true);
                     setTimeout(() => {
-                      const response = getAIResponse(question);
+                      const aiResponse = getAIResponse(question);
                       const assistantMessage: Message = {
                         id: (Date.now() + 1).toString(),
                         role: "assistant",
-                        content: response,
+                        content: aiResponse.content,
                         timestamp: new Date(),
+                        suggestedQuestions: aiResponse.suggestedQuestions,
                       };
                       setMessages((prev) => [...prev, assistantMessage]);
                       setIsTyping(false);
