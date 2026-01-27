@@ -8,12 +8,12 @@ import {
   ArrowLeft,
   Package,
   RefreshCw,
-  Eye,
   Search,
   Filter,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import Image from "next/image";
 
 interface OrderItem {
   id: string;
@@ -287,9 +287,11 @@ export default function AdminOrdersPage() {
                                 className="flex items-center gap-3 bg-white p-3 rounded-lg border"
                               >
                                 {item.artwork?.imageUrl ? (
-                                  <img
+                                  <Image
                                     src={item.artwork.imageUrl}
                                     alt={item.artwork.title}
+                                    width={64}
+                                    height={64}
                                     className="w-16 h-16 object-cover rounded-lg"
                                   />
                                 ) : (
