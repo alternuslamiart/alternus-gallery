@@ -812,7 +812,7 @@ export function Header() {
             </Button>
             <Button
               type="button"
-              className="flex-1 h-12 rounded-xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-medium shadow-lg shadow-rose-500/25 transition-all duration-200"
+              className="flex-1 h-12 rounded-xl bg-gray-900 hover:bg-gray-800 text-white font-medium shadow-lg transition-all duration-200"
               onClick={() => {
                 // Clear localStorage
                 localStorage.removeItem("userAuth");
