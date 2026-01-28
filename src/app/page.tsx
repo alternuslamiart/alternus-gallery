@@ -114,7 +114,7 @@ export default function Home() {
           {/* Navigation Header */}
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-2xl md:text-3xl font-bold">Exclusive Original Works</h2>
+              <h2 className="text-2xl md:text-3xl font-bold">Exclusive Original Artworks</h2>
             </div>
             <div className="flex items-center gap-2">
               <Button
