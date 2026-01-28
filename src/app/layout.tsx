@@ -113,7 +113,7 @@ export default function RootLayout({
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "ArtGallery",
+            "@type": "Organization",
             "@id": "https://alternusart.com/#organization",
             "name": "Alternus Art Gallery",
             "alternateName": "Alternus",
@@ -128,30 +128,20 @@ export default function RootLayout({
             "description": "Discover and purchase exclusive original artworks from talented artists worldwide. Alternus Gallery features unique paintings, prints, and commissioned art pieces.",
             "email": "contact@alternusart.com",
             "foundingDate": "2024",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Online",
-              "addressCountry": "Worldwide"
-            },
             "sameAs": [
               "https://www.instagram.com/alternusart",
               "https://www.facebook.com/alternusart",
               "https://www.trustpilot.com/review/alternusart.com"
             ],
-            "priceRange": "$$",
-            "paymentAccepted": ["Credit Card", "PayPal"],
-            "currenciesAccepted": "EUR, USD",
-            "areaServed": {
-              "@type": "Place",
-              "name": "Worldwide"
-            },
+            "areaServed": "Worldwide",
             "knowsAbout": [
+              "Art Gallery",
+              "Original Artworks",
               "Abstract Art",
               "Contemporary Art",
               "Landscape Paintings",
               "Still Life Art",
-              "Oil Paintings",
-              "Original Artworks"
+              "Oil Paintings"
             ]
           })
         }}
