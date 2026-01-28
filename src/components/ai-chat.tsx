@@ -130,7 +130,7 @@ export function AIChat() {
                 <div className="relative">
                   <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden">
                     <Image
-                      src="/icon.ico"
+                      src="/logo.png"
                       alt="Alternus AI"
                       width={32}
                       height={32}
@@ -176,7 +176,7 @@ export function AIChat() {
                       <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 dark:border-gray-700">
                         <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden">
                           <Image
-                            src="/icon.ico"
+                            src="/logo.png"
                             alt="Alternus AI"
                             width={16}
                             height={16}
@@ -201,7 +201,7 @@ export function AIChat() {
                     <div className="flex items-center gap-2">
                       <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden">
                         <Image
-                          src="/icon.ico"
+                          src="/logo.png"
                           alt="Alternus AI"
                           width={16}
                           height={16}

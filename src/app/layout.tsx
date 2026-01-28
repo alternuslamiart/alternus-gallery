@@ -33,7 +33,9 @@ export const metadata: Metadata = {
   title: "Exclusive Original Artworks",
   description: "Exclusive art gallery - Discover and purchase unique artworks",
   icons: {
-    icon: "/icon.ico",
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
   other: {
     "trustpilot-one-time-domain-verification-id": "97339bc2-345b-49c2-a68e-f83d09f259c1",

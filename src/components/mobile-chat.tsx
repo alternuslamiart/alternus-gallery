@@ -109,7 +109,7 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
             <div className="relative">
               <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
                 <Image
-                  src="/icon.ico"
+                  src="/logo.png"
                   alt="Alternus AI"
                   width={28}
                   height={28}
