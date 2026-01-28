@@ -45,6 +45,28 @@ const protectedRoutes: string[] = [];
 const adminRoutes = ["/admin"];
 const adminPublicRoutes = ["/admin/login"]; // Routes accessible without auth
 
+// Get allowed IPs from environment (comma-separated)
+// Example: ADMIN_ALLOWED_IPS=192.168.1.1,10.0.0.1
+function isIPAllowed(ip: string): boolean {
+  const allowedIPs = process.env.ADMIN_ALLOWED_IPS;
+
+  // If no IP restriction is set, allow all (for development)
+  if (!allowedIPs || allowedIPs === '*') {
+    return true;
+  }
+
+  const allowedList = allowedIPs.split(',').map(ip => ip.trim());
+
+  // Check exact match or CIDR-like prefix match (e.g., 192.168.1.)
+  return allowedList.some(allowed => {
+    if (allowed.endsWith('.')) {
+      // Prefix match (e.g., 192.168.1. matches 192.168.1.*)
+      return ip.startsWith(allowed);
+    }
+    return ip === allowed;
+  });
+}
+
 // Verify admin session token
 function verifyAdminSession(token: string | undefined): boolean {
   if (!token) return false;
@@ -72,6 +94,17 @@ export function middleware(request: NextRequest) {
   // Admin route protection
   const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
   const isAdminPublicRoute = adminPublicRoutes.some((route) => pathname === route);
+
+  // IP restriction for ALL admin routes (including login page)
+  if (isAdminRoute) {
+    if (!isIPAllowed(ip)) {
+      // Return 404 to hide admin panel existence from unauthorized IPs
+      return NextResponse.json(
+        { error: "Not Found" },
+        { status: 404 }
+      );
+    }
+  }
 
   if (isAdminRoute && !isAdminPublicRoute) {
     const adminSession = request.cookies.get('admin-session')?.value;
