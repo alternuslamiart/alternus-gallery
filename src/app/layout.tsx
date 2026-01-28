@@ -106,6 +106,115 @@ export default function RootLayout({
           gtag('config', 'G-WJV9KGNV0S');
         `}
       </Script>
+      {/* Schema.org Structured Data */}
+      <Script
+        id="schema-organization"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ArtGallery",
+            "@id": "https://alternusart.com/#organization",
+            "name": "Alternus Art Gallery",
+            "alternateName": "Alternus",
+            "url": "https://alternusart.com",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://alternusart.com/logo.png",
+              "width": 512,
+              "height": 512
+            },
+            "image": "https://alternusart.com/logo.png",
+            "description": "Discover and purchase exclusive original artworks from talented artists worldwide. Alternus Gallery features unique paintings, prints, and commissioned art pieces.",
+            "email": "contact@alternusart.com",
+            "foundingDate": "2024",
+            "sameAs": [
+              "https://www.instagram.com/alternusart",
+              "https://www.facebook.com/alternusart",
+              "https://www.trustpilot.com/review/alternusart.com"
+            ],
+            "priceRange": "$$",
+            "paymentAccepted": ["Credit Card", "PayPal"],
+            "currenciesAccepted": "EUR, USD",
+            "areaServed": {
+              "@type": "Place",
+              "name": "Worldwide"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Original Artworks",
+              "itemListElement": [
+                {
+                  "@type": "OfferCatalog",
+                  "name": "Paintings",
+                  "itemListElement": [
+                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Abstract Art" } },
+                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Contemporary Art" } },
+                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Landscape Art" } },
+                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Still Life Art" } }
+                  ]
+                }
+              ]
+            }
+          })
+        }}
+      />
+      <Script
+        id="schema-website"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": "https://alternusart.com/#website",
+            "url": "https://alternusart.com",
+            "name": "Alternus Art Gallery",
+            "description": "Online art gallery featuring original artworks and paintings from artists worldwide",
+            "publisher": {
+              "@id": "https://alternusart.com/#organization"
+            },
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://alternusart.com/gallery?search={search_term_string}"
+              },
+              "query-input": "required name=search_term_string"
+            }
+          })
+        }}
+      />
+      <Script
+        id="schema-store"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Store",
+            "@id": "https://alternusart.com/#store",
+            "name": "Alternus Art Gallery",
+            "image": "https://alternusart.com/logo.png",
+            "url": "https://alternusart.com",
+            "telephone": "",
+            "priceRange": "$$",
+            "servesCuisine": "",
+            "acceptsReservations": false,
+            "address": {
+              "@type": "PostalAddress",
+              "addressCountry": "Worldwide"
+            },
+            "geo": {
+              "@type": "GeoCoordinates"
+            },
+            "openingHoursSpecification": {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+              "opens": "00:00",
+              "closes": "23:59"
+            }
+          })
+        }}
+      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${roboto.variable} antialiased min-h-screen flex flex-col`}
       >
