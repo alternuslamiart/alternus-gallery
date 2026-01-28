@@ -686,13 +686,13 @@ Cdo teknike krijon tekstura dhe efekte unike!`
 // Greeting responses
 const GREETINGS = {
   en: [
-    "Hello! Welcome to Alternus Gallery. I'm Artie, your AI art assistant. How can I help you discover amazing art today?",
-    "Hi there! I'm Artie, ready to help you explore our collection. What kind of art interests you?",
+    "Hello! Welcome to Alternus Gallery. I'm your AI art assistant. How can I help you discover amazing art today?",
+    "Hi there! I'm Alternus AI, ready to help you explore our collection. What kind of art interests you?",
     "Welcome! I'm here to help with anything from finding the perfect artwork to learning about art movements. What would you like to know?"
   ],
   sq: [
-    "Pershendetje! Miresevini ne Alternus Gallery. Une jam Artie, asistenti juaj i artit AI. Si mund t'ju ndihmoj te zbuloni art te mahnitshëm sot?",
-    "Tung! Jam Artie, gati t'ju ndihmoj te eksploroni koleksionin tone. Cfare lloji arti ju intereson?",
+    "Pershendetje! Miresevini ne Alternus Gallery. Une jam asistenti juaj i artit AI. Si mund t'ju ndihmoj te zbuloni art te mahnitshëm sot?",
+    "Tung! Jam Alternus AI, gati t'ju ndihmoj te eksploroni koleksionin tone. Cfare lloji arti ju intereson?",
     "Miresevini! Jam ketu per te ndihmuar me cdo gje nga gjetja e vepres perfekte deri tek mesimi per levizjet e artit. Cfare deshironi te dini?"
   ]
 };
@@ -923,7 +923,7 @@ export function getAIResponse(message: string): AIResponse {
 
 // Export welcome message
 export const WELCOME_MESSAGE = {
-  en: `Hello! I'm Artie, your AI art assistant at Alternus Gallery.
+  en: `Hello! I'm Alternus AI, your art assistant at Alternus Gallery.
 
 I can help you with:
 - Discovering artworks and artists
@@ -934,7 +934,7 @@ I can help you with:
 - Finding the perfect piece for your space
 
 How can I assist you today?`,
-  sq: `Pershendetje! Une jam Artie, asistenti juaj i artit AI ne Alternus Gallery.
+  sq: `Pershendetje! Une jam Alternus AI, asistenti juaj i artit ne Alternus Gallery.
 
 Mund t'ju ndihmoj me:
 - Zbulimin e veprave dhe artisteve

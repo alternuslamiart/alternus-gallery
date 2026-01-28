@@ -109,7 +109,7 @@ export function AIChat() {
         <span className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white animate-pulse" />
         {/* Tooltip */}
         <span className="absolute right-20 bg-gray-900 text-white text-sm px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-          Chat with Artie AI
+          Chat with Alternus AI
         </span>
       </button>
 
@@ -128,22 +128,22 @@ export function AIChat() {
             <div className="bg-black px-4 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden">
                     <Image
-                      src="https://api.dicebear.com/7.x/bottts/svg?seed=artie&backgroundColor=transparent"
-                      alt="Artie AI"
-                      width={40}
-                      height={40}
-                      className="rounded-full"
+                      src="/icon.ico"
+                      alt="Alternus AI"
+                      width={32}
+                      height={32}
+                      className="object-contain"
                     />
                   </div>
                   <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-lg">Artie</h3>
+                  <h3 className="font-bold text-white text-lg">Alternus AI</h3>
                   <p className="text-white/80 text-xs flex items-center gap-1">
                     <span className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
-                    AI Art Assistant
+                    Art Assistant
                   </p>
                 </div>
               </div>
@@ -174,17 +174,16 @@ export function AIChat() {
                   >
                     {message.role === "assistant" && (
                       <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 dark:border-gray-700">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                            <path d="M12 8V4H8" />
-                            <rect width="16" height="12" x="4" y="8" rx="2" />
-                            <path d="M2 14h2" />
-                            <path d="M20 14h2" />
-                            <path d="M15 13v2" />
-                            <path d="M9 13v2" />
-                          </svg>
+                        <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden">
+                          <Image
+                            src="/icon.ico"
+                            alt="Alternus AI"
+                            width={16}
+                            height={16}
+                            className="object-contain"
+                          />
                         </div>
-                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Artie</span>
+                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Alternus AI</span>
                       </div>
                     )}
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
@@ -200,15 +199,14 @@ export function AIChat() {
                 <div className="flex justify-start">
                   <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
-                          <path d="M12 8V4H8" />
-                          <rect width="16" height="12" x="4" y="8" rx="2" />
-                          <path d="M2 14h2" />
-                          <path d="M20 14h2" />
-                          <path d="M15 13v2" />
-                          <path d="M9 13v2" />
-                        </svg>
+                      <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden">
+                        <Image
+                          src="/icon.ico"
+                          alt="Alternus AI"
+                          width={16}
+                          height={16}
+                          className="object-contain"
+                        />
                       </div>
                       <div className="flex gap-1">
                         <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />

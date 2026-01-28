@@ -107,19 +107,19 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
         <header className="flex-shrink-0 bg-gray-900 px-4 py-3 flex items-center justify-between safe-area-top">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
+              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
                 <Image
-                  src="https://api.dicebear.com/7.x/bottts/svg?seed=artie&backgroundColor=transparent"
-                  alt="Artie AI"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
+                  src="/icon.ico"
+                  alt="Alternus AI"
+                  width={28}
+                  height={28}
+                  className="object-contain"
                 />
               </div>
               <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-gray-900" />
             </div>
             <div>
-              <h3 className="font-bold text-white text-base">Artie</h3>
+              <h3 className="font-bold text-white text-base">Alternus AI</h3>
               <p className="text-white/70 text-xs flex items-center gap-1">
                 <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
                 Online
