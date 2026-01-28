@@ -125,19 +125,19 @@ export function AIChat() {
           {/* Chat Container */}
           <div className="relative w-full max-w-md h-[600px] max-h-[85vh] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-right-4 duration-300">
             {/* Header */}
-            <div className="bg-black px-4 py-4 flex items-center justify-between">
+            <div className="bg-gray-900 px-4 py-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden">
+                  <div className="w-14 h-14 rounded-full bg-gray-900 flex items-center justify-center overflow-hidden border-2 border-gray-700">
                     <Image
                       src="/logo.png"
                       alt="Alternus AI"
-                      width={32}
-                      height={32}
-                      className="object-contain"
+                      width={48}
+                      height={48}
+                      className="object-cover"
                     />
                   </div>
-                  <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
+                  <span className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-gray-900" />
                 </div>
                 <div>
                   <h3 className="font-bold text-white text-lg">Alternus AI</h3>
@@ -174,13 +174,13 @@ export function AIChat() {
                   >
                     {message.role === "assistant" && (
                       <div className="flex items-center gap-2 mb-2 pb-2 border-b border-gray-100 dark:border-gray-700">
-                        <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden">
+                        <div className="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
                           <Image
                             src="/logo.png"
                             alt="Alternus AI"
-                            width={16}
-                            height={16}
-                            className="object-contain"
+                            width={24}
+                            height={24}
+                            className="object-cover"
                           />
                         </div>
                         <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Alternus AI</span>
@@ -199,13 +199,13 @@ export function AIChat() {
                 <div className="flex justify-start">
                   <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center overflow-hidden">
+                      <div className="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center overflow-hidden">
                         <Image
                           src="/logo.png"
                           alt="Alternus AI"
-                          width={16}
-                          height={16}
-                          className="object-contain"
+                          width={24}
+                          height={24}
+                          className="object-cover"
                         />
                       </div>
                       <div className="flex gap-1">

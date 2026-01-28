@@ -107,16 +107,16 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
         <header className="flex-shrink-0 bg-gray-900 px-4 py-3 flex items-center justify-between safe-area-top">
           <div className="flex items-center gap-3">
             <div className="relative">
-              <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden">
+              <div className="w-12 h-12 rounded-full bg-gray-900 flex items-center justify-center overflow-hidden border-2 border-gray-700">
                 <Image
                   src="/logo.png"
                   alt="Alternus AI"
-                  width={28}
-                  height={28}
-                  className="object-contain"
+                  width={40}
+                  height={40}
+                  className="object-cover"
                 />
               </div>
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-gray-900" />
+              <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-gray-900" />
             </div>
             <div>
               <h3 className="font-bold text-white text-base">Alternus AI</h3>
