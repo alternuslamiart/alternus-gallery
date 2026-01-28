@@ -79,8 +79,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add your Google Search Console verification code here
-    // google: 'your-google-verification-code',
+    google: 'W4-KDn_AOLs9zBjvapl4jvxLFcuOvBqP-yV8wf1CCCo',
   },
   other: {
     "trustpilot-one-time-domain-verification-id": "97339bc2-345b-49c2-a68e-f83d09f259c1",
