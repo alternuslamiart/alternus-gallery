@@ -40,12 +40,57 @@ function getClientIP(request: NextRequest): string {
 
 // Define protected routes
 const protectedRoutes: string[] = [];
-// Admin routes (for future use)
-// const adminRoutes = ["/admin"];
+
+// Admin routes that require authentication
+const adminRoutes = ["/admin"];
+const adminPublicRoutes = ["/admin/login"]; // Routes accessible without auth
+
+// Verify admin session token
+function verifyAdminSession(token: string | undefined): boolean {
+  if (!token) return false;
+
+  const parts = token.split('.');
+  if (parts.length !== 2) return false;
+
+  const [hash, timestamp] = parts;
+  const timestampNum = parseInt(timestamp, 10);
+
+  // Check if token is expired (24 hours)
+  const maxAge = 24 * 60 * 60 * 1000;
+  if (Date.now() - timestampNum > maxAge) {
+    return false;
+  }
+
+  // Check hash format is valid (64 character hex string)
+  return hash.length === 64 && !isNaN(timestampNum);
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const ip = getClientIP(request);
+
+  // Admin route protection
+  const isAdminRoute = adminRoutes.some((route) => pathname.startsWith(route));
+  const isAdminPublicRoute = adminPublicRoutes.some((route) => pathname === route);
+
+  if (isAdminRoute && !isAdminPublicRoute) {
+    const adminSession = request.cookies.get('admin-session')?.value;
+
+    if (!verifyAdminSession(adminSession)) {
+      // Redirect to admin login
+      const loginUrl = new URL("/admin/login", request.url);
+      return NextResponse.redirect(loginUrl);
+    }
+  }
+
+  // If user is authenticated and trying to access login page, redirect to dashboard
+  if (pathname === "/admin/login") {
+    const adminSession = request.cookies.get('admin-session')?.value;
+    if (verifyAdminSession(adminSession)) {
+      const dashboardUrl = new URL("/admin/dashboard", request.url);
+      return NextResponse.redirect(dashboardUrl);
+    }
+  }
 
   // Rate limiting for API routes
   if (pathname.startsWith("/api")) {

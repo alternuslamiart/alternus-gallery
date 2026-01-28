@@ -21,23 +21,31 @@ export default function AdminLogin() {
     setError("");
     setIsLoading(true);
 
-    // Admin credentials
-    const ADMIN_EMAIL = "lamialiuart@gmail.com";
-    const ADMIN_PASSWORD = "Alternus333#";
+    try {
+      const response = await fetch('/api/admin/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: email.trim(),
+          password: password,
+        }),
+      });
 
-    // Compare with trimmed and lowercase email
-    const inputEmail = email.trim().toLowerCase();
-    const inputPassword = password;
+      const data = await response.json();
 
-    if (inputEmail === ADMIN_EMAIL.toLowerCase() && inputPassword === ADMIN_PASSWORD) {
-      // Set admin session
-      localStorage.setItem("adminAuth", "true");
-      localStorage.setItem("adminRemember", "true");
-
-      // Redirect to dashboard
-      window.location.href = "/admin/dashboard";
-    } else {
-      setError("Invalid email or password");
+      if (response.ok && data.success) {
+        // Redirect to dashboard
+        window.location.href = "/admin/dashboard";
+      } else {
+        setError(data.error || "Invalid email or password");
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError("An error occurred. Please try again.");
       setIsLoading(false);
     }
   };

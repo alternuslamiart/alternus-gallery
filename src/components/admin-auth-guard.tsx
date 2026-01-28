@@ -13,16 +13,32 @@ export function AdminAuthGuard({ children }: AdminAuthGuardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if admin is authenticated
-    const adminAuth = localStorage.getItem("adminAuth");
+    // Verify admin session with server
+    const verifySession = async () => {
+      try {
+        const response = await fetch('/api/admin/auth/verify', {
+          method: 'GET',
+          credentials: 'include',
+        });
 
-    if (adminAuth === "true") {
-      setIsAuthenticated(true);
-      setIsLoading(false);
-    } else {
-      // Redirect to login
-      router.replace("/admin/login");
-    }
+        if (response.ok) {
+          const data = await response.json();
+          if (data.authenticated) {
+            setIsAuthenticated(true);
+            setIsLoading(false);
+            return;
+          }
+        }
+
+        // Not authenticated - redirect to login
+        router.replace("/admin/login");
+      } catch (error) {
+        console.error('Auth verification error:', error);
+        router.replace("/admin/login");
+      }
+    };
+
+    verifySession();
   }, [router]);
 
   // Show loading state while checking auth
@@ -41,8 +57,21 @@ export function AdminAuthGuard({ children }: AdminAuthGuardProps) {
 }
 
 // Helper function to logout
-export function adminLogout() {
-  localStorage.removeItem("adminAuth");
-  localStorage.removeItem("adminRemember");
+export async function adminLogout() {
+  try {
+    await fetch('/api/admin/auth/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
+
+  // Clear any legacy localStorage
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem("adminAuth");
+    localStorage.removeItem("adminRemember");
+  }
+
   window.location.href = "/admin/login";
 }
