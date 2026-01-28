@@ -30,12 +30,57 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "Exclusive Original Artworks",
-  description: "Exclusive art gallery - Discover and purchase unique artworks",
+  metadataBase: new URL('https://alternusart.com'),
+  title: {
+    default: "Alternus Art Gallery | Original Artworks & Paintings",
+    template: "%s | Alternus Art Gallery",
+  },
+  description: "Discover and purchase exclusive original artworks from talented artists worldwide. Alternus Gallery features unique paintings, prints, and commissioned art pieces.",
+  keywords: ["art gallery", "original artworks", "paintings", "art for sale", "buy art online", "contemporary art", "abstract art", "impressionism", "artists", "art collectors"],
+  authors: [{ name: "Alternus Art Gallery" }],
+  creator: "Alternus Art Gallery",
+  publisher: "Alternus Art Gallery",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
     apple: "/logo.png",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://alternusart.com",
+    siteName: "Alternus Art Gallery",
+    title: "Alternus Art Gallery | Original Artworks & Paintings",
+    description: "Discover and purchase exclusive original artworks from talented artists worldwide.",
+    images: [
+      {
+        url: "/logo.png",
+        width: 512,
+        height: 512,
+        alt: "Alternus Art Gallery",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Alternus Art Gallery | Original Artworks & Paintings",
+    description: "Discover and purchase exclusive original artworks from talented artists worldwide.",
+    images: ["/logo.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    // Add your Google Search Console verification code here
+    // google: 'your-google-verification-code',
   },
   other: {
     "trustpilot-one-time-domain-verification-id": "97339bc2-345b-49c2-a68e-f83d09f259c1",
