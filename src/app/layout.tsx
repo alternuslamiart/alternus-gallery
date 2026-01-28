@@ -128,6 +128,11 @@ export default function RootLayout({
             "description": "Discover and purchase exclusive original artworks from talented artists worldwide. Alternus Gallery features unique paintings, prints, and commissioned art pieces.",
             "email": "contact@alternusart.com",
             "foundingDate": "2024",
+            "address": {
+              "@type": "PostalAddress",
+              "addressLocality": "Online",
+              "addressCountry": "Worldwide"
+            },
             "sameAs": [
               "https://www.instagram.com/alternusart",
               "https://www.facebook.com/alternusart",
