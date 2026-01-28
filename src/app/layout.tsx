@@ -140,22 +140,14 @@ export default function RootLayout({
               "@type": "Place",
               "name": "Worldwide"
             },
-            "hasOfferCatalog": {
-              "@type": "OfferCatalog",
-              "name": "Original Artworks",
-              "itemListElement": [
-                {
-                  "@type": "OfferCatalog",
-                  "name": "Paintings",
-                  "itemListElement": [
-                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Abstract Art" } },
-                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Contemporary Art" } },
-                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Landscape Art" } },
-                    { "@type": "Offer", "itemOffered": { "@type": "Product", "name": "Still Life Art" } }
-                  ]
-                }
-              ]
-            }
+            "knowsAbout": [
+              "Abstract Art",
+              "Contemporary Art",
+              "Landscape Paintings",
+              "Still Life Art",
+              "Oil Paintings",
+              "Original Artworks"
+            ]
           })
         }}
       />
@@ -180,37 +172,6 @@ export default function RootLayout({
                 "urlTemplate": "https://alternusart.com/gallery?search={search_term_string}"
               },
               "query-input": "required name=search_term_string"
-            }
-          })
-        }}
-      />
-      <Script
-        id="schema-store"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Store",
-            "@id": "https://alternusart.com/#store",
-            "name": "Alternus Art Gallery",
-            "image": "https://alternusart.com/logo.png",
-            "url": "https://alternusart.com",
-            "telephone": "",
-            "priceRange": "$$",
-            "servesCuisine": "",
-            "acceptsReservations": false,
-            "address": {
-              "@type": "PostalAddress",
-              "addressCountry": "Worldwide"
-            },
-            "geo": {
-              "@type": "GeoCoordinates"
-            },
-            "openingHoursSpecification": {
-              "@type": "OpeningHoursSpecification",
-              "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-              "opens": "00:00",
-              "closes": "23:59"
             }
           })
         }}
