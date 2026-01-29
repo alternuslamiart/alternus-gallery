@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AdBanner } from "@/components/adsense";
 
 const shippingZones = [
   { zone: "Europe (EU)", time: "5-7 business days", cost: "€25 - €45" },
@@ -227,6 +228,9 @@ export default function ShippingPage() {
             </div>
           </div>
         </div>
+
+        {/* Ad Banner */}
+        <AdBanner className="max-w-4xl mx-auto mt-12" />
 
         {/* Contact CTA */}
         <div className="max-w-4xl mx-auto">

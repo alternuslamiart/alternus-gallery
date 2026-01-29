@@ -10,6 +10,7 @@ import { useLanguage, useCart, useWishlist } from "@/components/providers";
 import { Painting } from "@/lib/paintings";
 import { FilterSidebar } from "@/components/gallery/filter-sidebar";
 import { MobileFilterDrawer } from "@/components/gallery/mobile-filter-drawer";
+import { AdBanner } from "@/components/adsense";
 
 export default function GalleryPage() {
   const searchParams = useSearchParams();
@@ -382,6 +383,9 @@ export default function GalleryPage() {
           ))}
             </div>
             )}
+
+            {/* Ad Banner */}
+            <AdBanner className="mt-8" />
 
             {/* Load More */}
             {filteredPaintings.length > 0 && (

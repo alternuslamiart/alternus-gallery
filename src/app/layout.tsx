@@ -94,6 +94,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* Google AdSense - Auto Ads */}
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
       {/* Google Analytics */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-WJV9KGNV0S"

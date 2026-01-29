@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { AdBanner } from "@/components/adsense";
 
 export default function CareGuidePage() {
 
@@ -238,6 +239,9 @@ export default function CareGuidePage() {
               </div>
             </div>
           </div>
+
+          {/* Ad Banner */}
+          <AdBanner className="mb-12" />
 
           {/* Contact CTA */}
           <div className="text-center">

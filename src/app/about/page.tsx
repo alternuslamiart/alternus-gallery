@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { paintings } from "@/lib/paintings";
+import { AdBanner } from "@/components/adsense";
 
 export default function AboutPage() {
   const totalWorks = paintings.length;
@@ -106,6 +107,11 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Ad Banner */}
+      <div className="container mx-auto px-4">
+        <AdBanner />
+      </div>
 
       {/* What We Offer */}
       <section className="py-24 bg-gray-50">

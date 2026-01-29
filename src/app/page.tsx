@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage, useCart, useWishlist } from "@/components/providers";
 import AccordionSection from "@/components/accordion-section";
 import TestimonialsSection from "@/components/testimonials-section";
+import { AdBanner } from "@/components/adsense";
 
 interface Artwork {
   id: string;
@@ -907,6 +908,11 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Ad Banner */}
+      <div className="container mx-auto px-4">
+        <AdBanner />
+      </div>
+
       {/* Favorite Artist Section - Horizontal Scroll */}
       <section className="py-24 bg-background overflow-hidden">
         <div className="container mx-auto px-4">
@@ -1302,6 +1308,11 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <TestimonialsSection />
+
+      {/* Ad Banner */}
+      <div className="container mx-auto px-4">
+        <AdBanner />
+      </div>
 
       {/* Order Tracking Section */}
       <section className="py-24 bg-gradient-to-b from-white to-gray-50/80">

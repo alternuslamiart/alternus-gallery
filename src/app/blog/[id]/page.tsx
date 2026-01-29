@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getBlogPostById, blogPosts } from "@/lib/blog";
+import { AdInArticle } from "@/components/adsense";
 
 function renderMarkdown(content: string) {
   const lines = content.split("\n");
@@ -264,6 +265,9 @@ export default function BlogDetailPage() {
           <article className="prose-custom">
             {renderMarkdown(post.content)}
           </article>
+
+          {/* In-Article Ad */}
+          <AdInArticle />
 
           {/* Share / Tags Section */}
           <div className="mt-12 pt-8 border-t border-gray-200">

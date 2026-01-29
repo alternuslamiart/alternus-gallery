@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { AdBanner } from "@/components/adsense";
 
 const faqs = [
   {
@@ -176,6 +177,9 @@ export default function FAQPage() {
             </div>
           ))}
         </div>
+
+        {/* Ad Banner */}
+        <AdBanner className="max-w-4xl mx-auto mt-12" />
 
         {/* Contact CTA */}
         <div className="max-w-4xl mx-auto mt-16">

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { blogPosts, blogCategories } from "@/lib/blog";
+import { AdBanner } from "@/components/adsense";
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -99,6 +100,9 @@ export default function BlogPage() {
             </Link>
           </div>
         )}
+
+        {/* Ad Banner */}
+        <AdBanner className="mb-8" />
 
         {/* Blog Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
