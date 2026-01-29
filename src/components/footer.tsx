@@ -200,45 +200,28 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Legal */}
           <div className="space-y-4">
-            <h4 className="font-semibold tracking-wider">Support</h4>
+            <h4 className="font-semibold tracking-wider">Legal</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li className="flex items-center gap-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect width="20" height="16" x="2" y="4" rx="2" />
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                </svg>
-                info@alternusart.com
+              <li>
+                <Link href="/accessibility" className="inline-block py-1 hover:text-foreground transition-colors">
+                  Accessibility
+                </Link>
               </li>
               <li>
-                <Link href="/support" className="inline-block py-1 hover:text-foreground transition-colors flex items-center gap-2">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                    <path d="M12 17h.01" />
-                  </svg>
-                  Support Center
+                <Link href="/cookie-notice" className="inline-block py-1 hover:text-foreground transition-colors">
+                  Cookie Notice
+                </Link>
+              </li>
+              <li>
+                <Link href="/copyright" className="inline-block py-1 hover:text-foreground transition-colors">
+                  Copyright Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/support" className="inline-block py-1 hover:text-foreground transition-colors">
+                  Support
                 </Link>
               </li>
             </ul>
