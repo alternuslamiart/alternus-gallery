@@ -109,10 +109,10 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section - Horizontal Scroll Frame */}
-      <section className="py-8 md:py-12 bg-muted/30">
+      <section className="py-3 md:py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           {/* Navigation Header */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-2 md:mb-4">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold">Exclusive Original Artworks</h2>
             </div>
@@ -141,8 +141,8 @@ export default function Home() {
           </div>
 
           {/* Style Buttons */}
-          <div className="mb-6">
-            <p className="text-sm text-gray-500 italic mb-3">Browse by style</p>
+          <div className="mb-3 md:mb-6">
+            <p className="text-sm text-gray-500 italic mb-2 md:mb-3">Browse by style</p>
             <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory md:flex-wrap" style={{ scrollbarWidth: "thin" }}>
               <button
                 onClick={() => router.push('/gallery?category=Baroque')}
@@ -178,14 +178,14 @@ export default function Home() {
           </div>
 
           {/* Horizontal Scroll Container */}
-          <div className="relative">
+          <div className="relative -mx-4 md:mx-0">
             <div
               ref={heroScrollRef}
-              className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
+              className="flex gap-6 overflow-x-auto pb-0 md:pb-4 snap-x snap-mandatory px-[7.5vw] md:px-0"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {/* Main Hero Card */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[360px] p-2">
                   {/* Decorative Frame */}
@@ -335,7 +335,7 @@ export default function Home() {
               </div>
 
               {/* News Card 2 - New Collection */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[360px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-emerald-600/80 bg-gradient-to-br from-emerald-900 to-emerald-800 overflow-hidden shadow-[0_0_0_4px_rgba(5,150,105,0.3)]">
@@ -457,7 +457,7 @@ export default function Home() {
               </div>
 
               {/* News Card 3 - Limited Offer */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[360px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-orange-600/80 bg-gradient-to-br from-amber-900 to-orange-800 overflow-hidden shadow-[0_0_0_4px_rgba(234,88,12,0.3)]">
@@ -579,7 +579,7 @@ export default function Home() {
               </div>
 
               {/* News Card 4 - Meet the Artist */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-start">
+              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[360px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-purple-600/80 bg-gradient-to-br from-purple-900 to-indigo-800 overflow-hidden shadow-[0_0_0_4px_rgba(147,51,234,0.3)]">
