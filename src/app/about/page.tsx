@@ -50,7 +50,7 @@ export default function AboutPage() {
                 Explore Collection
               </Link>
               <Link
-                href="/contact"
+                href="/support"
                 className="px-8 py-3 bg-white border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-100 transition-colors"
               >
                 Get in Touch
@@ -297,7 +297,7 @@ export default function AboutPage() {
                 Browse Gallery
               </Link>
               <Link
-                href="/contact"
+                href="/support"
                 className="px-8 py-3 bg-white border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-100 transition-colors"
               >
                 Contact Us

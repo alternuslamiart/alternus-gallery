@@ -245,7 +245,7 @@ export default function CareGuidePage() {
               Need professional advice or conservation services? We&apos;re here to help.
             </p>
             <Link
-              href="/contact"
+              href="/support"
               className="inline-flex items-center gap-2 bg-gray-900 text-white px-8 py-4 rounded-xl font-medium hover:bg-gray-800 transition-colors"
             >
               Contact Art Advisor

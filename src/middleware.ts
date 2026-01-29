@@ -135,7 +135,7 @@ export function middleware(request: NextRequest) {
       limit = 10; // 10 requests per minute for auth
     } else if (pathname.includes("/payment") || pathname.includes("/stripe")) {
       limit = 20; // 20 requests per minute for payments
-    } else if (pathname.includes("/contact")) {
+    } else if (pathname.includes("/support")) {
       limit = 5; // 5 requests per minute for contact
     }
 

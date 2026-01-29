@@ -490,7 +490,7 @@ We're here to help with any questions!
 **Contact Methods:**
 - **Email**: Best for detailed inquiries
 - **Chat**: I'm here 24/7 for quick questions
-- **Contact Form**: Visit /contact
+- **Contact Form**: Visit /support
 
 **Office Hours:**
 Monday - Friday: 9:00 AM - 6:00 PM (CET)
@@ -504,7 +504,7 @@ Weekend: Email support available
 - Technical support
 - Art recommendations
 
-Visit our contact page: /contact`,
+Visit our contact page: /support`,
     sq: `**Na Kontaktoni**
 
 Jemi ketu per te ndihmuar me cdo pyetje!
@@ -515,13 +515,13 @@ Jemi ketu per te ndihmuar me cdo pyetje!
 **Metodat e Kontaktit:**
 - **Email**: Me e mira per pyetje te detajuara
 - **Chat**: Jam ketu 24/7 per pyetje te shpejta
-- **Formulari i Kontaktit**: Vizitoni /contact
+- **Formulari i Kontaktit**: Vizitoni /support
 
 **Oret e Punes:**
 E Hene - E Premte: 9:00 - 18:00 (CET)
 Fundjavë: Mbeshtetje me email e disponueshme
 
-Vizitoni faqen e kontaktit: /contact`
+Vizitoni faqen e kontaktit: /support`
   },
 
   // Commission

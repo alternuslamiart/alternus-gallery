@@ -83,7 +83,7 @@ export default function Error({
             Need help? Our support team is here for you.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-            <Link href="/contact" className="text-primary hover:underline">
+            <Link href="/support" className="text-primary hover:underline">
               Contact Support
             </Link>
             <span className="text-gray-300">•</span>

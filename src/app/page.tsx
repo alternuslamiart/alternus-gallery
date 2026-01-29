@@ -499,7 +499,7 @@ export default function Home() {
                               </Link>
                             </Button>
                             <Button asChild size="sm" variant="outline" className="h-8 px-3 text-xs bg-white/10 text-white border border-white/30 hover:bg-white/20">
-                              <Link href="/contact">
+                              <Link href="/support">
                                 Learn More
                               </Link>
                             </Button>
@@ -559,7 +559,7 @@ export default function Home() {
                         </Link>
                       </Button>
                       <Button asChild size="lg" variant="outline" className="px-8 bg-white/20 text-white border border-white/30 hover:bg-white/30">
-                        <Link href="/contact">
+                        <Link href="/support">
                           Learn More
                         </Link>
                       </Button>

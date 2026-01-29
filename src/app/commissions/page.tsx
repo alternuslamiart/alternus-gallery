@@ -115,7 +115,7 @@ export default function CommissionsPage() {
               Start your commission journey today. Share your vision and let us bring it to life.
             </p>
             <Link
-              href="/contact"
+              href="/support"
               className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-xl font-medium hover:bg-gray-100 transition-colors"
             >
               Start Your Commission

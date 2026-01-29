@@ -139,8 +139,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="inline-block py-1 hover:text-foreground transition-colors">
-                  {t("contact")}
+                <Link href="/support" className="inline-block py-1 hover:text-foreground transition-colors">
+                  Support
                 </Link>
               </li>
             </ul>
@@ -200,9 +200,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Contact */}
+          {/* Support */}
           <div className="space-y-4">
-            <h4 className="font-semibold tracking-wider">{t("contact")}</h4>
+            <h4 className="font-semibold tracking-wider">Support</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-center gap-2">
                 <svg
@@ -280,7 +280,7 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="inline-block py-1 hover:text-foreground transition-colors flex items-center gap-2">
+                <Link href="/support" className="inline-block py-1 hover:text-foreground transition-colors flex items-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                     <polyline points="22,6 12,13 2,6"/>

@@ -237,7 +237,7 @@ export default function ShippingPage() {
                 <p className="text-gray-300">Contact us for shipping quotes or special requests.</p>
               </div>
               <Link
-                href="/contact"
+                href="/support"
                 className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-xl font-medium hover:bg-gray-100 transition-colors"
               >
                 Contact Us
@@ -386,7 +386,7 @@ export default function ShippingPage() {
             </div>
             <div className="mt-6 pt-4 border-t">
               <p className="text-sm text-gray-500 text-center">
-                Don&apos;t see your country? <Link href="/contact" className="text-blue-600 hover:underline">Contact us</Link> for shipping inquiries.
+                Don&apos;t see your country? <Link href="/support" className="text-blue-600 hover:underline">Contact us</Link> for shipping inquiries.
               </p>
             </div>
           </div>

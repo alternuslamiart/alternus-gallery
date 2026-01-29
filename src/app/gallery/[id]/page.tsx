@@ -677,7 +677,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                   </Button>
                 </div>
                 <Button asChild variant="outline" size="lg" className="w-full">
-                  <Link href={`/contact?painting=${painting.id}`}>
+                  <Link href={`/support?painting=${painting.id}`}>
                     {t("inquire")}
                   </Link>
                 </Button>
@@ -692,7 +692,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                   This piece has been sold, but you can commission a similar work.
                 </p>
                 <Button asChild variant="outline">
-                  <Link href="/contact">Commission a Piece</Link>
+                  <Link href="/support">Commission a Piece</Link>
                 </Button>
               </div>
             )}

@@ -178,7 +178,7 @@ export default function ReturnsPage() {
                 <p className="text-gray-300">Our support team will guide you through the process.</p>
               </div>
               <Link
-                href="/contact"
+                href="/support"
                 className="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-4 rounded-xl font-medium hover:bg-gray-100 transition-colors"
               >
                 Contact Support

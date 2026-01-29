@@ -79,7 +79,7 @@ export default function NotFound() {
               About Us
             </Link>
             <span className="text-gray-300">•</span>
-            <Link href="/contact" className="text-primary hover:underline">
+            <Link href="/support" className="text-primary hover:underline">
               Contact Support
             </Link>
             <span className="text-gray-300">•</span>

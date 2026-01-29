@@ -98,7 +98,7 @@ export default function HelpCenterPage() {
             </div>
 
             {/* Email Support */}
-            <Link href="/contact" className="bg-white rounded-2xl border border-gray-100 p-6 text-center hover:shadow-lg transition-shadow group">
+            <Link href="/support" className="bg-white rounded-2xl border border-gray-100 p-6 text-center hover:shadow-lg transition-shadow group">
               <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-500 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-blue-600 group-hover:text-white transition-colors">
                   <rect width="20" height="16" x="2" y="4" rx="2"/>

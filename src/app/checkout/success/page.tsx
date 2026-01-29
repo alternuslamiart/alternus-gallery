@@ -420,7 +420,7 @@ export default function CheckoutSuccessPage() {
               <p className="font-semibold text-lg">info@alternusart.com</p>
             </div>
             <Button variant="outline" className="ml-auto" asChild>
-              <Link href="/contact">Contact Us</Link>
+              <Link href="/support">Contact Us</Link>
             </Button>
           </div>
         </div>

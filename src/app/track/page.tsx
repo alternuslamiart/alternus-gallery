@@ -412,7 +412,7 @@ export default function TrackOrderPage() {
                   If you have any questions about your order, feel free to contact us.
                 </p>
                 <Button asChild variant="outline">
-                  <Link href="/contact">Contact Support</Link>
+                  <Link href="/support">Contact Support</Link>
                 </Button>
               </CardContent>
             </Card>

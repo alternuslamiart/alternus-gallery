@@ -148,7 +148,7 @@ export function Header() {
     { name: t("gallery"), href: "/gallery" },
     { name: "Blog", href: "/blog" },
     { name: t("about"), href: "/about" },
-    { name: t("contact"), href: "/contact" },
+    { name: "Support", href: "/support" },
   ];
 
   const currentLang = languages.find((l) => l.code === language);
