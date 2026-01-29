@@ -181,11 +181,11 @@ export default function Home() {
           <div className="relative -mx-4 md:mx-0">
             <div
               ref={heroScrollRef}
-              className="flex gap-6 overflow-x-auto pb-0 md:pb-4 snap-x snap-mandatory px-[7.5vw] md:px-0"
+              className="flex gap-6 overflow-x-auto pb-0 md:pb-4 snap-x snap-mandatory px-4 md:px-0"
               style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
             >
               {/* Main Hero Card */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
+              <div className="flex-shrink-0 w-[calc(100vw-32px)] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[424px] p-2">
                   {/* Decorative Frame */}
@@ -335,7 +335,7 @@ export default function Home() {
               </div>
 
               {/* News Card 2 - New Collection */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
+              <div className="flex-shrink-0 w-[calc(100vw-32px)] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[424px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-emerald-600/80 bg-gradient-to-br from-emerald-900 to-emerald-800 overflow-hidden shadow-[0_0_0_4px_rgba(5,150,105,0.3)]">
@@ -457,7 +457,7 @@ export default function Home() {
               </div>
 
               {/* News Card 3 - Limited Offer */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
+              <div className="flex-shrink-0 w-[calc(100vw-32px)] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[424px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-orange-600/80 bg-gradient-to-br from-amber-900 to-orange-800 overflow-hidden shadow-[0_0_0_4px_rgba(234,88,12,0.3)]">
@@ -579,7 +579,7 @@ export default function Home() {
               </div>
 
               {/* News Card 4 - Meet the Artist */}
-              <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
+              <div className="flex-shrink-0 w-[calc(100vw-32px)] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
                 <div className="md:hidden relative h-[424px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-purple-600/80 bg-gradient-to-br from-purple-900 to-indigo-800 overflow-hidden shadow-[0_0_0_4px_rgba(147,51,234,0.3)]">
