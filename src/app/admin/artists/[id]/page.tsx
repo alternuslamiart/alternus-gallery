@@ -57,7 +57,7 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
     artistEarning: 94080,
     joinedDate: "2023-06-15",
     isActive: true,
-    profileImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400",
+    profileImage: "https://randomuser.me/api/portraits/men/67.jpg",
     coverImage: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1200&h=400&fit=crop",
     website: "www.marcorossiart.com",
     instagram: "@marcorossiart",

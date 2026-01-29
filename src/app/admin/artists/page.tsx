@@ -35,7 +35,7 @@ export default function ArtistsPage() {
       artistEarning: 94080, // 60%
       joinedDate: "2023-06-15",
       isActive: true,
-      profileImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200",
+      profileImage: "https://randomuser.me/api/portraits/men/67.jpg",
     },
     {
       id: "ART-002",
@@ -49,7 +49,7 @@ export default function ArtistsPage() {
       artistEarning: 59040,
       joinedDate: "2023-08-22",
       isActive: true,
-      profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200",
+      profileImage: "https://randomuser.me/api/portraits/women/57.jpg",
     },
     {
       id: "ART-003",
@@ -63,7 +63,7 @@ export default function ArtistsPage() {
       artistEarning: 112380,
       joinedDate: "2023-04-10",
       isActive: true,
-      profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200",
+      profileImage: "https://randomuser.me/api/portraits/men/41.jpg",
     },
     {
       id: "ART-004",
@@ -77,7 +77,7 @@ export default function ArtistsPage() {
       artistEarning: 147360,
       joinedDate: "2023-03-05",
       isActive: true,
-      profileImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200",
+      profileImage: "https://randomuser.me/api/portraits/women/63.jpg",
     },
     {
       id: "ART-005",
@@ -91,7 +91,7 @@ export default function ArtistsPage() {
       artistEarning: 74700,
       joinedDate: "2023-09-18",
       isActive: false,
-      profileImage: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200",
+      profileImage: "https://randomuser.me/api/portraits/women/71.jpg",
     },
   ]);
 
