@@ -538,16 +538,10 @@ export default function TermsOfServicePage() {
               <div className="bg-muted/50 rounded-xl p-6 space-y-3">
                 <p className="font-semibold text-lg">Alternus Art Gallery</p>
                 <p className="text-muted-foreground">
-                  <strong>Address:</strong> Kosovo
-                </p>
-                <p className="text-muted-foreground">
                   <strong>Email:</strong> legal@alternusart.com
                 </p>
                 <p className="text-muted-foreground">
-                  <strong>Phone:</strong> +383 48 466 061
-                </p>
-                <p className="text-muted-foreground">
-                  <strong>Business Registration:</strong> NIPT: XXXXXXXXXX
+                  <strong>Website:</strong> alternusart.com
                 </p>
               </div>
             </section>

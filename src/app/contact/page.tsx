@@ -53,29 +53,31 @@ export default function ContactPage() {
               </a>
             </div>
 
-            {/* Phone */}
+            {/* Response Time */}
             <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 text-center hover:shadow-lg transition-shadow">
               <div className="w-12 h-12 sm:w-14 sm:h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-600">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Phone</h3>
-              <p className="text-sm text-gray-500 mb-3">Mon-Fri, 9am-6pm EST</p>
-              <span className="text-emerald-600 font-medium">+383 48 466 061</span>
+              <h3 className="font-semibold text-gray-900 mb-2">Response Time</h3>
+              <p className="text-sm text-gray-500 mb-3">We aim to respond</p>
+              <span className="text-emerald-600 font-medium">Within 24 Hours</span>
             </div>
 
-            {/* Location */}
+            {/* Online Gallery */}
             <div className="bg-white rounded-2xl border border-gray-100 p-4 sm:p-6 text-center hover:shadow-lg transition-shadow">
               <div className="w-12 h-12 sm:w-14 sm:h-14 bg-purple-100 rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600">
-                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
-                  <circle cx="12" cy="10" r="3"/>
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M2 12h20" />
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Location</h3>
-              <p className="text-sm text-gray-500 mb-3">Visit our gallery</p>
-              <span className="text-purple-600 font-medium">Kosovo</span>
+              <h3 className="font-semibold text-gray-900 mb-2">Online Gallery</h3>
+              <p className="text-sm text-gray-500 mb-3">Available worldwide</p>
+              <span className="text-purple-600 font-medium">alternusart.com</span>
             </div>
           </div>
 

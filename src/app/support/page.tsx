@@ -83,14 +83,14 @@ export default function SupportPage() {
                 </li>
               </ul>
               <a
-                href="mailto:support@alternusart.com"
+                href="#support-form"
                 className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
               >
+                Submit a Request
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect width="20" height="16" x="2" y="4" rx="2" />
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
                 </svg>
-                support@alternusart.com
               </a>
             </div>
 
@@ -134,53 +134,28 @@ export default function SupportPage() {
                 </li>
               </ul>
               <a
-                href="mailto:curator@alternusart.com"
+                href="#support-form"
                 className="inline-flex items-center gap-2 bg-amber-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-amber-700 transition-colors"
               >
+                Get Help
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <rect width="20" height="16" x="2" y="4" rx="2" />
-                  <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
                 </svg>
-                curator@alternusart.com
               </a>
             </div>
           </div>
 
-          {/* Quick Info Row */}
-          <div className="grid sm:grid-cols-3 gap-4 mb-12">
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-600">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-              <p className="text-sm text-gray-500 mb-2">Mon-Fri, 9am-6pm</p>
-              <span className="text-emerald-600 font-medium">+383 48 466 061</span>
-            </div>
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 text-center hover:shadow-lg transition-shadow">
-              <div className="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-purple-600">
-                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
-              <p className="text-sm text-gray-500 mb-2">Online Gallery</p>
-              <span className="text-purple-600 font-medium">Kosovo</span>
-            </div>
-            <div className="bg-gray-900 text-white rounded-2xl p-5 text-center">
-              <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse" />
-              </div>
-              <h3 className="font-semibold mb-1">Response Time</h3>
-              <p className="text-sm text-gray-400 mb-2">We aim to respond</p>
-              <span className="text-emerald-400 font-medium">Within 24 Hours</span>
-            </div>
+          {/* Response Time Banner */}
+          <div className="bg-gray-900 text-white rounded-2xl p-6 mb-12 flex items-center justify-center gap-4">
+            <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse" />
+            <p className="text-sm sm:text-base">
+              We typically respond <span className="text-emerald-400 font-semibold">within 24 hours</span>
+            </p>
           </div>
 
           {/* Message Form */}
-          <div className="max-w-3xl mx-auto">
+          <div id="support-form" className="max-w-3xl mx-auto scroll-mt-8">
             <div className="text-center mb-8">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Send Us a Message</h2>
               <p className="text-gray-500">Fill out the form below and we&apos;ll get back to you as soon as possible.</p>

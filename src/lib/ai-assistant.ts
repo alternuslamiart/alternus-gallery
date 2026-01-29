@@ -484,17 +484,12 @@ Keni nevoje per ndihme? Email: info@alternusart.com`
 
 We're here to help with any questions!
 
-**Email:** info@alternusart.com
 **Response time:** Within 24 hours
 
-**Contact Methods:**
-- **Email**: Best for detailed inquiries
+**How to Reach Us:**
+- **Support Form**: Submit a request at /support
 - **Chat**: I'm here 24/7 for quick questions
-- **Contact Form**: Visit /support
-
-**Office Hours:**
-Monday - Friday: 9:00 AM - 6:00 PM (CET)
-Weekend: Email support available
+- **Curator**: For artwork inquiries, visit /support
 
 **What We Can Help With:**
 - Order inquiries and tracking
@@ -504,24 +499,19 @@ Weekend: Email support available
 - Technical support
 - Art recommendations
 
-Visit our contact page: /support`,
+Visit our support page: /support`,
     sq: `**Na Kontaktoni**
 
 Jemi ketu per te ndihmuar me cdo pyetje!
 
-**Email:** info@alternusart.com
 **Koha e pergjigjes:** Brenda 24 oreve
 
-**Metodat e Kontaktit:**
-- **Email**: Me e mira per pyetje te detajuara
+**Si te na kontaktoni:**
+- **Formulari i Mbeshtetjes**: Dergoni kerkese ne /support
 - **Chat**: Jam ketu 24/7 per pyetje te shpejta
-- **Formulari i Kontaktit**: Vizitoni /support
+- **Kuratori**: Per pyetje rreth veprave, vizitoni /support
 
-**Oret e Punes:**
-E Hene - E Premte: 9:00 - 18:00 (CET)
-Fundjavë: Mbeshtetje me email e disponueshme
-
-Vizitoni faqen e kontaktit: /support`
+Vizitoni faqen e mbeshtetjes: /support`
   },
 
   // Commission
