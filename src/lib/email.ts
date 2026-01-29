@@ -287,6 +287,145 @@ export async function sendOrderConfirmationEmail(data: OrderEmailData): Promise<
   });
 }
 
+// Admin notification when a new order payment is completed
+interface AdminOrderNotificationData {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  items: { title: string; price: number; quantity: number }[];
+  total: number;
+  paymentMethod: string;
+  shippingAddress: {
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+}
+
+export async function sendAdminNewOrderEmail(data: AdminOrderNotificationData): Promise<boolean> {
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (!adminEmail) {
+    console.error('ADMIN_EMAIL not set — cannot send admin order notification');
+    return false;
+  }
+
+  const itemsHtml = data.items.map(item => `
+    <tr>
+      <td style="padding: 10px 15px; border-bottom: 1px solid #eee; color: #1a1a1a;">${item.title}</td>
+      <td style="padding: 10px 15px; border-bottom: 1px solid #eee; text-align: center; color: #666;">${item.quantity}</td>
+      <td style="padding: 10px 15px; border-bottom: 1px solid #eee; text-align: right; font-weight: 600; color: #1a1a1a;">€${item.price.toFixed(2)}</td>
+    </tr>
+  `).join('');
+
+  const html = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f8f9fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+      <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+        <div style="background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);">
+          <!-- Header -->
+          <div style="text-align: center; margin-bottom: 20px;">
+            <h1 style="margin: 0; font-size: 28px; font-weight: 700; color: #000;">Alternus Art Gallery</h1>
+          </div>
+
+          <!-- Alert Icon -->
+          <div style="text-align: center; margin-bottom: 20px;">
+            <div style="width: 60px; height: 60px; background: #f59e0b; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+              <span style="color: white; font-size: 30px;">$</span>
+            </div>
+          </div>
+
+          <h2 style="margin: 0 0 5px; font-size: 22px; font-weight: 700; color: #1a1a1a; text-align: center;">
+            New Order Received!
+          </h2>
+          <p style="margin: 0 0 25px; color: #666; font-size: 14px; text-align: center;">
+            A customer has just completed a payment.
+          </p>
+
+          <!-- Order Info -->
+          <div style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 15px; margin-bottom: 25px;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 4px 0; color: #92400e; font-size: 14px;">Order Number</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: 700; color: #92400e; font-size: 14px;">${data.orderNumber}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #92400e; font-size: 14px;">Payment Method</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: 600; color: #92400e; font-size: 14px;">${data.paymentMethod.toUpperCase()}</td>
+              </tr>
+              <tr>
+                <td style="padding: 4px 0; color: #92400e; font-size: 14px;">Total</td>
+                <td style="padding: 4px 0; text-align: right; font-weight: 700; color: #92400e; font-size: 18px;">€${data.total.toFixed(2)}</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Customer Info -->
+          <h3 style="margin: 0 0 10px; font-size: 14px; font-weight: 600; color: #1a1a1a;">Customer</h3>
+          <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+            <p style="margin: 0 0 5px; font-weight: 600; color: #1a1a1a; font-size: 14px;">${data.customerName}</p>
+            <p style="margin: 0; color: #666; font-size: 14px;">${data.customerEmail}</p>
+          </div>
+
+          <!-- Items -->
+          <h3 style="margin: 0 0 10px; font-size: 14px; font-weight: 600; color: #1a1a1a;">Items Ordered</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+            <thead>
+              <tr style="background: #f8f9fa;">
+                <th style="padding: 10px 15px; text-align: left; font-size: 12px; color: #666; font-weight: 600;">Artwork</th>
+                <th style="padding: 10px 15px; text-align: center; font-size: 12px; color: #666; font-weight: 600;">Qty</th>
+                <th style="padding: 10px 15px; text-align: right; font-size: 12px; color: #666; font-weight: 600;">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+          </table>
+
+          <!-- Shipping Address -->
+          <h3 style="margin: 0 0 10px; font-size: 14px; font-weight: 600; color: #1a1a1a;">Ship To</h3>
+          <div style="background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 25px;">
+            <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.6;">
+              ${data.shippingAddress.address}<br>
+              ${data.shippingAddress.city}, ${data.shippingAddress.postalCode}<br>
+              ${data.shippingAddress.country}
+            </p>
+          </div>
+
+          <!-- CTA -->
+          <div style="text-align: center;">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/orders" style="display: inline-block; padding: 14px 32px; background: #000; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+              View in Admin Panel
+            </a>
+          </div>
+
+          <!-- Footer -->
+          <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; text-align: center;">
+            <p style="margin: 0; color: #999; font-size: 12px;">
+              This is an automated notification from Alternus Art Gallery.
+            </p>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const text = `NEW ORDER: ${data.orderNumber}\nCustomer: ${data.customerName} (${data.customerEmail})\nTotal: €${data.total.toFixed(2)}\nPayment: ${data.paymentMethod}\nItems: ${data.items.map(i => i.title).join(', ')}\nShip to: ${data.shippingAddress.address}, ${data.shippingAddress.city}, ${data.shippingAddress.country}`;
+
+  return sendEmail({
+    to: adminEmail,
+    subject: `New Order! ${data.orderNumber} — €${data.total.toFixed(2)}`,
+    html,
+    text,
+  });
+}
+
 export async function sendOrderShippedEmail(data: OrderEmailData): Promise<boolean> {
   const html = `
     <!DOCTYPE html>

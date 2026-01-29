@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { constructWebhookEvent } from '@/lib/stripe'
+import { sendAdminNewOrderEmail } from '@/lib/email'
 import { Decimal } from '@prisma/client/runtime/library'
 import Stripe from 'stripe'
 
@@ -181,6 +182,34 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
       },
     })
   }
+
+  // Notify admin about new order
+  const shippingAddress = await prisma.address.findFirst({
+    where: { id: order.shippingAddressId ?? undefined },
+  })
+
+  sendAdminNewOrderEmail({
+    orderNumber: order.orderNumber,
+    customerName: order.userId
+      ? await prisma.user.findUnique({ where: { id: order.userId } }).then(u => u ? `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'Customer' : 'Customer')
+      : 'Guest',
+    customerEmail: order.guestEmail || (order.userId
+      ? (await prisma.user.findUnique({ where: { id: order.userId } }))?.email || ''
+      : ''),
+    items: order.items.map(item => ({
+      title: item.artwork.title,
+      price: Number(item.price),
+      quantity: item.quantity,
+    })),
+    total: Number(order.total),
+    paymentMethod: 'stripe',
+    shippingAddress: {
+      address: shippingAddress?.address || '',
+      city: shippingAddress?.city || '',
+      postalCode: shippingAddress?.postalCode || '',
+      country: shippingAddress?.country || '',
+    },
+  }).catch(err => console.error('Failed to send admin notification:', err))
 
   console.log(`Payment succeeded for order ${order.orderNumber}`)
 }
