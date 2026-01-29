@@ -109,7 +109,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section - Horizontal Scroll Frame */}
-      <section className="py-3 md:py-12 bg-muted/30">
+      <section className="pt-3 pb-5 md:py-12 bg-muted/30">
         <div className="container mx-auto px-4">
           {/* Navigation Header */}
           <div className="flex items-center justify-between mb-2 md:mb-4">
@@ -141,7 +141,7 @@ export default function Home() {
           </div>
 
           {/* Style Buttons */}
-          <div className="mb-3 md:mb-6">
+          <div className="mb-5 md:mb-6">
             <p className="text-sm text-gray-500 italic mb-2 md:mb-3">Browse by style</p>
             <div className="flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory md:flex-wrap" style={{ scrollbarWidth: "thin" }}>
               <button
@@ -187,7 +187,7 @@ export default function Home() {
               {/* Main Hero Card */}
               <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[360px] p-2">
+                <div className="md:hidden relative h-[424px] p-2">
                   {/* Decorative Frame */}
                   <div className="relative h-full rounded-[16px] border-[2px] border-amber-600/80 bg-gradient-to-br from-zinc-900 to-zinc-800 overflow-hidden shadow-[0_0_0_4px_rgba(120,53,15,0.3)]">
                     {/* Background Image */}
@@ -337,7 +337,7 @@ export default function Home() {
               {/* News Card 2 - New Collection */}
               <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[360px] p-2">
+                <div className="md:hidden relative h-[424px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-emerald-600/80 bg-gradient-to-br from-emerald-900 to-emerald-800 overflow-hidden shadow-[0_0_0_4px_rgba(5,150,105,0.3)]">
                     <div className="absolute inset-0">
                       <Image
@@ -459,7 +459,7 @@ export default function Home() {
               {/* News Card 3 - Limited Offer */}
               <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[360px] p-2">
+                <div className="md:hidden relative h-[424px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-orange-600/80 bg-gradient-to-br from-amber-900 to-orange-800 overflow-hidden shadow-[0_0_0_4px_rgba(234,88,12,0.3)]">
                     <div className="absolute inset-0">
                       <Image
@@ -581,7 +581,7 @@ export default function Home() {
               {/* News Card 4 - Meet the Artist */}
               <div className="flex-shrink-0 w-[85vw] md:w-[700px] lg:w-[900px] snap-center">
                 {/* Mobile Layout - Framed */}
-                <div className="md:hidden relative h-[360px] p-2">
+                <div className="md:hidden relative h-[424px] p-2">
                   <div className="relative h-full rounded-[16px] border-[2px] border-purple-600/80 bg-gradient-to-br from-purple-900 to-indigo-800 overflow-hidden shadow-[0_0_0_4px_rgba(147,51,234,0.3)]">
                     <div className="absolute inset-0">
                       <Image
