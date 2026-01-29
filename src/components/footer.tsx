@@ -23,6 +23,8 @@ export function Footer() {
             <div className="flex space-x-4 pt-2">
               <a
                 href="#"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#1877F2] transition-colors"
                 aria-label="Facebook"
               >
@@ -37,7 +39,9 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/alternusart/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#E4405F] transition-colors"
                 aria-label="Instagram"
               >
@@ -52,7 +56,9 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://x.com/Alternusart"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-black transition-colors"
                 aria-label="X (Twitter)"
               >
@@ -68,6 +74,8 @@ export function Footer() {
               </a>
               <a
                 href="#"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#FF0000] transition-colors"
                 aria-label="YouTube"
               >
@@ -82,7 +90,9 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://www.tiktok.com/@alternusart"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-black transition-colors"
                 aria-label="TikTok"
               >
