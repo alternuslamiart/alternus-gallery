@@ -11,6 +11,7 @@ import { ArtLoverModal } from "@/components/art-lover-modal";
 import { CookieModal } from "@/components/cookie-modal";
 import { AIChat } from "@/components/ai-chat";
 import { MobileNav } from "@/components/mobile-nav";
+import { CategoryBar } from "@/components/category-bar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -176,6 +177,7 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
+          <CategoryBar />
           <main className="flex-1 pb-20 md:pb-0">{children}</main>
           <Footer />
           <CartModal />
