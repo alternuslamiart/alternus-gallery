@@ -22,78 +22,7 @@ interface Application {
 }
 
 export default function ApplicationsPage() {
-  const [applications, setApplications] = useState<Application[]>([
-    {
-      id: "APP-2024-001",
-      name: "Marco Rossi",
-      email: "marco.rossi@example.com",
-      country: "Italy",
-      city: "Florence",
-      bio: "Contemporary artist specializing in abstract expressionism. My work explores the intersection of emotion and color, creating vibrant pieces that evoke deep personal connections.",
-      artworks: 12,
-      portfolioImages: [
-        "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600",
-        "https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=600",
-        "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600",
-      ],
-      appliedDate: "2024-01-15",
-      status: "pending",
-      website: "https://marcorossiart.com",
-      instagram: "@marcorossiart",
-    },
-    {
-      id: "APP-2024-002",
-      name: "Sophie Chen",
-      email: "sophie.chen@example.com",
-      country: "Singapore",
-      city: "Singapore",
-      bio: "Digital artist and illustrator focused on surrealist landscapes and dreamlike compositions. I blend traditional techniques with modern digital tools.",
-      artworks: 8,
-      portfolioImages: [
-        "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600",
-        "https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?w=600",
-        "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600",
-      ],
-      appliedDate: "2024-01-14",
-      status: "pending",
-      instagram: "@sophiechenart",
-    },
-    {
-      id: "APP-2024-003",
-      name: "Ahmed Hassan",
-      email: "ahmed.hassan@example.com",
-      country: "Egypt",
-      city: "Cairo",
-      bio: "Mixed media artist combining traditional calligraphy with contemporary art forms. My work celebrates cultural heritage while pushing artistic boundaries.",
-      artworks: 15,
-      portfolioImages: [
-        "https://images.unsplash.com/photo-1578926375605-eaf8b228f6cf?w=600",
-        "https://images.unsplash.com/photo-1561214115-f2f134cc4912?w=600",
-        "https://images.unsplash.com/photo-1580913428706-c311368a80eb?w=600",
-      ],
-      appliedDate: "2024-01-13",
-      status: "pending",
-      website: "https://ahmedart.com",
-    },
-    {
-      id: "APP-2024-004",
-      name: "Maria Garcia",
-      email: "maria.garcia@example.com",
-      country: "Spain",
-      city: "Barcelona",
-      bio: "Oil painter focusing on realism and portraiture. I create emotionally charged pieces that capture the essence of the human experience.",
-      artworks: 20,
-      portfolioImages: [
-        "https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=600",
-        "https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=600",
-        "https://images.unsplash.com/photo-1571115177098-24ec42ed204d?w=600",
-      ],
-      appliedDate: "2024-01-12",
-      status: "pending",
-      website: "https://mariagarciaart.es",
-      instagram: "@mariagarciaart",
-    },
-  ]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   const [selectedApp, setSelectedApp] = useState<Application | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

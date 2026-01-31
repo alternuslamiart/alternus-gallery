@@ -22,78 +22,7 @@ interface Artist {
 }
 
 export default function ArtistsPage() {
-  const [artists, setArtists] = useState<Artist[]>([
-    {
-      id: "ART-001",
-      name: "Marco Rossi",
-      email: "marco.rossi@example.com",
-      country: "Italy",
-      totalArtworks: 45,
-      totalSales: 32,
-      totalRevenue: 156800,
-      commission: 62720, // 40%
-      artistEarning: 94080, // 60%
-      joinedDate: "2023-06-15",
-      isActive: true,
-      profileImage: "https://randomuser.me/api/portraits/men/67.jpg",
-    },
-    {
-      id: "ART-002",
-      name: "Sophie Chen",
-      email: "sophie.chen@example.com",
-      country: "Singapore",
-      totalArtworks: 28,
-      totalSales: 24,
-      totalRevenue: 98400,
-      commission: 39360,
-      artistEarning: 59040,
-      joinedDate: "2023-08-22",
-      isActive: true,
-      profileImage: "https://randomuser.me/api/portraits/women/57.jpg",
-    },
-    {
-      id: "ART-003",
-      name: "Ahmed Hassan",
-      email: "ahmed.hassan@example.com",
-      country: "Egypt",
-      totalArtworks: 52,
-      totalSales: 38,
-      totalRevenue: 187300,
-      commission: 74920,
-      artistEarning: 112380,
-      joinedDate: "2023-04-10",
-      isActive: true,
-      profileImage: "https://randomuser.me/api/portraits/men/41.jpg",
-    },
-    {
-      id: "ART-004",
-      name: "Maria Garcia",
-      email: "maria.garcia@example.com",
-      country: "Spain",
-      totalArtworks: 63,
-      totalSales: 48,
-      totalRevenue: 245600,
-      commission: 98240,
-      artistEarning: 147360,
-      joinedDate: "2023-03-05",
-      isActive: true,
-      profileImage: "https://randomuser.me/api/portraits/women/63.jpg",
-    },
-    {
-      id: "ART-005",
-      name: "Yuki Tanaka",
-      email: "yuki.tanaka@example.com",
-      country: "Japan",
-      totalArtworks: 34,
-      totalSales: 22,
-      totalRevenue: 124500,
-      commission: 49800,
-      artistEarning: 74700,
-      joinedDate: "2023-09-18",
-      isActive: false,
-      profileImage: "https://randomuser.me/api/portraits/women/71.jpg",
-    },
-  ]);
+  const [artists, setArtists] = useState<Artist[]>([]);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<"all" | "active" | "inactive">("all");

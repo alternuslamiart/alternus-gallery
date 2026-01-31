@@ -26,43 +26,23 @@ export default function ReportsPage() {
     };
   }, [isUserMenuOpen]);
 
-  // Mock data for charts
-  const monthlyData = [
-    { month: "Jul", revenue: 245000, commission: 98000, sales: 142 },
-    { month: "Aug", revenue: 289000, commission: 115600, sales: 168 },
-    { month: "Sep", revenue: 312000, commission: 124800, sales: 184 },
-    { month: "Oct", revenue: 298000, commission: 119200, sales: 175 },
-    { month: "Nov", revenue: 356000, commission: 142400, sales: 203 },
-    { month: "Dec", revenue: 425000, commission: 170000, sales: 248 },
-    { month: "Jan", revenue: 525000, commission: 210000, sales: 284 },
-  ];
+  // Real data - starts from zero, updates with actual transactions
+  const monthlyData: { month: string; revenue: number; commission: number; sales: number }[] = [];
 
-  const topArtists = [
-    { name: "Maria Garcia", sales: 48, revenue: 245600, commission: 98240 },
-    { name: "Ahmed Hassan", sales: 38, revenue: 187300, commission: 74920 },
-    { name: "Marco Rossi", sales: 32, revenue: 156800, commission: 62720 },
-    { name: "Yuki Tanaka", sales: 22, revenue: 124500, commission: 49800 },
-    { name: "Sophie Chen", sales: 24, revenue: 98400, commission: 39360 },
-  ];
+  const topArtists: { name: string; sales: number; revenue: number; commission: number }[] = [];
 
-  const categoryBreakdown = [
-    { category: "Abstract", sales: 420, percentage: 32.7, revenue: 856000 },
-    { category: "Contemporary", sales: 345, percentage: 26.9, revenue: 712000 },
-    { category: "Impressionism", sales: 298, percentage: 23.2, revenue: 598000 },
-    { category: "Photography", sales: 145, percentage: 11.3, revenue: 289000 },
-    { category: "Mixed Media", sales: 76, percentage: 5.9, revenue: 145000 },
-  ];
+  const categoryBreakdown: { category: string; sales: number; percentage: number; revenue: number }[] = [];
 
   const stats = {
-    totalRevenue: 2450000,
-    totalCommission: 980000,
-    totalArtistEarnings: 1470000,
-    totalSales: 1284,
-    avgSalePrice: 1908,
-    avgCommission: 763,
+    totalRevenue: 0,
+    totalCommission: 0,
+    totalArtistEarnings: 0,
+    totalSales: 0,
+    avgSalePrice: 0,
+    avgCommission: 0,
   };
 
-  const maxRevenue = Math.max(...monthlyData.map((d) => d.revenue));
+  const maxRevenue = monthlyData.length > 0 ? Math.max(...monthlyData.map((d) => d.revenue)) : 0;
 
   const handleExportCSV = () => {
     const csvContent = [

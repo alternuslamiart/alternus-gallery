@@ -42,85 +42,42 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
     };
   }, [isUserMenuOpen]);
 
-  // Mock artist data - in production, fetch based on params.id
-  const artist = {
-    id: params.id,
-    name: "Marco Rossi",
-    email: "marco.rossi@example.com",
-    country: "Italy",
-    city: "Rome",
-    bio: "Contemporary artist specializing in abstract compositions and mixed media. My work explores the intersection of color, form, and emotion.",
-    totalArtworks: 45,
-    totalSales: 32,
-    totalRevenue: 156800,
-    commission: 62720,
-    artistEarning: 94080,
-    joinedDate: "2023-06-15",
-    isActive: true,
-    profileImage: "https://randomuser.me/api/portraits/men/67.jpg",
-    coverImage: "https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1200&h=400&fit=crop",
-    website: "www.marcorossiart.com",
-    instagram: "@marcorossiart",
-  };
+  const [artist, setArtist] = useState<{
+    id: string;
+    displayName: string;
+    bio: string;
+    country: string;
+    city: string;
+    profileImage: string;
+    coverImage: string;
+    websiteUrl: string;
+    instagramUrl: string;
+    totalArtworks: number;
+    totalSales: number;
+    createdAt: string;
+    user: { firstName: string; lastName: string };
+    artworks: { id: string; title: string; primaryImage: string; price: number; medium: string; isAvailable: boolean; status: string }[];
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [artworks] = useState<Artwork[]>([
-    {
-      id: "AW-001",
-      title: "Sunset Dreams",
-      price: 12500,
-      commission: 5000,
-      artistEarning: 7500,
-      image: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600",
-      medium: "Oil on Canvas",
-      style: "Abstract",
-      dimensions: "100 x 150 cm",
-      status: "approved",
-      uploadDate: "2024-01-15",
-      views: 245,
-    },
-    {
-      id: "AW-002",
-      title: "Golden Hour",
-      price: 14200,
-      commission: 5680,
-      artistEarning: 8520,
-      image: "https://images.unsplash.com/photo-1549289524-06cf8837ace5?w=600",
-      medium: "Acrylic on Canvas",
-      style: "Contemporary",
-      dimensions: "80 x 120 cm",
-      status: "sold",
-      uploadDate: "2024-01-10",
-      views: 189,
-    },
-    {
-      id: "AW-003",
-      title: "Urban Symphony",
-      price: 8300,
-      commission: 3320,
-      artistEarning: 4980,
-      image: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=600",
-      medium: "Mixed Media",
-      style: "Modern",
-      dimensions: "90 x 90 cm",
-      status: "pending",
-      uploadDate: "2024-01-08",
-      views: 156,
-    },
-    {
-      id: "AW-004",
-      title: "Ocean Whispers",
-      price: 22400,
-      commission: 8960,
-      artistEarning: 13440,
-      image: "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=600",
-      medium: "Watercolor",
-      style: "Impressionism",
-      dimensions: "120 x 180 cm",
-      status: "approved",
-      uploadDate: "2024-01-05",
-      views: 312,
-    },
-  ]);
+  useEffect(() => {
+    const fetchArtist = async () => {
+      try {
+        const res = await fetch(`/api/artists/${params.id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setArtist(data.artist);
+        }
+      } catch (error) {
+        console.error("Failed to fetch artist:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchArtist();
+  }, [params.id]);
+
+  const [artworks] = useState<Artwork[]>([]);
 
   const [filterStatus, setFilterStatus] = useState<"all" | "pending" | "approved" | "sold">("all");
 
@@ -263,30 +220,46 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
           </Button>
         </Link>
 
+        {loading ? (
+          <div className="text-center py-20">
+            <p className="text-zinc-500 text-lg">Loading artist...</p>
+          </div>
+        ) : !artist ? (
+          <div className="text-center py-20">
+            <p className="text-zinc-500 text-lg">Artist not found</p>
+          </div>
+        ) : (
+        <>
         {/* Artist Profile Header */}
         <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden mb-8">
           {/* Cover Image */}
           <div className="relative h-48 bg-gradient-to-r from-blue-500 to-purple-500">
-            <Image
-              src={artist.coverImage}
-              alt="Cover"
-              fill
-              className="object-cover"
-            />
+            {artist.coverImage && (
+              <Image
+                src={artist.coverImage}
+                alt="Cover"
+                fill
+                className="object-cover"
+              />
+            )}
           </div>
 
           <div className="p-8">
             <div className="flex items-start gap-6">
               {/* Profile Image */}
               <div className="relative -mt-20">
-                <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white">
-                  <Image
-                    src={artist.profileImage}
-                    alt={artist.name}
-                    width={128}
-                    height={128}
-                    className="object-cover"
-                  />
+                <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white flex items-center justify-center">
+                  {artist.profileImage ? (
+                    <Image
+                      src={artist.profileImage}
+                      alt={artist.displayName}
+                      width={128}
+                      height={128}
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-3xl font-bold text-zinc-400">{artist.displayName?.charAt(0) || "A"}</span>
+                  )}
                 </div>
               </div>
 
@@ -294,18 +267,14 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
               <div className="flex-1 mt-4">
                 <div className="flex items-start justify-between">
                   <div>
-                    <h2 className="text-3xl font-bold text-black mb-2">{artist.name}</h2>
+                    <h2 className="text-3xl font-bold text-black mb-2">{artist.displayName}</h2>
                     <p className="text-zinc-600 mb-4">
-                      {artist.city}, {artist.country}
+                      {artist.city}{artist.city && artist.country ? ", " : ""}{artist.country}
                     </p>
-                    <p className="text-zinc-700 max-w-2xl">{artist.bio}</p>
+                    {artist.bio && <p className="text-zinc-700 max-w-2xl">{artist.bio}</p>}
                   </div>
                   <div className="flex gap-2">
-                    {artist.isActive ? (
-                      <Badge className="bg-emerald-100 text-emerald-700 border-0">Active</Badge>
-                    ) : (
-                      <Badge className="bg-red-100 text-red-700 border-0">Suspended</Badge>
-                    )}
+                    <Badge className="bg-emerald-100 text-emerald-700 border-0">Active</Badge>
                   </div>
                 </div>
 
@@ -321,28 +290,28 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
                   </div>
                   <div className="bg-zinc-50 rounded-lg p-4">
                     <p className="text-sm text-zinc-600">Total Revenue</p>
-                    <p className="text-2xl font-bold text-black">€{artist.totalRevenue.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-black">€0</p>
                   </div>
                   <div className="bg-zinc-50 rounded-lg p-4">
                     <p className="text-sm text-zinc-600">Artist Earnings (60%)</p>
-                    <p className="text-2xl font-bold text-purple-600">€{artist.artistEarning.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-purple-600">€0</p>
                   </div>
                 </div>
 
                 {/* Contact Info */}
                 <div className="flex gap-6 mt-6 text-sm">
-                  <div>
-                    <span className="text-zinc-600">Email:</span>
-                    <span className="text-black ml-2">{artist.email}</span>
-                  </div>
-                  <div>
-                    <span className="text-zinc-600">Website:</span>
-                    <span className="text-black ml-2">{artist.website}</span>
-                  </div>
-                  <div>
-                    <span className="text-zinc-600">Instagram:</span>
-                    <span className="text-black ml-2">{artist.instagram}</span>
-                  </div>
+                  {artist.websiteUrl && (
+                    <div>
+                      <span className="text-zinc-600">Website:</span>
+                      <span className="text-black ml-2">{artist.websiteUrl}</span>
+                    </div>
+                  )}
+                  {artist.instagramUrl && (
+                    <div>
+                      <span className="text-zinc-600">Instagram:</span>
+                      <span className="text-black ml-2">{artist.instagramUrl}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -354,7 +323,7 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-2xl font-bold text-black">Artist Artworks</h3>
-              <p className="text-zinc-600 text-sm mt-1">All artworks by {artist.name}</p>
+              <p className="text-zinc-600 text-sm mt-1">All artworks by {artist.displayName}</p>
             </div>
 
             {/* Filter */}
@@ -455,6 +424,8 @@ export default function ArtistDetailPage({ params }: { params: { id: string } })
             </div>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   );

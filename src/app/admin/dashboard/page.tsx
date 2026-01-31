@@ -116,94 +116,49 @@ function CEODashboard() {
     };
   }, [isNotificationOpen]);
 
-  // Mock data - In production, fetch from API
+  // Real data - starts from zero, updates with actual transactions
   const stats = {
-    totalRevenue: 2450000,
-    revenueGrowth: 12.5,
-    galleryCommission: 980000, // 40% of revenue
-    commissionGrowth: 8.2,
-    totalSales: 1284,
-    salesGrowth: 15.3,
-    activeArtists: 528,
-    newArtists: 24,
-    pendingApplications: 4,
-    pendingArtworks: 12,
-    artistEarnings: 1470000, // 60% of revenue
+    totalRevenue: 0,
+    revenueGrowth: 0,
+    galleryCommission: 0,
+    commissionGrowth: 0,
+    totalSales: 0,
+    salesGrowth: 0,
+    activeArtists: 0,
+    newArtists: 0,
+    pendingApplications: 0,
+    pendingArtworks: 0,
+    artistEarnings: 0,
   };
 
-  const recentSales = [
-    {
-      id: "TXN-2024-0152",
-      artwork: "Sunset Dreams",
-      artist: "Marco Rossi",
-      buyer: "John Smith",
-      price: 12500,
-      commission: 5000, // 40%
-      artistEarning: 7500, // 60%
-      date: "2024-01-15",
-      status: "completed",
-    },
-    {
-      id: "TXN-2024-0151",
-      artwork: "Urban Symphony",
-      artist: "Sophie Chen",
-      buyer: "Emma Johnson",
-      price: 8300,
-      commission: 3320,
-      artistEarning: 4980,
-      date: "2024-01-14",
-      status: "processing",
-    },
-    {
-      id: "TXN-2024-0150",
-      artwork: "Desert Mirage",
-      artist: "Ahmed Hassan",
-      buyer: "Michael Brown",
-      price: 15700,
-      commission: 6280,
-      artistEarning: 9420,
-      date: "2024-01-13",
-      status: "completed",
-    },
-  ];
+  const recentSales: {
+    id: string;
+    artwork: string;
+    artist: string;
+    buyer: string;
+    price: number;
+    commission: number;
+    artistEarning: number;
+    date: string;
+    status: string;
+  }[] = [];
 
   const pendingActions = {
-    artistApplications: 4,
-    artworkApprovals: 12,
-    pendingPayouts: 8,
-    unreadMessages: 3,
+    artistApplications: 0,
+    artworkApprovals: 0,
+    pendingPayouts: 0,
+    unreadMessages: 0,
   };
 
-  // Generate notifications including new user signups
-  const staticNotifications = [
-    {
-      id: 1,
-      type: "application",
-      title: "New Artist Application",
-      message: "Sarah Johnson submitted an application",
-      time: "5 min ago",
-      isRead: false,
-      link: "/admin/applications",
-    },
-    {
-      id: 2,
-      type: "artwork",
-      title: "Artwork Pending Approval",
-      message: "Marco Rossi uploaded 'Mediterranean Dreams'",
-      time: "15 min ago",
-      isRead: false,
-      link: "/admin/artworks",
-    },
-    {
-      id: 3,
-      type: "sale",
-      title: "New Sale Completed",
-      message: "€18,500 sale by Ahmed Hassan",
-      time: "1 hour ago",
-      isRead: false,
-      link: "/admin/sales",
-    },
-  ];
+  const staticNotifications: {
+    id: number;
+    type: string;
+    title: string;
+    message: string;
+    time: string;
+    isRead: boolean;
+    link: string;
+  }[] = [];
 
   // Add new user notifications dynamically
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
