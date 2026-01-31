@@ -38,11 +38,11 @@ export default function PaintingPage({ params }: PaintingPageProps) {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedFrame, setSelectedFrame] = useState<"none" | "black" | "white">("none");
 
-  // Elegant modern living room for artwork preview
+  // Modern living room - wall facing camera for natural artwork placement
   const roomBackground = {
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1920&q=80",
-    // Position artwork centered on wall above sofa
-    artworkPosition: { top: "5%", left: "50%", width: "28%", height: "45%" },
+    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=80",
+    // Position artwork on the wall above the credenza
+    artworkPosition: { top: "8%", left: "50%", width: "24%", height: "42%" },
   };
 
   // Fetch artwork from API
