@@ -38,11 +38,11 @@ export default function PaintingPage({ params }: PaintingPageProps) {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedFrame, setSelectedFrame] = useState<"none" | "black" | "white">("none");
 
-  // Single elegant room background - minimalist living room
+  // Elegant modern living room for artwork preview
   const roomBackground = {
-    image: "https://i.pinimg.com/originals/b2/93/8b/b2938b6be5e13f2df78d03ba9281b498.jpg",
-    // Position artwork on the wall above the sofa
-    artworkPosition: { top: "8%", left: "50%", width: "32%", height: "42%" },
+    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1920&q=80",
+    // Position artwork centered on wall above sofa
+    artworkPosition: { top: "5%", left: "50%", width: "28%", height: "45%" },
   };
 
   // Fetch artwork from API
@@ -318,15 +318,17 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     }}
                   >
                     {/* Shadow */}
-                    <div className="absolute inset-0 translate-x-1 translate-y-1 bg-black/20 blur-sm" />
-                    {/* Frame */}
-                    <div className="relative w-full h-full bg-gradient-to-b from-gray-700 to-gray-900 p-[2px]">
-                      <Image
-                        src={painting.image}
-                        alt="In Room Preview"
-                        fill
-                        className="object-cover"
-                      />
+                    <div className="absolute inset-0 translate-x-1 translate-y-2 bg-black/20 blur-sm" />
+                    {/* Frame with mat */}
+                    <div className="relative w-full h-full bg-gradient-to-b from-neutral-700 to-neutral-900 p-[2px]">
+                      <div className="relative w-full h-full bg-white p-[1px]">
+                        <Image
+                          src={painting.image}
+                          alt="In Room Preview"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -382,7 +384,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     className="object-cover object-top"
                   />
 
-                  {/* Artwork with realistic frame on wall above sofa */}
+                  {/* Artwork hanging naturally on wall */}
                   <div
                     className="absolute transform -translate-x-1/2"
                     style={{
@@ -392,20 +394,26 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                       height: roomBackground.artworkPosition.height,
                     }}
                   >
-                    {/* Shadow behind frame - subtle and realistic */}
-                    <div className="absolute inset-0 translate-x-2 translate-y-3 bg-black/25 blur-lg" />
+                    {/* Wall shadow - realistic bottom-heavy shadow */}
+                    <div className="absolute -inset-1 translate-y-2 bg-black/20 blur-xl rounded-sm" />
+                    <div className="absolute inset-0 translate-x-1 translate-y-3 bg-black/30 blur-md" />
 
-                    {/* Frame - thin elegant black frame */}
-                    <div className="relative w-full h-full bg-gradient-to-b from-gray-800 to-black p-[4px] shadow-xl">
-                      {/* Artwork */}
-                      <div className="relative w-full h-full overflow-hidden">
-                        <Image
-                          src={painting.image}
-                          alt={painting.title}
-                          fill
-                          className="object-cover cursor-zoom-in"
-                          onClick={() => setIsZoomed(true)}
-                        />
+                    {/* Thin elegant frame */}
+                    <div className="relative w-full h-full bg-gradient-to-b from-neutral-700 via-neutral-800 to-neutral-900 p-[3px] shadow-2xl">
+                      {/* Inner mat/border */}
+                      <div className="relative w-full h-full bg-white p-[3px]">
+                        {/* Artwork */}
+                        <div className="relative w-full h-full overflow-hidden">
+                          <Image
+                            src={painting.image}
+                            alt={painting.title}
+                            fill
+                            className="object-cover cursor-zoom-in"
+                            onClick={() => setIsZoomed(true)}
+                          />
+                          {/* Subtle glass reflection effect */}
+                          <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-black/5 pointer-events-none" />
+                        </div>
                       </div>
                     </div>
                   </div>
