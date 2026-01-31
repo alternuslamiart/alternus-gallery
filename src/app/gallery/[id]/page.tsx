@@ -38,11 +38,11 @@ export default function PaintingPage({ params }: PaintingPageProps) {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedFrame, setSelectedFrame] = useState<"none" | "black" | "white">("none");
 
-  // Front-facing modern interior - wall directly facing camera
+  // Warm terracotta living room - artwork on wall above sofa
   const roomBackground = {
-    image: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=80",
-    // Large prominent frame on wall - like a real gallery display
-    artworkPosition: { top: "4%", left: "50%", width: "36%", height: "58%" },
+    image: "/roomart.jpg",
+    // Position overlay exactly where the painting sits in the room image
+    artworkPosition: { top: "4%", left: "50%", width: "42%", height: "50%" },
   };
 
   // Fetch artwork from API
@@ -317,8 +317,8 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                       height: roomBackground.artworkPosition.height,
                     }}
                   >
-                    <div className="absolute inset-0 translate-y-1 bg-black/20 blur-sm" />
-                    <div className="relative w-full h-full p-[2px]" style={{ background: 'linear-gradient(180deg, #3a3a3a, #1a1a1a)' }}>
+                    <div className="absolute inset-0 translate-y-1 bg-black/15 blur-sm" />
+                    <div className="relative w-full h-full p-[2px]" style={{ background: 'linear-gradient(180deg, #9e7c5a, #6b4d2e)' }}>
                       <div className="relative w-full h-full overflow-hidden">
                         <Image
                           src={painting.image}
@@ -382,7 +382,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     className="object-cover object-top"
                   />
 
-                  {/* Artwork in frame on wall */}
+                  {/* Artwork in wooden frame on wall */}
                   <div
                     className="absolute transform -translate-x-1/2"
                     style={{
@@ -392,22 +392,19 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                       height: roomBackground.artworkPosition.height,
                     }}
                   >
-                    {/* Shadow on wall behind frame */}
+                    {/* Wall shadow */}
                     <div className="absolute -inset-2 translate-y-3 bg-black/15 blur-2xl" />
-                    <div className="absolute -inset-1 translate-y-2 bg-black/25 blur-lg" />
 
-                    {/* Dark frame - prominent like reference photo */}
-                    <div className="relative w-full h-full shadow-2xl" style={{ padding: '8px', background: 'linear-gradient(180deg, #3a3a3a 0%, #1a1a1a 50%, #0a0a0a 100%)' }}>
-                      {/* Artwork fills the frame */}
-                      <div className="relative w-full h-full overflow-hidden bg-gray-100">
+                    {/* Warm wooden frame */}
+                    <div className="relative w-full h-full shadow-2xl" style={{ padding: '6px', background: 'linear-gradient(180deg, #9e7c5a 0%, #7a5c3a 50%, #6b4d2e 100%)' }}>
+                      {/* Artwork */}
+                      <div className="relative w-full h-full overflow-hidden">
                         <Image
                           src={painting.image}
                           alt={painting.title}
                           fill
                           className="object-cover"
                         />
-                        {/* Glass reflection */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-black/5 pointer-events-none" />
                       </div>
                     </div>
                   </div>
