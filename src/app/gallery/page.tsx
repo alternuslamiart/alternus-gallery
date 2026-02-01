@@ -17,9 +17,8 @@ export default function GalleryPage() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const [email, setEmail] = useState("");
-  const [isSubscribing, setIsSubscribing] = useState(false);
-  const [subscriptionStatus, setSubscriptionStatus] = useState<"idle" | "success" | "error">("idle");
+  const [orderNumber, setOrderNumber] = useState("");
+  const [trackingError, setTrackingError] = useState("");
   const { t, formatPrice } = useLanguage();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -177,30 +176,25 @@ export default function GalleryPage() {
     return result;
   }, [paintings, selectedCategory, selectedStyles, sortBy]);
 
-  // Handle newsletter subscription
-  const handleSubscribe = async (e: React.FormEvent) => {
+  const handleTrackOrder = (e: React.FormEvent) => {
     e.preventDefault();
+    setTrackingError("");
 
-    // Validate email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email)) {
-      setSubscriptionStatus("error");
+    // Validate order number format (e.g., ALT-XXXX-XXXX)
+    const orderPattern = /^ALT-[A-Z0-9]+-[A-Z0-9]+$/i;
+
+    if (!orderNumber.trim()) {
+      setTrackingError("Please enter an order number");
       return;
     }
 
-    setIsSubscribing(true);
+    if (!orderPattern.test(orderNumber.trim())) {
+      setTrackingError("Invalid order number format. Use: ALT-XXXX-XXXX");
+      return;
+    }
 
-    // Simulate API call
-    setTimeout(() => {
-      setSubscriptionStatus("success");
-      setEmail("");
-      setIsSubscribing(false);
-
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setSubscriptionStatus("idle");
-      }, 5000);
-    }, 1000);
+    // Redirect to order tracking page with order number
+    router.push(`/track?order=${encodeURIComponent(orderNumber.trim())}`);
   };
 
   return (
@@ -421,86 +415,49 @@ export default function GalleryPage() {
         </div>
       </div>
 
-      {/* Newsletter Section */}
+      {/* Order Tracking Section */}
       <section className="py-24 bg-gradient-to-b from-white to-gray-50/80 mt-16">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto text-center">
             {/* Header */}
             <p className="text-xs uppercase tracking-[0.3em] text-gray-400 mb-3">
-              Stay Updated
+              Order Tracking
             </p>
             <h2 className="text-2xl md:text-3xl font-semibold text-gray-900 mb-3">
-              Join Our Newsletter
+              Track Your Order
             </h2>
             <p className="text-gray-500 text-sm mb-10 max-w-md mx-auto">
-              Get notified about new artworks, exclusive offers, and artist stories.
+              Enter your order number to check delivery status
             </p>
 
-            {/* Modern Email Input */}
+            {/* Order Tracking Input */}
             <div className="max-w-md mx-auto">
-              <form onSubmit={handleSubscribe}>
-                <div className={`flex items-center gap-3 p-1.5 bg-gray-100/80 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.04)] border transition-colors ${
-                  subscriptionStatus === "error" ? "border-red-300" : "border-gray-200/50"
-                }`}>
+              <form onSubmit={handleTrackOrder}>
+                <div className="flex items-center gap-3 p-1.5 bg-gray-100/80 rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-gray-200/50">
                   <input
-                    type="email"
-                    placeholder="Enter your email address"
-                    value={email}
+                    type="text"
+                    placeholder="Enter order number (e.g., ALT-2024-1234)"
+                    className="flex-1 px-5 py-2.5 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none"
+                    value={orderNumber}
                     onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (subscriptionStatus === "error") {
-                        setSubscriptionStatus("idle");
-                      }
+                      setOrderNumber(e.target.value);
+                      setTrackingError("");
                     }}
-                    disabled={isSubscribing}
-                    className="flex-1 px-5 py-2.5 bg-transparent text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none disabled:opacity-50"
                   />
                   <button
                     type="submit"
-                    disabled={isSubscribing || subscriptionStatus === "success"}
-                    className="px-6 py-2.5 bg-white text-gray-700 text-sm font-medium rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:text-gray-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-6 py-2.5 bg-white text-gray-700 text-sm font-medium rounded-full shadow-[0_1px_3px_rgba(0,0,0,0.08)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.12)] hover:text-gray-900 transition-all duration-200"
                   >
-                    {isSubscribing ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      </span>
-                    ) : subscriptionStatus === "success" ? (
-                      "Subscribed!"
-                    ) : (
-                      "Subscribe"
-                    )}
+                    Track
                   </button>
                 </div>
               </form>
-
-              {/* Status Messages */}
-              {subscriptionStatus === "success" && (
-                <div className="mt-4 flex items-center justify-center gap-2 text-green-600 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                    <polyline points="22 4 12 14.01 9 11.01" />
-                  </svg>
-                  <p className="text-sm font-medium">Successfully subscribed! Check your email.</p>
-                </div>
+              {trackingError && (
+                <p className="text-xs text-red-500 mt-3 font-medium">{trackingError}</p>
               )}
-
-              {subscriptionStatus === "error" && (
-                <div className="mt-4 flex items-center justify-center gap-2 text-red-600 animate-in fade-in slide-in-from-top-2 duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" x2="12" y1="8" y2="12" />
-                    <line x1="12" x2="12.01" y1="16" y2="16" />
-                  </svg>
-                  <p className="text-sm font-medium">Please enter a valid email address.</p>
-                </div>
-              )}
-
-              {subscriptionStatus === "idle" && (
+              {!trackingError && (
                 <p className="text-[11px] text-gray-400 mt-4">
-                  No spam, unsubscribe anytime.
+                  Secure tracking with order confirmation.
                 </p>
               )}
             </div>
