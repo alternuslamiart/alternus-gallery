@@ -73,7 +73,7 @@ export function Footer() {
                 </svg>
               </a>
               <a
-                href="#"
+                href="https://www.youtube.com/@alternusart"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#FF0000] transition-colors"
