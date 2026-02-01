@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useLanguage, useUserArtworks } from "@/components/providers";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Camera, UserPlus, MessageCircle, MoreHorizontal, MapPin, Globe, Calendar, Instagram, Facebook, Twitter, Plus, Check } from "lucide-react";
+import { Camera, UserPlus, MessageCircle, MoreHorizontal, MapPin, Globe, Calendar, Instagram, Facebook, Twitter, Plus, Check, Pencil, X } from "lucide-react";
 
 export default function ProfilePage() {
   const { formatPrice } = useLanguage();
@@ -42,6 +42,27 @@ export default function ProfilePage() {
   const [showReportDialog, setShowReportDialog] = useState(false);
   const [showBlockDialog, setShowBlockDialog] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Social links state
+  const [socialLinks, setSocialLinks] = useState({ instagram: "", facebook: "", twitter: "" });
+  const [editingSocials, setEditingSocials] = useState(false);
+  const [socialForm, setSocialForm] = useState({ instagram: "", facebook: "", twitter: "" });
+
+  // Load social links from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("profileSocialLinks");
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setSocialLinks(parsed);
+      setSocialForm(parsed);
+    }
+  }, []);
+
+  const handleSaveSocials = () => {
+    setSocialLinks(socialForm);
+    localStorage.setItem("profileSocialLinks", JSON.stringify(socialForm));
+    setEditingSocials(false);
+  };
 
   // Get user data from session
   const userName = session?.user?.name || session?.user?.email?.split("@")[0] || "User";
@@ -451,25 +472,102 @@ export default function ProfilePage() {
 
             {/* Social Links */}
             <div className="flex items-center gap-3 mt-4">
-              <a
-                href="#"
+              {socialLinks.instagram && (
+                <a
+                  href={socialLinks.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:shadow-md"
+                >
+                  <Instagram className="w-5 h-5" />
+                </a>
+              )}
+              {socialLinks.facebook && (
+                <a
+                  href={socialLinks.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:shadow-md"
+                >
+                  <Facebook className="w-5 h-5" />
+                </a>
+              )}
+              {socialLinks.twitter && (
+                <a
+                  href={socialLinks.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:shadow-md"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+              )}
+              <button
+                onClick={() => {
+                  setSocialForm(socialLinks);
+                  setEditingSocials(true);
+                }}
                 className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:shadow-md"
+                title="Edit social links"
               >
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:shadow-md"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 bg-muted hover:bg-muted/80 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:shadow-md"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
+                <Pencil className="w-4 h-4" />
+              </button>
             </div>
+
+            {/* Edit Social Links Dialog */}
+            {editingSocials && (
+              <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setEditingSocials(false)}>
+                <div className="bg-background rounded-xl p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold">Edit Social Links</h3>
+                    <button onClick={() => setEditingSocials(false)} className="p-1 hover:bg-muted rounded-full">
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium flex items-center gap-2 mb-1.5">
+                        <Instagram className="w-4 h-4" /> Instagram
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://instagram.com/username"
+                        value={socialForm.instagram}
+                        onChange={(e) => setSocialForm({ ...socialForm, instagram: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium flex items-center gap-2 mb-1.5">
+                        <Facebook className="w-4 h-4" /> Facebook
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://facebook.com/username"
+                        value={socialForm.facebook}
+                        onChange={(e) => setSocialForm({ ...socialForm, facebook: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium flex items-center gap-2 mb-1.5">
+                        <Twitter className="w-4 h-4" /> X (Twitter)
+                      </label>
+                      <input
+                        type="url"
+                        placeholder="https://x.com/username"
+                        value={socialForm.twitter}
+                        onChange={(e) => setSocialForm({ ...socialForm, twitter: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                    <Button onClick={handleSaveSocials} className="w-full">
+                      Save
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
