@@ -22,7 +22,7 @@ export function Footer() {
             {/* Social Icons */}
             <div className="flex space-x-4 pt-2">
               <a
-                href="#"
+                href="https://www.facebook.com/alternusart"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[#1877F2] transition-colors"
