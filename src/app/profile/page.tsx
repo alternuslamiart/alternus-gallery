@@ -48,7 +48,17 @@ export default function ProfilePage() {
   const [editingSocials, setEditingSocials] = useState(false);
   const [socialForm, setSocialForm] = useState({ instagram: "", facebook: "", twitter: "" });
 
-  // Load social links from localStorage
+  // Profile info state (bio, location, website, specialties)
+  const [profileInfo, setProfileInfo] = useState({
+    bio: "Welcome to my profile! I'm passionate about art and creativity.",
+    location: "Not specified",
+    website: "",
+    specialties: "Art Enthusiast",
+  });
+  const [editingProfile, setEditingProfile] = useState(false);
+  const [profileForm, setProfileForm] = useState({ ...profileInfo });
+
+  // Load from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("profileSocialLinks");
     if (saved) {
@@ -56,12 +66,24 @@ export default function ProfilePage() {
       setSocialLinks(parsed);
       setSocialForm(parsed);
     }
+    const savedProfile = localStorage.getItem("profileInfo");
+    if (savedProfile) {
+      const parsed = JSON.parse(savedProfile);
+      setProfileInfo(parsed);
+      setProfileForm(parsed);
+    }
   }, []);
 
   const handleSaveSocials = () => {
     setSocialLinks(socialForm);
     localStorage.setItem("profileSocialLinks", JSON.stringify(socialForm));
     setEditingSocials(false);
+  };
+
+  const handleSaveProfile = () => {
+    setProfileInfo(profileForm);
+    localStorage.setItem("profileInfo", JSON.stringify(profileForm));
+    setEditingProfile(false);
   };
 
   // Get user data from session
@@ -76,11 +98,11 @@ export default function ProfilePage() {
   const profile = {
     firstName: userName,
     username: userEmail.split("@")[0] || userName.toLowerCase().replace(/\s+/g, ""),
-    bio: "Welcome to my profile! I'm passionate about art and creativity.",
-    location: "Not specified",
-    website: "",
+    bio: profileInfo.bio,
+    location: profileInfo.location,
+    website: profileInfo.website,
     joinedDate: "January 2025",
-    specialties: ["Art Enthusiast"],
+    specialties: profileInfo.specialties.split(",").map(s => s.trim()).filter(Boolean),
     stats: {
       artworks: myArtworks.length,
       sold: myArtworks.filter(a => !a.available).length,
@@ -142,8 +164,8 @@ export default function ProfilePage() {
     setTimeout(() => setCopiedLink(false), 3000);
   };
 
-  // Handle save profile
-  const handleSaveProfile = () => {
+  // Handle bookmark/save profile
+  const handleBookmarkProfile = () => {
     setIsSaved(!isSaved);
     setShowOptionsMenu(false);
   };
@@ -318,7 +340,7 @@ export default function ProfilePage() {
                         </div>
                       </button>
 
-                      <button onClick={handleSaveProfile} className={`w-full px-4 py-2.5 text-left transition-colors flex items-center gap-3 ${isSaved ? 'bg-purple-50 dark:bg-purple-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}>
+                      <button onClick={handleBookmarkProfile} className={`w-full px-4 py-2.5 text-left transition-colors flex items-center gap-3 ${isSaved ? 'bg-purple-50 dark:bg-purple-900/30' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}>
                         <div className={`w-8 h-8 rounded-lg ${isSaved ? 'bg-purple-600' : 'bg-purple-50 dark:bg-purple-900/30'} flex items-center justify-center`}>
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isSaved ? 'text-white' : 'text-purple-600'}>
                             <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
@@ -684,7 +706,19 @@ export default function ProfilePage() {
 
           {activeTab === "about" && (
             <div className="max-w-3xl">
-              <h2 className="text-2xl font-bold mb-4">About {profile.firstName}</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold">About {profile.firstName}</h2>
+                <button
+                  onClick={() => {
+                    setProfileForm({ ...profileInfo });
+                    setEditingProfile(true);
+                  }}
+                  className="p-2 hover:bg-muted rounded-full transition-colors"
+                  title="Edit profile info"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+              </div>
               <p className="text-muted-foreground leading-relaxed mb-6">
                 {profile.bio}
               </p>
@@ -712,6 +746,66 @@ export default function ProfilePage() {
                   </div>
                 )}
               </div>
+
+              {/* Edit Profile Dialog */}
+              {editingProfile && (
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setEditingProfile(false)}>
+                  <div className="bg-background rounded-xl p-6 w-full max-w-md shadow-xl" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold">Edit Profile</h3>
+                      <button onClick={() => setEditingProfile(false)} className="p-1 hover:bg-muted rounded-full">
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium mb-1.5 block">Bio</label>
+                        <textarea
+                          placeholder="Write something about yourself..."
+                          value={profileForm.bio}
+                          onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
+                          rows={3}
+                          className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-1.5 block">Location</label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Tirana, Albania"
+                          value={profileForm.location}
+                          onChange={(e) => setProfileForm({ ...profileForm, location: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-1.5 block">Website</label>
+                        <input
+                          type="text"
+                          placeholder="e.g., www.mysite.com"
+                          value={profileForm.website}
+                          onChange={(e) => setProfileForm({ ...profileForm, website: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-1.5 block">Specializations</label>
+                        <input
+                          type="text"
+                          placeholder="e.g., Painting, Sculpture, Photography"
+                          value={profileForm.specialties}
+                          onChange={(e) => setProfileForm({ ...profileForm, specialties: e.target.value })}
+                          className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                        <p className="text-[11px] text-muted-foreground mt-1">Separate with commas</p>
+                      </div>
+                      <Button onClick={handleSaveProfile} className="w-full">
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
