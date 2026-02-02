@@ -298,7 +298,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     src="/roomart.jpg"
                     alt="In Room Preview"
                     fill
-                    className="object-cover object-top"
+                    className="object-cover object-center"
                   />
                   <div
                     className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -365,7 +365,7 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     src="/roomart.jpg"
                     alt="Living Room Interior"
                     fill
-                    className="object-cover object-top"
+                    className="object-cover object-center"
                   />
                   {/* Artwork centered in frame */}
                   <div
