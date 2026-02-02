@@ -159,7 +159,7 @@ export default function TermsOfServicePage() {
               <ul className="list-disc pl-6 text-muted-foreground space-y-2 mb-4">
                 <li>
                   Artworks must not contain content that is offensive, insulting, or degrading toward any individual
-                  or group based on race, ethnicity, nationality, religion, gender, sexual orientation, disability,
+                  or group based on race, ethnicity, nationality, religion, gender, disability,
                   or any other protected characteristic.
                 </li>
                 <li>
