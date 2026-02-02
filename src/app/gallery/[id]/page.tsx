@@ -293,19 +293,13 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     : "border-transparent hover:border-primary/50"
                 }`}
               >
-                <div className="relative w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #f5f0eb 0%, #e8e0d8 100%)' }}>
-                  <div className="relative w-[60%] h-[70%]">
-                    <div className="relative w-full h-full p-[2px]" style={{ background: 'linear-gradient(180deg, #9e7c5a, #6b4d2e)' }}>
-                      <div className="relative w-full h-full overflow-hidden">
-                        <Image
-                          src={painting.image}
-                          alt="In Room Preview"
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/roomart.jpg"
+                    alt="In Room Preview"
+                    fill
+                    className="object-cover object-top"
+                  />
                 </div>
               </button>
             </div>
@@ -350,26 +344,13 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                 </div>
               )}
               {viewMode === "room" && (
-                <div className="relative w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #f5f0eb 0%, #e8e0d8 100%)' }}>
-                  {/* Artwork in wooden frame */}
-                  <div className="relative w-[60%] h-[75%]">
-                    {/* Wall shadow */}
-                    <div className="absolute -inset-2 translate-y-3 bg-black/15 blur-2xl" />
-
-                    {/* Warm wooden frame */}
-                    <div className="relative w-full h-full shadow-2xl" style={{ padding: '8px', background: 'linear-gradient(180deg, #9e7c5a 0%, #7a5c3a 50%, #6b4d2e 100%)' }}>
-                      {/* Artwork */}
-                      <div className="relative w-full h-full overflow-hidden">
-                        <Image
-                          src={painting.image}
-                          alt={painting.title}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
+                <div className="relative w-full h-full">
+                  <Image
+                    src="/roomart.jpg"
+                    alt="Living Room Interior"
+                    fill
+                    className="object-cover object-top"
+                  />
                   {/* Label */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full">
                     <p className="text-white text-sm font-medium">View in Room</p>
