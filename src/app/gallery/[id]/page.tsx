@@ -38,13 +38,6 @@ export default function PaintingPage({ params }: PaintingPageProps) {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [selectedFrame, setSelectedFrame] = useState<"none" | "black" | "white">("none");
 
-  // Warm terracotta living room - artwork on wall above sofa
-  const roomBackground = {
-    image: "/roomart.jpg",
-    // Position overlay exactly where the painting sits in the room image
-    artworkPosition: { top: "4%", left: "50%", width: "42%", height: "50%" },
-  };
-
   // Fetch artwork from API
   useEffect(() => {
     async function fetchArtwork() {
@@ -300,24 +293,8 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     : "border-transparent hover:border-primary/50"
                 }`}
               >
-                <div className="relative w-full h-full">
-                  <Image
-                    src={roomBackground.image}
-                    alt="In Room"
-                    fill
-                    className="object-cover object-top"
-                  />
-                  {/* Artwork with frame on wall */}
-                  <div
-                    className="absolute transform -translate-x-1/2"
-                    style={{
-                      top: roomBackground.artworkPosition.top,
-                      left: roomBackground.artworkPosition.left,
-                      width: roomBackground.artworkPosition.width,
-                      height: roomBackground.artworkPosition.height,
-                    }}
-                  >
-                    <div className="absolute inset-0 translate-y-1 bg-black/15 blur-sm" />
+                <div className="relative w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #f5f0eb 0%, #e8e0d8 100%)' }}>
+                  <div className="relative w-[60%] h-[70%]">
                     <div className="relative w-full h-full p-[2px]" style={{ background: 'linear-gradient(180deg, #9e7c5a, #6b4d2e)' }}>
                       <div className="relative w-full h-full overflow-hidden">
                         <Image
@@ -373,30 +350,14 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                 </div>
               )}
               {viewMode === "room" && (
-                <div className="relative w-full h-full">
-                  {/* Room Background - Elegant minimalist living room */}
-                  <Image
-                    src={roomBackground.image}
-                    alt="Living Room Interior"
-                    fill
-                    className="object-cover object-top"
-                  />
-
-                  {/* Artwork in wooden frame on wall */}
-                  <div
-                    className="absolute transform -translate-x-1/2"
-                    style={{
-                      top: roomBackground.artworkPosition.top,
-                      left: roomBackground.artworkPosition.left,
-                      width: roomBackground.artworkPosition.width,
-                      height: roomBackground.artworkPosition.height,
-                    }}
-                  >
+                <div className="relative w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(180deg, #f5f0eb 0%, #e8e0d8 100%)' }}>
+                  {/* Artwork in wooden frame */}
+                  <div className="relative w-[60%] h-[75%]">
                     {/* Wall shadow */}
                     <div className="absolute -inset-2 translate-y-3 bg-black/15 blur-2xl" />
 
                     {/* Warm wooden frame */}
-                    <div className="relative w-full h-full shadow-2xl" style={{ padding: '6px', background: 'linear-gradient(180deg, #9e7c5a 0%, #7a5c3a 50%, #6b4d2e 100%)' }}>
+                    <div className="relative w-full h-full shadow-2xl" style={{ padding: '8px', background: 'linear-gradient(180deg, #9e7c5a 0%, #7a5c3a 50%, #6b4d2e 100%)' }}>
                       {/* Artwork */}
                       <div className="relative w-full h-full overflow-hidden">
                         <Image
