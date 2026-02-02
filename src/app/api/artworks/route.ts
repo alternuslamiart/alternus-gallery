@@ -154,6 +154,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate price limit
+    if (parseFloat(price) > 25000) {
+      return NextResponse.json(
+        { error: 'Maximum artwork price is $25,000' },
+        { status: 400 }
+      )
+    }
+
     // Determine artist ID
     let artistId = providedArtistId
 

@@ -1393,12 +1393,18 @@ function DashboardContent() {
                         <Input
                           type="number"
                           min="0"
+                          max="25000"
                           step="0.01"
                           placeholder="0.00"
                           value={newArtwork.price}
-                          onChange={(e) => setNewArtwork({ ...newArtwork, price: e.target.value })}
+                          onChange={(e) => {
+                            const val = parseFloat(e.target.value);
+                            if (val > 25000) return;
+                            setNewArtwork({ ...newArtwork, price: e.target.value });
+                          }}
                           className="pl-8 text-2xl font-bold h-14"
                         />
+                        <p className="text-[11px] text-muted-foreground mt-1">Maximum price: $25,000</p>
                       </div>
                     </div>
 
@@ -1556,8 +1562,14 @@ function DashboardContent() {
                   <label className="text-sm font-medium">Price (€)</label>
                   <Input
                     type="number"
+                    min="0"
+                    max="25000"
                     value={newArtwork.price}
-                    onChange={(e) => setNewArtwork(prev => ({ ...prev, price: e.target.value }))}
+                    onChange={(e) => {
+                      const val = parseFloat(e.target.value);
+                      if (val > 25000) return;
+                      setNewArtwork(prev => ({ ...prev, price: e.target.value }));
+                    }}
                     placeholder="2500"
                     required
                     className="mt-1"
