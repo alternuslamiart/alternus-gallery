@@ -145,10 +145,41 @@ export default function TermsOfServicePage() {
               </p>
 
               <h3 className="text-xl font-semibold mb-3">4.3 Availability</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed mb-4">
                 All artworks are subject to availability. We reserve the right to discontinue any
                 product at any time. In the event that a product is unavailable after you have
                 placed an order, we will notify you and provide a full refund.
+              </p>
+
+              <h3 className="text-xl font-semibold mb-3">4.4 Artwork Content Guidelines</h3>
+              <p className="text-muted-foreground leading-relaxed mb-4">
+                Alternus Art Gallery is committed to fostering a respectful and inclusive creative environment.
+                All artworks displayed and sold on our platform must adhere to the following content guidelines:
+              </p>
+              <ul className="list-disc pl-6 text-muted-foreground space-y-2 mb-4">
+                <li>
+                  Artworks must not contain content that is offensive, insulting, or degrading toward any individual
+                  or group based on race, ethnicity, nationality, religion, gender, sexual orientation, disability,
+                  or any other protected characteristic.
+                </li>
+                <li>
+                  Art that expresses dissent, critique, or revolt against actions, systems, or ideologies is welcome
+                  and encouraged — provided it does not cross the line into direct insult, hate speech, or incitement
+                  of violence against any person or group.
+                </li>
+                <li>
+                  This policy does not represent a limitation on artistic freedom or creative expression. Rather, it
+                  reflects our commitment to distancing the platform from content that is deliberately hurtful,
+                  discriminatory, or inflammatory in nature.
+                </li>
+                <li>
+                  Alternus reserves the right to review, reject, or remove any artwork that violates these guidelines
+                  at its sole discretion, without prior notice.
+                </li>
+              </ul>
+              <p className="text-muted-foreground leading-relaxed">
+                We believe that art has the power to challenge, provoke thought, and inspire change — and we
+                encourage artists to push creative boundaries while maintaining respect for the dignity of all people.
               </p>
             </section>
 
