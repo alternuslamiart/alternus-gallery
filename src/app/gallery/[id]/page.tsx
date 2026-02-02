@@ -300,6 +300,21 @@ export default function PaintingPage({ params }: PaintingPageProps) {
                     fill
                     className="object-cover object-top"
                   />
+                  <div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                    style={{ width: "42%", height: "50%" }}
+                  >
+                    <div className="relative w-full h-full p-[2px]" style={{ background: 'linear-gradient(180deg, #9e7c5a, #6b4d2e)' }}>
+                      <div className="relative w-full h-full overflow-hidden">
+                        <Image
+                          src={painting.image}
+                          alt="In Room Thumbnail"
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </button>
             </div>
@@ -345,12 +360,29 @@ export default function PaintingPage({ params }: PaintingPageProps) {
               )}
               {viewMode === "room" && (
                 <div className="relative w-full h-full">
+                  {/* Room Background */}
                   <Image
                     src="/roomart.jpg"
                     alt="Living Room Interior"
                     fill
                     className="object-cover object-top"
                   />
+                  {/* Artwork centered in frame */}
+                  <div
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                    style={{ width: "42%", height: "50%" }}
+                  >
+                    <div className="relative w-full h-full shadow-2xl" style={{ padding: '6px', background: 'linear-gradient(180deg, #9e7c5a 0%, #7a5c3a 50%, #6b4d2e 100%)' }}>
+                      <div className="relative w-full h-full overflow-hidden">
+                        <Image
+                          src={painting.image}
+                          alt={painting.title}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   {/* Label */}
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/60 backdrop-blur-sm px-4 py-2 rounded-full">
                     <p className="text-white text-sm font-medium">View in Room</p>
