@@ -200,7 +200,7 @@ export function AIChat() {
                   <div
                     className={`max-w-[85%] rounded-2xl px-4 py-3 ${
                       message.role === "user"
-                        ? "bg-gradient-to-br from-primary to-purple-600 text-white rounded-br-md"
+                        ? "bg-gray-900 text-white rounded-br-md"
                         : "bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm rounded-bl-md"
                     }`}
                   >
@@ -340,7 +340,7 @@ export function AIChat() {
                 <button
                   onClick={handleSend}
                   disabled={!input.trim() || isTyping}
-                  className="w-11 h-11 bg-gradient-to-br from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90 text-white rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-11 h-11 bg-gray-900 hover:bg-gray-800 text-white rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="m22 2-7 20-4-9-9-4Z" />
