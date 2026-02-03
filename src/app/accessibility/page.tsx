@@ -162,7 +162,7 @@ export default function AccessibilityPage() {
 
           {/* Bottom Links */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <p>Last updated: January 2025</p>
+            <p>Last updated: January 2026</p>
             <div className="flex gap-6">
               <Link href="/privacy" className="hover:text-gray-700 transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-gray-700 transition-colors">Terms of Service</Link>

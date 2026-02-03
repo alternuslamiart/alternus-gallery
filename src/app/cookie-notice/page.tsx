@@ -18,7 +18,7 @@ export default function CookieNoticePage() {
           <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
             Learn how we use cookies and similar technologies to enhance your browsing experience.
           </p>
-          <p className="text-gray-500 text-sm mt-4">Last updated: January 2025</p>
+          <p className="text-gray-500 text-sm mt-4">Last updated: January 2026</p>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export default function CookieNoticePage() {
 
           {/* Bottom Links */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-400">
-            <p>Last updated: January 2025</p>
+            <p>Last updated: January 2026</p>
             <div className="flex gap-6">
               <Link href="/privacy" className="hover:text-gray-700 transition-colors">Privacy Policy</Link>
               <Link href="/terms" className="hover:text-gray-700 transition-colors">Terms of Service</Link>
