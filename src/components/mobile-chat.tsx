@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { getAIResponse, WELCOME_MESSAGE, SUGGESTED_QUESTIONS } from "@/lib/ai-assistant";
+import { WELCOME_MESSAGE, SUGGESTED_QUESTIONS } from "@/lib/ai-assistant";
 
 interface Message {
   id: string;
@@ -72,18 +72,51 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
     setInput("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      const aiResponse = getAIResponse(userMessage.content);
+    try {
+      // Build conversation history (exclude welcome message)
+      const conversationHistory = messages
+        .filter((m) => m.id !== "welcome")
+        .map((m) => ({
+          role: m.role,
+          content: m.content,
+        }));
+
+      const response = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: userMessage.content,
+          conversationHistory,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to get response");
+      }
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: aiResponse.content,
+        content: data.content,
         timestamp: new Date(),
-        suggestedQuestions: aiResponse.suggestedQuestions,
       };
       setMessages((prev) => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error("AI Chat error:", error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: "assistant",
+        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment, or contact us at info@alternusart.com for assistance.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 800 + Math.random() * 600);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -184,7 +217,7 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
               {currentSuggestions.map((question) => (
                 <button
                   key={question}
-                  onClick={() => {
+                  onClick={async () => {
                     const userMessage: Message = {
                       id: Date.now().toString(),
                       role: "user",
@@ -193,18 +226,51 @@ export function MobileChat({ isOpen, onClose }: MobileChatProps) {
                     };
                     setMessages((prev) => [...prev, userMessage]);
                     setIsTyping(true);
-                    setTimeout(() => {
-                      const aiResponse = getAIResponse(question);
+
+                    try {
+                      const conversationHistory = messages
+                        .filter((m) => m.id !== "welcome")
+                        .map((m) => ({
+                          role: m.role,
+                          content: m.content,
+                        }));
+
+                      const response = await fetch("/api/ai-chat", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          message: question,
+                          conversationHistory,
+                        }),
+                      });
+
+                      const data = await response.json();
+
+                      if (!response.ok) {
+                        throw new Error(data.error || "Failed to get response");
+                      }
+
                       const assistantMessage: Message = {
                         id: (Date.now() + 1).toString(),
                         role: "assistant",
-                        content: aiResponse.content,
+                        content: data.content,
                         timestamp: new Date(),
-                        suggestedQuestions: aiResponse.suggestedQuestions,
                       };
                       setMessages((prev) => [...prev, assistantMessage]);
+                    } catch (error) {
+                      console.error("AI Chat error:", error);
+                      const errorMessage: Message = {
+                        id: (Date.now() + 1).toString(),
+                        role: "assistant",
+                        content: "I apologize, but I'm having trouble connecting right now. Please try again in a moment.",
+                        timestamp: new Date(),
+                      };
+                      setMessages((prev) => [...prev, errorMessage]);
+                    } finally {
                       setIsTyping(false);
-                    }, 800);
+                    }
                   }}
                   className="flex-shrink-0 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 active:bg-gray-200 rounded-full text-xs text-gray-700 dark:text-gray-300 transition-colors"
                 >
