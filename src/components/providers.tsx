@@ -6,6 +6,25 @@ import { Language, translations } from "@/lib/i18n";
 import { Painting } from "@/lib/paintings";
 import { formatPrice as formatPriceUtil, getCurrencyForLanguage } from "@/lib/currency";
 
+// Theme Context
+type Theme = "light" | "dark" | "system";
+
+interface ThemeContextType {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+  resolvedTheme: "light" | "dark";
+}
+
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeProvider");
+  }
+  return context;
+}
+
 // Language Context
 interface LanguageContextType {
   language: Language;
@@ -170,6 +189,49 @@ export function useUserArtworks() {
 
 // Combined Provider
 export function Providers({ children }: { children: React.ReactNode }) {
+  // Theme State
+  const [theme, setThemeState] = useState<Theme>("system");
+  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+
+  // Load theme from localStorage and apply it
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as Theme | null;
+    if (savedTheme && ["light", "dark", "system"].includes(savedTheme)) {
+      setThemeState(savedTheme);
+    }
+  }, []);
+
+  // Apply theme to document
+  useEffect(() => {
+    const root = window.document.documentElement;
+
+    const applyTheme = (isDark: boolean) => {
+      if (isDark) {
+        root.classList.add("dark");
+        setResolvedTheme("dark");
+      } else {
+        root.classList.remove("dark");
+        setResolvedTheme("light");
+      }
+    };
+
+    if (theme === "system") {
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      applyTheme(mediaQuery.matches);
+
+      const handler = (e: MediaQueryListEvent) => applyTheme(e.matches);
+      mediaQuery.addEventListener("change", handler);
+      return () => mediaQuery.removeEventListener("change", handler);
+    } else {
+      applyTheme(theme === "dark");
+    }
+  }, [theme]);
+
+  const setTheme = (newTheme: Theme) => {
+    setThemeState(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
   // Language State
   const [language, setLanguage] = useState<Language>("en-US");
 
@@ -479,6 +541,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
+      <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
       <LanguageContext.Provider value={{ language, setLanguage, t, formatPrice, currencySymbol }}>
         <WishlistContext.Provider
           value={{
@@ -548,6 +611,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           </CompareContext.Provider>
         </WishlistContext.Provider>
       </LanguageContext.Provider>
+      </ThemeContext.Provider>
     </SessionProvider>
   );
 }
