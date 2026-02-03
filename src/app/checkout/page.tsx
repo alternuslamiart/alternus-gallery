@@ -39,6 +39,9 @@ export default function CheckoutPage() {
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
   const [paymentError, setPaymentError] = useState<string | null>(null);
 
+  // Temporarily disable checkout - payment processing not available
+  const checkoutDisabled = true;
+
   // Calculate totals
   const subtotal = items.reduce((sum, item) => sum + (item.painting.price * item.quantity), 0);
   const shipping = subtotal > 0 ? (subtotal >= 2160 ? 0 : 160) : 0;
@@ -160,6 +163,45 @@ export default function CheckoutPage() {
           <Button asChild size="lg">
             <Link href="/gallery">{t("viewGallery")}</Link>
           </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Show coming soon message if checkout is disabled
+  if (checkoutDisabled) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-lg mx-auto text-center">
+          <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-600">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" x2="12" y1="8" y2="12"/>
+              <line x1="12" x2="12.01" y1="16" y2="16"/>
+            </svg>
+          </div>
+          <h1 className="text-3xl font-bold mb-4">Checkout Coming Soon</h1>
+          <p className="text-muted-foreground mb-6">
+            We&apos;re currently setting up our payment system. Online checkout will be available soon.
+          </p>
+          <p className="text-muted-foreground mb-8">
+            In the meantime, please contact us directly to purchase artworks:
+          </p>
+          <a
+            href="mailto:contact@alternusart.com"
+            className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-lg font-medium hover:bg-primary/90 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect width="20" height="16" x="2" y="4" rx="2"/>
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+            </svg>
+            contact@alternusart.com
+          </a>
+          <div className="mt-8">
+            <Link href="/gallery" className="text-primary hover:underline">
+              ← Continue browsing artworks
+            </Link>
+          </div>
         </div>
       </div>
     );
