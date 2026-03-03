@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
 const SYSTEM_PROMPT = `You are Alternus AI, a friendly and knowledgeable art assistant for Alternus Gallery - a premium online art marketplace connecting passionate collectors with exceptional artists worldwide.
 
@@ -94,17 +95,19 @@ You have deep knowledge of art history and movements including:
 5. For account issues, direct to /login or /signup
 6. For support issues, direct to /support or info@alternusart.com
 7. When asked general knowledge questions outside art, you can answer briefly but gently guide back to art and the gallery
+8. If the user wants to speak with the Curator or CEO, let them know they can use the contact buttons in the chat or email info@alternusart.com
 
 ## Contact Information
 - Email: info@alternusart.com
+- Curator: curator@alternusart.com
+- CEO: ceo@alternusart.com
 - Support page: /support
 
 Remember: You're an art expert passionate about helping people discover and appreciate art. Make every interaction helpful and inspiring!`;
 
-interface GroqMessage {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -118,16 +121,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const apiKey = process.env.GROQ_API_KEY;
-    if (!apiKey) {
+    if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json(
-        { error: 'Groq API key not configured' },
+        { error: 'OpenAI API key not configured' },
         { status: 500 }
       );
     }
 
     // Build messages array
-    const messages: GroqMessage[] = [
+    const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
       { role: 'system', content: SYSTEM_PROMPT },
       ...conversationHistory.map((msg: { role: string; content: string }) => ({
         role: msg.role as 'user' | 'assistant',
@@ -136,52 +138,38 @@ export async function POST(request: NextRequest) {
       { role: 'user', content: message },
     ];
 
-    // Call Groq API (OpenAI-compatible)
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'llama-3.3-70b-versatile',
-        messages,
-        max_tokens: 1000,
-        temperature: 0.7,
-      }),
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages,
+      max_tokens: 1000,
+      temperature: 0.7,
     });
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      console.error('Groq API error:', data);
-      if (data.error?.code === 'invalid_api_key') {
-        return NextResponse.json(
-          { error: 'Invalid API key' },
-          { status: 500 }
-        );
-      }
-      if (data.error?.code === 'rate_limit_exceeded') {
-        return NextResponse.json(
-          { error: 'Rate limit exceeded. Please try again in a moment.' },
-          { status: 429 }
-        );
-      }
-      return NextResponse.json(
-        { error: 'Failed to get AI response' },
-        { status: 500 }
-      );
-    }
-
-    const responseContent = data.choices?.[0]?.message?.content ||
+    const responseContent = completion.choices?.[0]?.message?.content ||
       'I apologize, but I was unable to generate a response. Please try again.';
 
     return NextResponse.json({
       success: true,
       content: responseContent,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('AI Chat error:', error);
+
+    if (error instanceof OpenAI.APIError) {
+      if (error.status === 401) {
+        return NextResponse.json(
+          { error: 'Invalid API key' },
+          { status: 500 }
+        );
+      }
+      if (error.status === 429) {
+        return NextResponse.json(
+          { error: 'Rate limit exceeded. Please try again in a moment.' },
+          { status: 429 }
+        );
+      }
+    }
+
     return NextResponse.json(
       { error: 'Failed to get AI response. Please try again.' },
       { status: 500 }
